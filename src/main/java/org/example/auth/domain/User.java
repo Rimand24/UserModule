@@ -5,25 +5,25 @@ import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
 @Getter
 @Setter
-//@Entity
-//@Table(name = "users")
+@Entity
+@Table(name = "users")
 public class User implements UserDetails {
-  //  @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String username;
     private String password;
     private String email;
 
-    //    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "users_roles",
-//            joinColumns = {@JoinColumn(name = "users_id", referencedColumnName = "id")},
-//            inverseJoinColumns ={@JoinColumn(name = "role_name", referencedColumnName = "name")} )
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "users_id"))
     private Set<Role> authorities;
 
     private boolean accountNonExpired = true;

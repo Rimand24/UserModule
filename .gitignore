@@ -1,2 +1,4 @@
 # Project exclude paths
 /target/
+/AuthModule.iml
+/.idea/
