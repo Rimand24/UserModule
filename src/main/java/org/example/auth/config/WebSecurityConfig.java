@@ -35,17 +35,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/h2-console/**").permitAll();
-
+                //.antMatchers("/").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin().loginPage("/login").permitAll()
+//                .and()
+//                .rememberMe()
+//                .and()
+//                .logout().permitAll()
+                ;
         http.csrf().disable();
-        http.headers().frameOptions().disable();
     }
 
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        http.authorizeRequests()
-//                .antMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
+//                //.antMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
 //                .anyRequest().authenticated()
 //                .and()
 //                .formLogin().loginPage("/login").permitAll()
@@ -71,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
         auth.inMemoryAuthentication()
                 .withUser("user")
                 .password(passwordEncoder.encode("pass"))

@@ -11,4 +11,9 @@ public class Main {
     public String main(){
         return "index";
     }
+
+    @GetMapping("/some")
+    public String some(){
+        return "index";
+    }
 }
