@@ -19,7 +19,19 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Override
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Bean
+    public PasswordEncoder getPasswordEncoder (){
+        return new BCryptPasswordEncoder();
+    }
+
+
+    //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        http
 //                .authorizeRequests()
@@ -32,9 +44,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //
 //    }
 
+    /**
+     * Config for H2 database
+     * */
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .csrf().disable()
+                .authorizeRequests()
                 //.antMatchers("/").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
@@ -44,8 +62,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .rememberMe()
 //                .and()
 //                .logout().permitAll()
-                ;
+        ;
+
         http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 
 //    @Override
@@ -61,20 +81,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .logout().permitAll();
 //    }
 
-    @Autowired
-    private UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
+//    }
 
-    @Bean
-    public PasswordEncoder getPasswordEncoder (){
-        return new BCryptPasswordEncoder(8);
-    }
 
     /**
      * in memory test values
-    */
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
@@ -87,10 +103,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .password(passwordEncoder.encode("pass"))
                 .roles("ADMIN");
     }
-
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
-//    }
 }
