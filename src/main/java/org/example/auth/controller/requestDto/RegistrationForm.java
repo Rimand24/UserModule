@@ -1,4 +1,4 @@
-package org.example.auth.controller;
+package org.example.auth.controller.requestDto;
 
 import lombok.Data;
 

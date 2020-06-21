@@ -2,7 +2,6 @@ package org.example.auth.config;
 
 import org.example.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
     @Bean
-    public PasswordEncoder getPasswordEncoder (){
+    public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -43,17 +41,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
 //
 //    }
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .csrf().disable()
+//                .authorizeRequests()
+//                .antMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
+//                .anyRequest().authenticated()
+//                .and().formLogin().loginPage("/login").permitAll()
+//                .and().rememberMe()
+//                .and().logout().permitAll();
+//    }
 
     /**
      * Config for H2 database
-     * */
+     */
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                //.antMatchers("/").permitAll()
+                .antMatchers("/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -94,13 +103,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
-        auth.inMemoryAuthentication()
-                .withUser("user")
-                .password(passwordEncoder.encode("pass"))
-                .roles("USER")
-                .and()
-                .withUser("admin")
-                .password(passwordEncoder.encode("pass"))
-                .roles("ADMIN");
+//        auth.inMemoryAuthentication()
+//                .withUser("user")
+//                .password(passwordEncoder.encode("pass"))
+//                .roles("USER")
+//                .and()
+//                .withUser("admin")
+//                .password(passwordEncoder.encode("pass"))
+//                .roles("ADMIN");
     }
 }

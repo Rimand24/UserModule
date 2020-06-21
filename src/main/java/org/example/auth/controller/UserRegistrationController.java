@@ -1,5 +1,6 @@
 package org.example.auth.controller;
 
+import org.example.auth.controller.requestDto.RegistrationForm;
 import org.example.auth.service.registration.RegistrationRequest;
 import org.example.auth.service.registration.RegistrationResponse;
 import org.example.auth.service.registration.UserRegistrationService;
@@ -20,22 +21,22 @@ public class UserRegistrationController {
     @Autowired
     UserRegistrationService userRegistrationService;
 
-    @GetMapping("/register")
-    public String getRregistration() {
-        return "registrationPage";
+    @GetMapping("/registration")
+    public String getRregistration(Model model) {
+        return "registration";
     }
 
-    @PostMapping("/register")
-    public String postRegistration(@RequestBody RegistrationForm form, Model model) {
+    @PostMapping(value = "/registration")
+    public String postRegistration(RegistrationForm form, Model model) {
 
         RegistrationRequest request = modelMapper.map(form, RegistrationRequest.class);
         RegistrationResponse response = userRegistrationService.register(request);
 
         if (response.isSuccess()) {
-            return "registrationSuccessPage";
+            return "registrationSuccess";
         } else {
             model.addAllAttributes(response.getErrors());
-            return "registrationPage";
+            return "registration";
         }
     }
 
