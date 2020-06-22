@@ -33,3 +33,5 @@ VALUES (1, 'admin', '123', 'email@mail.com', true, true, true, true), (2, 'user'
 insert into users_role (users_id, authorities)
 values (1, 'USER'),(1, 'ADMIN'), (2, 'USER')
 
+alter sequence hibernate_sequence  restart with 3
+
