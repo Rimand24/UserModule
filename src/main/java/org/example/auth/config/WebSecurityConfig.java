@@ -29,22 +29,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    //    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/static/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().permitAll()
-//                .and()
-//                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
-//
 //    }
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        http
-//                .csrf().disable()
+
 //                .authorizeRequests()
 //                .antMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
 //                .anyRequest().authenticated()
@@ -60,18 +49,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/registration").permitAll()
                 .antMatchers("/static/**").permitAll()
+//                .antMatchers("/activate/*").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()
-                .and()
-//                .rememberMe()
-//                .and()
-//                .logout().permitAll()
+//                .and().rememberMe()
+//                .and().logout().permitAll()
+                .and().logout().logoutSuccessUrl("/login?logout")
         ;
 
         http.csrf().disable();

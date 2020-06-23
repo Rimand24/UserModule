@@ -32,13 +32,15 @@ public class UserRegistrationController {
     @PostMapping(value = "/registration")
     public String postRegistration(RegistrationForm form, Model model) {
 
+       // System.out.println(form); //fixme
+
         if (form == null || !form.getPassword().equals(form.getPassword2())) {
             model.addAttribute("passwords does not match");
             return "registration";
         }
 
 
-        System.out.println(form); //fixme
+
 
 
             RegistrationRequest request = modelMapper.map(form, RegistrationRequest.class);

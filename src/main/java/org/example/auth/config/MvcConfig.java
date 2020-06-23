@@ -10,6 +10,32 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
 
+    /**
+     * custom login page
+     */
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/login").setViewName("login");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+                .addResourceHandler("/bootstrap/**")
+                .addResourceLocations("/resources/static/bootstrap/");
+        registry
+                .addResourceHandler("/css/**")
+                .addResourceLocations("/resources/static/css/");
+    }
+
+
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry
+//                .addResourceHandler("/resources/**")
+//                .addResourceLocations("/resources/");
+//    }
+}
+
 //    @Bean
 //    public ThymeleafViewResolver viewResolver(){
 //        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
@@ -22,9 +48,7 @@ public class MvcConfig implements WebMvcConfigurer {
 //    @Value("${upload.path}")
 //    private String uploadPath;
 //
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("login");
-    }
+
 
 //    @Override
 //    public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -36,4 +60,5 @@ public class MvcConfig implements WebMvcConfigurer {
 //    }
 
 
-}
+
+
