@@ -41,19 +41,18 @@ public class UserService implements UserDetailsService {
 
     public void save(RegistrationForm form) {
 
-        User user = new User();
-        user.setUsername(form.getUsername());
-        user.setPassword(encoder.encode(form.getPassword()));
-        user.setEmail(form.getEmail());
-        Set<Role> authorities = new HashSet<>();
-        authorities.add(Role.USER);
-        user.setAuthorities(authorities);
-        user.setEnabled(true); //todo email activation
+//        User user = new User();
+//        user.setUsername(form.getUsername());
+//        user.setPassword(encoder.encode(form.getPassword()));
+//        user.setEmail(form.getEmail());
+//        Set<Role> authorities = new HashSet<>();
+//        authorities.add(Role.USER);
+//        user.setAuthorities(authorities);
+//        user.setEnabled(true); //todo email activation
+//
+//        User registeredUser = userRepo.save(user);
+//        response.setSuccess(true);
+//        System.out.println("new user created with id "+registeredUser.getId()); //fixme
 
-        User registeredUser = userRepo.save(user);
-        response.setSuccess(true);
-        System.out.println("new user created with id "+registeredUser.getId()); //fixme
-
-        return response;
     }
 }

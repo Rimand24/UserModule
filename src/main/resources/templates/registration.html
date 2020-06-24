@@ -32,44 +32,29 @@
     <form class="needs-validation" action="/registration" method="post" novalidate>
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" placeholder="Enter username here" required autofocus
+            <input name="username" type="text" class="form-control" id="username" placeholder="Enter username here" required autofocus
                    pattern="[\dA-Za-z]{2,32}" title="Use only latin letters and numbers with length 2 to 32 symbols">
             <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter password here" required>
-            <!--            uncomment to use password validation        -->
-            <!--               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" -->
-            <!--               title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">-->
+            <input name="password" type="password" class="form-control" id="password" placeholder="Enter password here" required>
             <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group">
             <label for="password2">Confirm Password</label>
-            <input type="password" class="form-control" id="password2" placeholder="Confirm your password" required>
+            <input name="password2" type="password" class="form-control" id="password2" placeholder="Confirm your password" required>
             <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group">
             <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter email here" required>
+            <input name="email" type="email" class="form-control" id="email" placeholder="Enter email here" required>
             <div class="invalid-feedback">Please fill out this field.</div>
         </div>
-<!--        <div class="form-group">-->
-<!--            <label for="name">Name</label>-->
-<!--            <input type="text" class="form-control" id="name" placeholder="Enter your name here" required-->
-<!--                   pattern="[\d\w\s_]{2,32}"-->
-<!--                   title="Use only latin letters, numbers, space and underscore symbol with length 2 to 32 symbols">-->
-<!--            <div class="invalid-feedback">Please fill out this field.</div>-->
-<!--        </div>-->
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <br>
 </div>
-
-
-
-
-
 
 <script>
     // Disable form submissions if there are invalid fields
