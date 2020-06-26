@@ -1,14 +1,18 @@
 package org.example.auth.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.*;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
+
+    @Value("${upload.path}")
+    String uploadPath;
 
     /**
      * custom login page
@@ -19,45 +23,18 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-                .addResourceHandler("/bootstrap/**")
-                .addResourceLocations("/resources/static/bootstrap/");
-        registry
-                .addResourceHandler("/css/**")
-                .addResourceLocations("/resources/static/css/");
+
+        //bootstrap+css
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/");
+
+        //upload
+        registry.addResourceHandler("/doc/**")
+                .addResourceLocations("file:/" + uploadPath + "/"); //fixme windows
+//                .addResourceLocations("file://" + uploadPath + "/"); //fixme linux
     }
 
-
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry
-//                .addResourceHandler("/resources/**")
-//                .addResourceLocations("/resources/");
-//    }
 }
-
-//    @Bean
-//    public ThymeleafViewResolver viewResolver(){
-//        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-//        viewResolver.setTemplateEngine(templateEngine());
-//        // NOTE 'order' and 'viewNames' are optional
-//        viewResolver.setOrder(1);
-//        viewResolver.setViewNames(new String[] {".html", ".xhtml"});
-//        return viewResolver;
-//    }
-//    @Value("${upload.path}")
-//    private String uploadPath;
-//
-
-
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/img/**")
-//                .addResourceLocations("file:/" + uploadPath + "/"); //windows
-////        .addResourceLocations("file://" + uploadPath + "/"); //linux
-//        registry.addResourceHandler("/static/**")
-//                .addResourceLocations("classpath:/static/");
-//    }
 
 
 
