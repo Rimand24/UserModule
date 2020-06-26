@@ -2,6 +2,8 @@ package org.example.auth.service.registration;
 
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
+import org.example.auth.service.registration.dto.RegistrationRequest;
+import org.example.auth.service.registration.dto.RegistrationResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,7 +11,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 

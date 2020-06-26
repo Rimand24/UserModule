@@ -1,4 +1,4 @@
-package org.example.auth.service.registration;
+package org.example.auth.service.registration.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

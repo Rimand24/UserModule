@@ -1,19 +1,15 @@
 package org.example.auth.controller;
 
 import org.example.auth.controller.requestDto.RegistrationForm;
-import org.example.auth.service.registration.RegistrationRequest;
-import org.example.auth.service.registration.RegistrationResponse;
+import org.example.auth.service.registration.dto.RegistrationRequest;
+import org.example.auth.service.registration.dto.RegistrationResponse;
 import org.example.auth.service.registration.UserRegistrationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Controller
 public class UserRegistrationController {
@@ -58,8 +54,8 @@ public class UserRegistrationController {
 //import org.example.auth.controller.requestDto.RegistrationForm;
 //import org.example.auth.domain.User;
 //import org.example.auth.service.UserService;
-//import org.example.auth.service.registration.RegistrationRequest;
-//import org.example.auth.service.registration.RegistrationResponse;
+//import org.example.auth.service.registration.dto.RegistrationRequest;
+//import org.example.auth.service.registration.dto.RegistrationResponse;
 //import org.example.auth.service.registration.UserRegistrationService;
 //import org.modelmapper.ModelMapper;
 //import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,8 @@
 package org.example.auth.domain;
 
+import com.sun.istack.Nullable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,12 +14,17 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+    private static final long serialVersionUID = 372821945756910420L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String email;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

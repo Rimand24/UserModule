@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -30,92 +32,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    //todo
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userService);
-        auth.setPasswordEncoder(passwordEncoder());
-        return auth;
-    }
-
-
-     @Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-
-
                 .antMatchers(
-                        "/registration",
-                        "/js/**",
-                        "/css/**",
-                        "/img/**",
-                        "/webjars/**").permitAll()
+                        "/registration", "/activate/*",
+                        "/static/**", "/js/**", "/css/**", "/img/**", "/webjars/**"
+                ).permitAll()
+                .antMatchers("/h2-console/**").permitAll() //fixme H2 database config
+//                .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
+                .and().formLogin().loginPage("/login").permitAll()
+//                .and().logout().permitAll()
+                .and().logout().logoutSuccessUrl("/logout")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                //                .and().rememberMe() //todo https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/#servlet-rememberme
+                .invalidateHttpSession(true)//fixme
+                .clearAuthentication(true)//fixme
+
                 .logoutSuccessUrl("/login?logout")
                 .permitAll();
 
-
-
-
-//                .antMatchers("/registration").permitAll()
-//                .antMatchers("/static/**").permitAll()
-////                .antMatchers("/activate/*").permitAll()
-//                .antMatchers("/h2-console/**").permitAll() //fixme H2 database config
-//                .antMatchers("/admin").hasRole("ADMIN")
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().loginPage("/login").permitAll()
-////                .and().rememberMe()
-////                .and().logout().permitAll()
-//                .and().logout().logoutSuccessUrl("/login?logout")
-//        ;
-
-        http.csrf().disable();
+        http.csrf().disable(); //fixme H2 database config
         http.headers().frameOptions().disable();   //fixme H2 database config
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                //.antMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().loginPage("/login").permitAll()
-//                .and()
-//                .rememberMe()
-//                .and()
-//                .logout().permitAll();
-//    }
-
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
-//    }
-
-
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
-//    }
-
-//todo del
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
-
-
 }

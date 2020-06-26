@@ -3,14 +3,14 @@ package org.example.auth.service.registration;
 import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
+import org.example.auth.service.registration.dto.RegistrationRequest;
+import org.example.auth.service.registration.dto.RegistrationResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
