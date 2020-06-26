@@ -37,4 +37,9 @@ public class User implements UserDetails {
     private boolean credentialsNonExpired = true;
     private boolean enabled;
 
+
+    @OneToMany(mappedBy="cart", fetch = FetchType.LAZY)
+
+        private Set<Document> CreatedDocuments;
+
 }
