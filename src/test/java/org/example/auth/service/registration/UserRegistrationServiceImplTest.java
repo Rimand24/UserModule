@@ -11,6 +11,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-//@SpringBootTest
+@SpringBootTest
 class UserRegistrationServiceImplTest {
 
     @InjectMocks
@@ -93,7 +94,7 @@ class UserRegistrationServiceImplTest {
     }
 
     @Test
-    void createUser_fail_incorectInputData() {
+    void createUser_fail_incorrectInputData() {
         when(userRepo.findByEmail(ArgumentMatchers.anyString())).thenReturn(new User());
         when(userRepo.findByUsername(ArgumentMatchers.anyString())).thenReturn(null);
         when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn(encryptedPassword);
