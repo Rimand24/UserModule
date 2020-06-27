@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private boolean enabled;
 
 
-    @OneToMany(mappedBy="cart", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="createdBy", fetch = FetchType.LAZY)
 
         private Set<Document> CreatedDocuments;
 

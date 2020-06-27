@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/admin").hasRole("ADMIN") //todo admin page
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login").permitAll()
+                //.and().formLogin(form -> form.loginPage("/login").permitAll())
                 .and().logout().logoutSuccessUrl("/login")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 //                .and().rememberMe() //todo https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/#servlet-rememberme
