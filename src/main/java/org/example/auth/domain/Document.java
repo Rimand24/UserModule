@@ -1,5 +1,6 @@
 package org.example.auth.domain;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,8 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "document")
 public class Document implements Serializable {

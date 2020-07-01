@@ -1,6 +1,6 @@
 package org.example.auth.config;
 
-import org.example.auth.service.UserService;
+import org.example.auth.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package org.example.auth.service;
+package org.example.auth.service.user;
 
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
