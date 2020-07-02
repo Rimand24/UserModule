@@ -16,9 +16,31 @@
     <link href="../static/bootstrap/bootstrap.min.css" rel="stylesheet" th:href="@{/static/bootstrap/bootstrap.css}"/>
 </head>
 <body>
-welcome page
+<div>
+<div th:text="Hello, +${#authentication.name}+!">
+    The value of the "name" property of the authentication object should appear here.
+</div>
+<div th:text="${#authentication.authorities.contains('USER')}">
+    The value of the "name" property of the authentication object should appear here.
+</div>
+<!--<div th:text="${#authentication.authorities.contains("ADMIN")}">-->
+<!--    The value of the "name" property of the authentication object should appear here.-->
+<!--</div>-->
+
+<div th:if="${#authentication.authorities.contains('ADMIN')}">
+    This will only be displayed if authenticated user has role ADMIN.
+</div>
+
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+    <!--    https://www.thymeleaf.org/ecosystem.html-->
+    This will only be displayed if authenticated user has role ROLE_ADMIN.
+</div>
+</div>
+
+
 
 <a href="/doc/all">list</a>
+<a href="/logout">logout</a>
 
 <form action="/doc/add" method="post" enctype="multipart/form-data" >
 
