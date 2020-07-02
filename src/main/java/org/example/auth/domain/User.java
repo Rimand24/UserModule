@@ -1,10 +1,6 @@
 package org.example.auth.domain;
 
-import com.sun.istack.Nullable;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -32,14 +28,11 @@ public class User implements UserDetails {
     @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "users_id"))
     private Set<Role> authorities;
 
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
+    private Set<Document> createdDocuments;
+
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
     private boolean enabled;
-
-
-    @OneToMany(mappedBy="createdBy", fetch = FetchType.LAZY)
-
-        private Set<Document> CreatedDocuments;
-
 }

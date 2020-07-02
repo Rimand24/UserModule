@@ -1,15 +1,16 @@
 package org.example.auth.service.document;
 
-import org.example.auth.controller.requestDto.DocumentForm;
-
 import java.util.List;
 
 public interface DocumentService {
+    DocumentDto addDocument(DocumentRequest request);
+
     List<DocumentDto> getAllDocuments();
 
-    DocumentDto getDocument(String id);
+    DocumentDto getDocumentById(String id);
 
-    DocumentDto addDocument(DocumentForm form);
+    List<DocumentDto> findDocumentsByName(String name);
+
 }
 
 

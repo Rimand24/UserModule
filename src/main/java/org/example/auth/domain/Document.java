@@ -1,13 +1,9 @@
 package org.example.auth.domain;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
 
 @Data
 @Entity
@@ -22,9 +18,9 @@ public class Document implements Serializable {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private String hashedName;
+    private String docId;
     @Column(nullable = false)
-    private String path;
+    private String filename;
 
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
