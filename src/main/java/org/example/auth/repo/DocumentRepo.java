@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface DocumentRepo extends JpaRepository<Document, Long> {
-    Document findByDocId(String name);
+    Document findByDocId(String docId);
 
     List<Document> findByNameContains(String name);
 }

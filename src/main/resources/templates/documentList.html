@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<table class="documentList">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>docId</th>
+        <th>filename</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody th:each="document : ${documentList}">
+    <tr th:object="${document}">
+        <td th:text="*{name}">Jeb</td>
+        <td th:text="*{docId}">2a7840ad-551f-4ba4-a772</td>
+        <td th:text="*{filename}">695462.pdf</td>
+        <td th:text="*{createdBy}">admin</td>
+
+        <td>
+            <a href="/doc/" th:href="@{/doc/{id}(id=*{docId})}">Open</a>
+
+<!--            <a href="/doc/" th:href="@{/doc/(id=*{docId})}">Open</a>-->
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!--<li th:each="document : ${documentList}">-->
+<!--    <div th:object="${document}">-->
+<!--        <span th:text="*{name}"> Jeb </span><br>-->
+<!--        <span th:text="*{docId}"> 2a7840ad-551f-4ba4-a772 </span><br>-->
+<!--        <span th:text="*{filename}"> 695462.pdf </span><br>-->
+<!--        <span th:text="*{createdBy}"> admin </span><br>-->
+<!--    </div>-->
+<!--</li>-->
+
+</body>
+</html>

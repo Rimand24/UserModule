@@ -4,8 +4,6 @@ import lombok.SneakyThrows;
 import org.example.auth.domain.Document;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.user.UserDto;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,8 +20,8 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     DocumentRepo documentRepo;
 
-    @Autowired
-    ModelMapper mapper;
+//    @Autowired
+//    ModelMapper mapper = new ModelMapper();
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -53,19 +50,8 @@ public class DocumentServiceImpl implements DocumentService {
 
         //fixme: crutch - model mapper exception (failed to convert org.hibernate.collection.internal.PersistentSet to java.util.Set.)
         //return mapper.map(saved, DocumentDto.class);
-        DocumentDto documentDto = new DocumentDto();
-        documentDto.setName(saved.getName());
-        documentDto.setDocId(saved.getDocId());
-        documentDto.setFilename(saved.getFilename());
-        //maper
-        //documentDto.setCreatedBy(mapper.map(saved, UserDto.class));
-        UserDto userDto = new UserDto() {{
-            setUsername(saved.getCreatedBy().getUsername());
-            setEmail(saved.getCreatedBy().getEmail());
-        }};
-        documentDto.setCreatedBy(userDto);
-        return documentDto;
-        //end crutch
+
+        return docToDtoMapping(saved);
     }
 
 
@@ -81,7 +67,8 @@ public class DocumentServiceImpl implements DocumentService {
         if (StringUtils.isEmpty(document)) {
             throw new RuntimeException("document not found");  //fixme make custom exception
         }
-        return mapper.map(document, DocumentDto.class);
+        System.out.println("doc found");
+        return docToDtoMapping(document);
     }
 
 
@@ -93,11 +80,29 @@ public class DocumentServiceImpl implements DocumentService {
 
     private List<DocumentDto> getDocumentDtos(List<Document> documents) {
         List<DocumentDto> result = new ArrayList<>();
-        if (!documents.isEmpty()) {
-            Type listType = new TypeToken<List<DocumentDto>>() {}.getType();
-            result = mapper.map(documents, listType);
+
+        //fixme maping dont work
+//        if (!documents.isEmpty()) {
+//            Type listType = new TypeToken<List<DocumentDto>>() {}.getType();
+//            result = mapper.map(documents, listType);
+//        }
+        for (Document doc : documents){
+            DocumentDto dto = docToDtoMapping(doc);
+            result.add(dto);
         }
+
         return result;
+    }
+
+    //fixme change method to modelmapper or make generic transformer
+    private DocumentDto docToDtoMapping(Document doc) {
+        DocumentDto dto = new DocumentDto();
+        dto.setName(doc.getName());
+        dto.setDocId(doc.getDocId());
+        dto.setFilename(doc.getFilename());
+        UserDto user = new UserDto(){{setUsername(doc.getCreatedBy().getUsername());setEmail(doc.getCreatedBy().getEmail());}};
+        dto.setCreatedBy(user);
+        return dto;
     }
 
 }
