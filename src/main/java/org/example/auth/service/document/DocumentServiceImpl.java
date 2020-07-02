@@ -78,6 +78,19 @@ public class DocumentServiceImpl implements DocumentService {
         return getDocumentDtos(documents);
     }
 
+    @Override
+    public boolean deleteDocument(String id) {
+        Document document = documentRepo.findByDocId(id);
+        documentRepo.delete(document);
+
+        File file = new File(uploadPath + "/" + document.getFilename());
+         if( file.exists()){
+             file.delete();
+             System.out.println("deleted");
+         }
+        return true;
+    }
+
     private List<DocumentDto> getDocumentDtos(List<Document> documents) {
         List<DocumentDto> result = new ArrayList<>();
 
@@ -104,6 +117,8 @@ public class DocumentServiceImpl implements DocumentService {
         dto.setCreatedBy(user);
         return dto;
     }
+
+
 
 }
 

@@ -11,6 +11,7 @@ public interface DocumentService {
 
     List<DocumentDto> findDocumentsByName(String name);
 
+    boolean deleteDocument(String id);
 }
 
 

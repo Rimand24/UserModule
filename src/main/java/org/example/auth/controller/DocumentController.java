@@ -51,13 +51,21 @@ public class DocumentController {
             request.setCreatedBy(user);
             request.setDocumentFile(file);
             DocumentDto document = documentService.addDocument(request);
-            model.addAttribute("document", document);
+//            model.addAttribute("document", document);
         } else {
             model.addAttribute("error", "filenotfound");//todo exception
         }
-
-        System.out.println("saved");
-        return "document";
+        return "redirect:/doc/all";
     }
+
+    @GetMapping("/doc/delete/{id}")
+    public String deleteDocument(@PathVariable String id, Model model) {
+        boolean deleted = documentService.deleteDocument(id);
+        if (!deleted) {
+            model.addAttribute("error", "deleteFailed");
+        }
+        return "redirect:/doc/all";
+    }
+
 
 }

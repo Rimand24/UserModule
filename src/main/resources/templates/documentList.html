@@ -6,31 +6,40 @@
 </head>
 <body>
 
-<table class="documentList">
+<table class="documentList" border="2">
     <thead>
     <tr>
-        <th>ID</th>
         <th>Name</th>
-        <th>docId</th>
-        <th>filename</th>
+        <th>Author</th>
         <th>Action</th>
     </tr>
     </thead>
     <tbody th:each="document : ${documentList}">
     <tr th:object="${document}">
-        <td th:text="*{name}">Jeb</td>
-        <td th:text="*{docId}">2a7840ad-551f-4ba4-a772</td>
-        <td th:text="*{filename}">695462.pdf</td>
-        <td th:text="*{createdBy}">admin</td>
+        <td th:text="*{name}">695462.pdf</td>
+        <td th:text="*{createdBy.getUsername()}">Jeb</td>
 
         <td>
-            <a href="/doc/" th:href="@{/doc/{id}(id=*{docId})}">Open</a>
-
-<!--            <a href="/doc/" th:href="@{/doc/(id=*{docId})}">Open</a>-->
+            <a href="../templates/document.html" th:href="@{/doc/{id}(id=*{docId})}">Open</a>
+            <a href="../templates/documentList.html" th:href="@{/doc/delete/{id}(id=*{docId})}">Delete</a>
         </td>
     </tr>
     </tbody>
 </table>
+
+<form action="/doc/add" method="post" enctype="multipart/form-data" >
+<p>Upload file (max size 100mb)</p>
+    <div class="form-group">
+        <div class="custom-file">
+            <input type="file" name="file" id="customFile" placeholder="choose">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Send</button>
+    </div>
+</form>
+
 
 
 <!--<li th:each="document : ${documentList}">-->
