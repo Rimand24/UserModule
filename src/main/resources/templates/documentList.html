@@ -18,9 +18,9 @@
     <tr th:object="${document}">
         <td th:text="*{name}">695462.pdf</td>
         <td th:text="*{createdBy.getUsername()}">Jeb</td>
-
         <td>
             <a href="../templates/document.html" th:href="@{/doc/{id}(id=*{docId})}">Open</a>
+            <p><a href="#" th:href="@{/doc/download/{id}(id=*{docId})}" download>Download</a>
             <a href="../templates/documentList.html" th:href="@{/doc/delete/{id}(id=*{docId})}">Delete</a>
         </td>
     </tr>
@@ -28,7 +28,7 @@
 </table>
 
 <form action="/doc/add" method="post" enctype="multipart/form-data" >
-<p>Upload file (max size 100mb)</p>
+<p>Upload file (max size 300mb)</p>
     <div class="form-group">
         <div class="custom-file">
             <input type="file" name="file" id="customFile" placeholder="choose">
@@ -39,17 +39,6 @@
         <button type="submit" class="btn btn-primary">Send</button>
     </div>
 </form>
-
-
-
-<!--<li th:each="document : ${documentList}">-->
-<!--    <div th:object="${document}">-->
-<!--        <span th:text="*{name}"> Jeb </span><br>-->
-<!--        <span th:text="*{docId}"> 2a7840ad-551f-4ba4-a772 </span><br>-->
-<!--        <span th:text="*{filename}"> 695462.pdf </span><br>-->
-<!--        <span th:text="*{createdBy}"> admin </span><br>-->
-<!--    </div>-->
-<!--</li>-->
 
 </body>
 </html>

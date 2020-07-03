@@ -1,5 +1,6 @@
 package org.example.auth.service.document;
 
+import java.io.File;
 import java.util.List;
 
 public interface DocumentService {
@@ -12,6 +13,8 @@ public interface DocumentService {
     List<DocumentDto> findDocumentsByName(String name);
 
     boolean deleteDocument(String id);
-}
 
+    File getDocumentFileById(String id);
+
+}
 

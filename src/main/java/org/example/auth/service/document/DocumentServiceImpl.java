@@ -44,6 +44,8 @@ public class DocumentServiceImpl implements DocumentService {
         document.setName(filename);
         document.setDocId(docId);
         document.setFilename(resultFilename);
+        //todo add ContentType() to Document entity
+        //document.setContentType(file.getContentType());
         document.setCreatedBy(request.getCreatedBy());
 
         Document saved = documentRepo.save(document);
@@ -67,15 +69,19 @@ public class DocumentServiceImpl implements DocumentService {
         if (StringUtils.isEmpty(document)) {
             throw new RuntimeException("document not found");  //fixme make custom exception
         }
-        System.out.println("doc found");
         return docToDtoMapping(document);
     }
-
 
     @Override
     public List<DocumentDto> findDocumentsByName(String name) {
         List<Document> documents = documentRepo.findByNameContains(name);
         return getDocumentDtos(documents);
+    }
+
+    @Override
+    public File getDocumentFileById(String id) {
+        Document document = documentRepo.findByDocId(id);
+        return new File(uploadPath + "/" + document.getFilename());
     }
 
     @Override
@@ -86,10 +92,11 @@ public class DocumentServiceImpl implements DocumentService {
         File file = new File(uploadPath + "/" + document.getFilename());
          if( file.exists()){
              file.delete();
-             System.out.println("deleted");
          }
         return true;
     }
+
+
 
     private List<DocumentDto> getDocumentDtos(List<Document> documents) {
         List<DocumentDto> result = new ArrayList<>();
