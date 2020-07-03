@@ -9,6 +9,7 @@ import org.example.auth.service.document.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import javax.servlet.ServletContext;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -46,20 +48,21 @@ public class DocumentController {
     }
 
     @GetMapping("/doc/download/{id}")
-    public ResponseEntity<InputStreamResource> getDocumentFileById(@PathVariable String id) throws IOException {
-        File file = documentService.getDocumentFileById(id);
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        String mimeType = Files.probeContentType(file.toPath());
+    public ResponseEntity<Resource> getDocumentFileById(@PathVariable String id) throws IOException {
+        Path path = documentService.getDocumentFileById(id);
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+
+        String mimeType = Files.probeContentType(path);
         MediaType mediaType = MediaType.valueOf(mimeType);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + path.getFileName().toString())
                 .contentType(mediaType)
-                .contentLength(file.length()) //
+                .contentLength(resource.getFile().length()) // resource.contentLength() //todo equal???
                 .body(resource);
     }
 
-    //fixme not used yet
+    //fixme search not used yet
     @PostMapping("/doc/find/")
     public String findDocumentsByName(@RequestParam String name, Model model) {
         List<DocumentDto> documents = documentService.findDocumentsByName(name);
@@ -77,7 +80,7 @@ public class DocumentController {
             request.setCreatedBy(user);
             request.setDocumentFile(file);
             DocumentDto document = documentService.addDocument(request);
-//            model.addAttribute("document", document);
+
         } else {
             model.addAttribute("error", "filenotfound");//todo exception
         }

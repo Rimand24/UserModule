@@ -1,6 +1,6 @@
 package org.example.auth.service.document;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 public interface DocumentService {
@@ -14,7 +14,7 @@ public interface DocumentService {
 
     boolean deleteDocument(String id);
 
-    File getDocumentFileById(String id);
+    Path getDocumentFileById(String id);
 
 }
 
