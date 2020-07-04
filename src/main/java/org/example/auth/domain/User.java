@@ -22,7 +22,6 @@ public class User implements UserDetails {
     private String password;
     @Column(nullable = false)
     private String email;
-
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "users_id"))
@@ -35,4 +34,5 @@ public class User implements UserDetails {
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
     private boolean enabled;
+    private String activationCode;
 }

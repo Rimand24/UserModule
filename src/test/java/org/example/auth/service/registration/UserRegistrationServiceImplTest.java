@@ -2,8 +2,6 @@ package org.example.auth.service.registration;
 
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
-import org.example.auth.service.registration.dto.RegistrationRequest;
-import org.example.auth.service.registration.dto.RegistrationResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,11 +48,10 @@ class UserRegistrationServiceImplTest {
         when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn(encryptedPassword);
         when(userRepo.save(ArgumentMatchers.any(User.class))).thenReturn(makeMockUser());
 
-        RegistrationResponse response = registrationService.createUser(makeMockRegistrationRequest());
+        boolean response = registrationService.createUser(makeMockRegistrationRequest());
 
-        assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals(Collections.EMPTY_SET, response.getErrors());
+        assertTrue(response);
+//        assertEquals(Collections.EMPTY_SET, response.getErrors());/**/
         verify(userRepo).findByEmail(ArgumentMatchers.anyString());
         verify(userRepo).findByUsername(ArgumentMatchers.anyString());
         verify(userRepo).save(ArgumentMatchers.any(User.class));
@@ -68,11 +65,11 @@ class UserRegistrationServiceImplTest {
         when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn(encryptedPassword);
         when(userRepo.save(ArgumentMatchers.any(User.class))).thenReturn(makeMockUser());
 
-        RegistrationResponse response = registrationService.createUser(makeMockRegistrationRequest());
+        boolean response = registrationService.createUser(makeMockRegistrationRequest());
 
-        assertNotNull(response);
-        assertFalse(response.isSuccess());
-        assertNotEquals(Collections.EMPTY_SET, response.getErrors());
+
+        assertFalse(response);
+//        assertNotEquals(Collections.EMPTY_SET, response.getErrors());
         verify(userRepo).findByUsername(ArgumentMatchers.anyString());
         verify(userRepo, times(0)).save(ArgumentMatchers.any(User.class));
     }
@@ -84,11 +81,10 @@ class UserRegistrationServiceImplTest {
         when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn(encryptedPassword);
         when(userRepo.save(ArgumentMatchers.any(User.class))).thenReturn(makeMockUser());
 
-        RegistrationResponse response = registrationService.createUser(makeMockRegistrationRequest());
+        boolean response = registrationService.createUser(makeMockRegistrationRequest());
 
-        assertNotNull(response);
-        assertFalse(response.isSuccess());
-        assertNotEquals(Collections.EMPTY_SET, response.getErrors());
+        assertFalse(response);
+//        assertNotEquals(Collections.EMPTY_SET, response.getErrors());
         verify(userRepo).findByEmail(ArgumentMatchers.anyString());
         verify(userRepo, times(0)).save(ArgumentMatchers.any(User.class));
     }
@@ -100,11 +96,11 @@ class UserRegistrationServiceImplTest {
         when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn(encryptedPassword);
         when(userRepo.save(ArgumentMatchers.any(User.class))).thenReturn(makeMockUser());
 
-        RegistrationResponse response = registrationService.createUser(new RegistrationRequest());
+        boolean response = registrationService.createUser(new RegistrationRequest());
 
         assertNotNull(response);
-        assertFalse(response.isSuccess());
-        assertNotEquals(Collections.EMPTY_SET, response.getErrors());
+        assertFalse(response);
+//        assertNotEquals(Collections.EMPTY_SET, response.getErrors());
         verify(userRepo, times(0)).save(ArgumentMatchers.any(User.class));
     }
 

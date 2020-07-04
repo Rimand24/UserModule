@@ -1,9 +1,10 @@
 package org.example.auth.service.registration;
 
-import org.example.auth.service.registration.dto.RegistrationRequest;
-import org.example.auth.service.registration.dto.RegistrationResponse;
+import javax.validation.constraints.NotNull;
 
 public interface UserRegistrationService {
 
-    RegistrationResponse createUser(RegistrationRequest registrationRequest);
+    boolean createUser(RegistrationRequest registrationRequest);
+
+    boolean activateUser(@NotNull String activationCode);
 }

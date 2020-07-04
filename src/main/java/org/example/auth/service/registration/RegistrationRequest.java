@@ -1,4 +1,4 @@
-package org.example.auth.service.registration.dto;
+package org.example.auth.service.registration;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,10 +10,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegistrationRequest implements Serializable {
-
     private static final long serialVersionUID = -1064645942032271857L;
     private String username;
     private String password;
     private String email;
-
 }

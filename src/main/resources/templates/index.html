@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 
     <meta charset="utf-8">
@@ -34,7 +37,7 @@
 
 
 <!--EXPERIMENT PART-->
-<!--index-->
+experiment
 
 <!--<div th:if="${#authorization.getAuthentication.authorities.equals('USER')}">-->
 <!--    tag works-->
@@ -51,12 +54,15 @@
 <!--    role-->
 <!--</div>-->
 
-<!--<div sec:authorize="hasRole('ROLE_ADMIN')">-->
+<!--<div sec:authorize="hasRole('ROLE_USER')">-->
 <!--    &lt;!&ndash;    https://www.thymeleaf.org/ecosystem.html&ndash;&gt;-->
 <!--    This will only be displayed if authenticated user has role ROLE_ADMIN.-->
 <!--</div>-->
+<!--<div sec:authorize="hasRole('USER')">-->
+<!--    &lt;!&ndash;    https://www.thymeleaf.org/ecosystem.html&ndash;&gt;-->
+<!--    This will only be displayed if authenticated user has role ROLE_ADMIN.-->
 <!--</div>-->
-
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
 
 
 <!--<div class="container">-->
@@ -108,9 +114,7 @@
 <!--<script src="../static/bootstrap/bootstrap.bundle.min.js" th:href="@{/js/bootstrap.js}"></script>-->
 
 
-
-
-<p>auth stuff up
+<!--<p>auth stuff up-->
 
 </body>
 </html>

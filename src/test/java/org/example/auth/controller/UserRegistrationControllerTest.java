@@ -1,35 +1,26 @@
 package org.example.auth.controller;
 
-import org.example.auth.domain.User;
+import org.example.auth.service.registration.RegistrationRequest;
 import org.example.auth.service.registration.UserRegistrationService;
-import org.example.auth.service.registration.dto.RegistrationRequest;
-import org.example.auth.service.registration.dto.RegistrationResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Collections;
 import java.util.Objects;
 
-import static org.hamcrest.Matchers.containsString;
-
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -69,9 +60,7 @@ class UserRegistrationControllerTest {
                 setEmail(email);
             }
         })))
-                .thenReturn(new RegistrationResponse() {{
-                    setSuccess(true);
-                }});
+                .thenReturn(true);
 
         Assertions.assertEquals(registrationSuccessPageName, Objects.requireNonNull(
                 mockMvc
@@ -100,7 +89,7 @@ class UserRegistrationControllerTest {
                 setEmail("fgsfds!");
             }
         })))
-                .thenReturn(new RegistrationResponse());
+                .thenReturn(false);
 
         Assertions.assertEquals(registrationPageName, Objects.requireNonNull(
                 mockMvc

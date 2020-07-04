@@ -3,8 +3,7 @@ package org.example.auth.service.registration;
 import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
-import org.example.auth.service.registration.dto.RegistrationRequest;
-import org.example.auth.service.registration.dto.RegistrationResponse;
+import org.example.auth.service.util.TokenService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService {
@@ -26,44 +24,68 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Autowired
     PasswordEncoder encoder;
 
+    @Autowired
+    TokenService tokenService;
+
     @Override
-    public RegistrationResponse createUser(RegistrationRequest registrationRequest) {
-        RegistrationResponse response = new RegistrationResponse();
+    public boolean createUser(RegistrationRequest registrationRequest) {
 
-
+        //todo request validation
         if (registrationRequest == null
                 || !StringUtils.hasText(registrationRequest.getUsername())
                 || !StringUtils.hasText(registrationRequest.getEmail())
                 || !StringUtils.hasText(registrationRequest.getPassword())) {
-            response.addError("username, email or password is invalid");
-            return response;
+            throw new RuntimeException("username, email or password is invalid");
         }
 
         User userByUsername = userRepo.findByUsername(registrationRequest.getUsername());
         if (userByUsername != null) {
-            response.addError("user already exists");
-            return response;
+            throw new RuntimeException("user already exists");
         }
 
         User userByEmail = userRepo.findByEmail(registrationRequest.getEmail());
         if (userByEmail != null) {
-            response.addError("user with such email already exists");
-            return response;
+            throw new RuntimeException("user with such email already exists");
         }
 
         User user = new User();
         user.setUsername(registrationRequest.getUsername());
         user.setPassword(encoder.encode(registrationRequest.getPassword()));
         user.setEmail(registrationRequest.getEmail());
-        Set<Role> authorities = new HashSet<>();
-        authorities.add(Role.USER);
-        user.setAuthorities(authorities);
-        user.setEnabled(true); //todo email activation
 
-        User registeredUser = userRepo.save(user);
-        response.setSuccess(true);
-        System.out.println("new user created with id "+registeredUser.getId()); //fixme
+    /*    Set<Role> authorities = new HashSet<>() {{
+            add(Role.USER);
+        }};*/
+        //authorities.add(Role.USER);
+        //String activationCode = UUID.randomUUID().toString(); //todo
+        user.setAuthorities(new HashSet<>() {{add(Role.USER);}});
 
-        return response;
+        String activationCode = tokenService.generateEmailVerificationToken(registrationRequest.getUsername());
+        sendActivationCode(activationCode);
+        user.setActivationCode(activationCode);
+
+        userRepo.save(user);
+        return true;
     }
+
+    @Override
+    public boolean activateUser(String activationCode) { //todo not null
+
+        User user = userRepo.findByActivationCode(activationCode);
+        if (user != null) {
+            //boolean verified = tokenService.verifyToken(activationCode);
+            if (tokenService.verifyToken(activationCode)) {
+                user.setActivationCode(null);
+                user.setEnabled(true);
+                userRepo.save(user);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void sendActivationCode(String activationCode) {
+        System.out.println(activationCode); //todo email service
+    }
+
 }
