@@ -1,64 +1,61 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../static/img/favicon.ico"/>
 
-    <link rel="icon" href="../static/bootstrap/bootstrap.min.css"/>
+    <!-- CSS and Bootstrap -->
+    <link rel="icon" href="../static/img/favicon.ico" th:href="@{/static/img/favicon.ico}"/>
+    <link rel="stylesheet" href="../static/bootstrap/bootstrap.min.css" th:href="@{/static/bootstrap/bootstrap.css}"/>
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/static/css/style.css}"/>
+
     <title>welcome page</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="../static/bootstrap/bootstrap.min.css" rel="stylesheet" th:href="@{/static/bootstrap/bootstrap.css}"/>
 </head>
 <body>
-<div>
-<div th:text="Hello, +${#authentication.name}+!">
-    The value of the "name" property of the authentication object should appear here.
-</div>
-<div th:text="${#authentication.authorities.contains('USER')}">
-    The value of the "name" property of the authentication object should appear here.
-</div>
-<!--<div th:text="${#authentication.authorities.contains("ADMIN")}">-->
+<!--LINKS-->
+<p><a href="/doc/all">list</a>
+<p><a href="/logout">logout</a>
+
+
+<form action="/doc/add" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <div class="custom-file">
+            <input type="file" name="file" id="customFile" placeholder="choose">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Post</button>
+    </div>
+</form>
+
+
+<!--EXPERIMENT PART-->
+<!--index-->
+
+<!--<div th:if="${#authorization.getAuthentication.authorities.equals('USER')}">-->
+<!--    tag works-->
+<!--</div>-->
+
+<!--<div th:text="${#authentication.authorities.contains('USER')}">-->
+<!--    The value of the "name" property of the authentication object should appear here.-->
+<!--</div>-->
+<!--<div th:text="${#authentication.authorities}">-->
 <!--    The value of the "name" property of the authentication object should appear here.-->
 <!--</div>-->
 
-<div th:if="${#authentication.authorities.contains('ADMIN')}">
-    This will only be displayed if authenticated user has role ADMIN.
-</div>
+<!--<div th:text="${#authentication.authorities.toArray()}">-->
+<!--    role-->
+<!--</div>-->
 
-<div sec:authorize="hasRole('ROLE_ADMIN')">
-    <!--    https://www.thymeleaf.org/ecosystem.html-->
-    This will only be displayed if authenticated user has role ROLE_ADMIN.
-</div>
-</div>
-
-
-
-<a href="/doc/all">list</a>
-<a href="/logout">logout</a>
-
-<form action="/doc/add" method="post" enctype="multipart/form-data" >
-
-
-
-<div class="form-group">
-    <div class="custom-file">
-        <input type="file" name="file" id="customFile" placeholder="choose">
-        <label class="custom-file-label" for="customFile">Choose file</label>
-    </div>
-</div>
-
-<div class="form-group">
-    <button type="submit" class="btn btn-primary">Post</button>
-</div>
-
-</form>
-
+<!--<div sec:authorize="hasRole('ROLE_ADMIN')">-->
+<!--    &lt;!&ndash;    https://www.thymeleaf.org/ecosystem.html&ndash;&gt;-->
+<!--    This will only be displayed if authenticated user has role ROLE_ADMIN.-->
+<!--</div>-->
+<!--</div>-->
 
 
 
@@ -74,7 +71,7 @@
 <!--                    <span class="icon-bar"></span>-->
 <!--                    <span class="icon-bar"></span>-->
 <!--                </button>-->
-<!--                <a class="navbar-brand" href="#" th:text="${username}">Project name</a>-->
+<!--                <a class="navbar-brand" href="#" th:text="${name}">Project name</a>-->
 <!--            </div>-->
 <!--            <div id="navbar" class="navbar-collapse collapse">-->
 <!--                <ul class="nav navbar-nav">-->
@@ -104,22 +101,16 @@
 <!--        </div>&lt;!&ndash;/.container-fluid &ndash;&gt;-->
 <!--    </nav>-->
 <!--    &lt;!&ndash; Main component for a primary marketing message or call to action &ndash;&gt;-->
-<!--    <div class="jumbotron">-->
-<!--        &lt;!&ndash;Usage of models we wrote in WepAppController th:text="'Welcome to basic Bootstrap with Spring Boot created by ' + ${username} &ndash;&gt;-->
-<!--        <h3 th:text="'Welcome to basic Bootstrap with Spring Boot created by ' + ${username}"></h3>-->
-<!--        <p th:text="'This date example  ' + ${#dates.format(datetime, 'dd MMM yyyy HH:mm')}"></p>-->
-<!--        <p> is a quick exercise to illustrate how the default, static navbar and fixed to top navbar work.-->
-<!--            It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>-->
-<!--        <p>-->
-<!--            <a class="btn btn-lg btn-primary" href="#" role="button">View navbar docs &raquo;</a>-->
-<!--        </p>-->
-<!--    </div>-->
+
 <!--</div> &lt;!&ndash; /container &ndash;&gt;-->
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="../static/bootstrap/bootstrap.bundle.min.js" th:href="@{/js/bootstrap.js}"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<!--&lt;!&ndash; Placed at the end of the document so the pages load faster &ndash;&gt;-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+<!--<script src="../static/bootstrap/bootstrap.bundle.min.js" th:href="@{/js/bootstrap.js}"></script>-->
+
+
+
+
+<p>auth stuff up
+
 </body>
 </html>

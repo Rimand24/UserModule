@@ -1,14 +1,11 @@
 package org.example.auth.controller;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.impl.FileItemStreamImpl;
 import org.example.auth.domain.User;
 import org.example.auth.service.document.DocumentDto;
 import org.example.auth.service.document.DocumentRequest;
 import org.example.auth.service.document.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,15 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import javax.servlet.ServletContext;
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -54,11 +51,10 @@ public class DocumentController {
 
         String mimeType = Files.probeContentType(path);
         MediaType mediaType = MediaType.valueOf(mimeType);
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + path.getFileName().toString())
                 .contentType(mediaType)
-                .contentLength(resource.getFile().length()) // resource.contentLength() //todo equal???
+                .contentLength(resource.contentLength())
                 .body(resource);
     }
 
@@ -95,6 +91,5 @@ public class DocumentController {
         }
         return "redirect:/doc/all";
     }
-
 
 }

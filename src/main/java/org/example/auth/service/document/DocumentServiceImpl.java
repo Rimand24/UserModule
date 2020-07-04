@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,18 +52,15 @@ public class DocumentServiceImpl implements DocumentService {
 
         Document saved = documentRepo.save(document);
 
-        //fixme: crutch - model mapper exception (failed to convert org.hibernate.collection.internal.PersistentSet to java.util.Set.)
+        //fixme: model mapper exception (failed to convert org.hibernate.collection.internal.PersistentSet to java.util.Set.)
         //return mapper.map(saved, DocumentDto.class);
-
         return docToDtoMapping(saved);
     }
-
 
     public List<DocumentDto> getAllDocuments() {
         List<Document> documents = documentRepo.findAll();
         return getDocumentDtos(documents);
     }
-
 
     @Override
     public DocumentDto getDocumentById(String docId) {
@@ -82,8 +80,10 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public Path getDocumentFileById(String id) {
         Document document = documentRepo.findByDocId(id);
-        File file = new File(uploadPath + "/" + document.getFilename());
-        return file.toPath();
+        if (document == null) {
+            throw new RuntimeException("document not found (id:" + id + ")");
+        }
+        return Paths.get(uploadPath, document.getFilename());
     }
 
     @Override
@@ -92,23 +92,16 @@ public class DocumentServiceImpl implements DocumentService {
         documentRepo.delete(document);
 
         File file = new File(uploadPath + "/" + document.getFilename());
-         if( file.exists()){
-             file.delete();
-         }
+        if (file.exists()) {
+            file.delete();
+        }
         return true;
     }
-
-
 
     private List<DocumentDto> getDocumentDtos(List<Document> documents) {
         List<DocumentDto> result = new ArrayList<>();
 
-        //fixme maping dont work
-//        if (!documents.isEmpty()) {
-//            Type listType = new TypeToken<List<DocumentDto>>() {}.getType();
-//            result = mapper.map(documents, listType);
-//        }
-        for (Document doc : documents){
+        for (Document doc : documents) {
             DocumentDto dto = docToDtoMapping(doc);
             result.add(dto);
         }
@@ -122,11 +115,13 @@ public class DocumentServiceImpl implements DocumentService {
         dto.setName(doc.getName());
         dto.setDocId(doc.getDocId());
         dto.setFilename(doc.getFilename());
-        UserDto user = new UserDto(){{setUsername(doc.getCreatedBy().getUsername());setEmail(doc.getCreatedBy().getEmail());}};
+        UserDto user = new UserDto() {{
+            setUsername(doc.getCreatedBy().getUsername());
+            setEmail(doc.getCreatedBy().getEmail());
+        }};
         dto.setCreatedBy(user);
         return dto;
     }
-
 
 
 }
