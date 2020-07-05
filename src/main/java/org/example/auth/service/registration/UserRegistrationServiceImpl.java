@@ -18,8 +18,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Autowired
     UserRepo userRepo;
 
-    @Autowired
-    ModelMapper modelMapper;
+//    @Autowired
+//    ModelMapper modelMapper;
 
     @Autowired
     PasswordEncoder encoder;
@@ -35,17 +35,17 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
                 || !StringUtils.hasText(registrationRequest.getUsername())
                 || !StringUtils.hasText(registrationRequest.getEmail())
                 || !StringUtils.hasText(registrationRequest.getPassword())) {
-            throw new RuntimeException("username, email or password is invalid");
+            throw new UserRegistrationException("username, email or password is invalid");
         }
 
         User userByUsername = userRepo.findByUsername(registrationRequest.getUsername());
         if (userByUsername != null) {
-            throw new RuntimeException("user already exists");
+            throw new UserRegistrationException("user already exists");
         }
 
         User userByEmail = userRepo.findByEmail(registrationRequest.getEmail());
         if (userByEmail != null) {
-            throw new RuntimeException("user with such email already exists");
+            throw new UserRegistrationException("user with such email already exists");
         }
 
         User user = new User();

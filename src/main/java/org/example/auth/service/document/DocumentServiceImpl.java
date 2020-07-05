@@ -1,24 +1,18 @@
 package org.example.auth.service.document;
 
-import lombok.SneakyThrows;
 import org.example.auth.domain.Document;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.ResourceService;
 import org.example.auth.service.user.UserDto;
 import org.example.auth.service.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -32,29 +26,20 @@ public class DocumentServiceImpl implements DocumentService {
     ResourceService resourceService;
 
     @Autowired
-    private UUIDGenerator generator;// = new UUIDGenerator();
+    private UUIDGenerator generator;
 
-//    @Value("${upload.path}")
-//    private String uploadPath;
-
-//    public DocumentServiceImpl(DocumentRepo documentRepo, UUIDGenerator generator, @Value("${upload.path}") String uploadPath) {
-//        this.documentRepo = documentRepo;
-//        this.generator = generator;
-//        this.uploadPath = uploadPath;
-//    }
-
-    @SneakyThrows
     @Override
     public DocumentDto addDocument(DocumentRequest request) {
+
+        if (request == null || request.getCreatedBy() == null || request.getDocumentFile() == null){
+         throw new DocumentServiceException("document addition request incorrect");
+        }
 
         MultipartFile file = request.getDocumentFile();
         String filename = file.getOriginalFilename();
         String docId = generator.generateUUID();
         String resultFilename = docId + "." + filename;
         resourceService.saveFile(file, resultFilename);
-        // resourceService.saveFile(Path.of(uploadPath + "/" + resultFilename));
-      //  file.transferTo(Path.of(uploadPath + "/" + resultFilename)); //todo check: uploadPath ends with "/"
-                //new File(uploadPath + "/" + resultFilename));
 
         Document document = new Document();
         document.setName(filename);
@@ -63,7 +48,6 @@ public class DocumentServiceImpl implements DocumentService {
         //todo add ContentType() to Document entity
         //document.setContentType(file.getContentType());
         document.setCreatedBy(request.getCreatedBy());
-
         Document saved = documentRepo.save(document);
 
         //fixme: model mapper exception (failed to convert org.hibernate.collection.internal.PersistentSet to java.util.Set.)
@@ -132,7 +116,5 @@ public class DocumentServiceImpl implements DocumentService {
         dto.setCreatedBy(user);
         return dto;
     }
-
-
 }
 
