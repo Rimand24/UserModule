@@ -3,7 +3,9 @@ package org.example.auth.service.document;
 import lombok.SneakyThrows;
 import org.example.auth.domain.Document;
 import org.example.auth.repo.DocumentRepo;
+import org.example.auth.service.ResourceService;
 import org.example.auth.service.user.UserDto;
+import org.example.auth.service.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -20,27 +23,38 @@ import java.util.UUID;
 @Service
 public class DocumentServiceImpl implements DocumentService {
     @Autowired
-    DocumentRepo documentRepo;
+    private DocumentRepo documentRepo;
 
 //    @Autowired
 //    ModelMapper mapper = new ModelMapper();
 
-    @Value("${upload.path}")
-    private String uploadPath;
+    @Autowired
+    ResourceService resourceService;
+
+    @Autowired
+    private UUIDGenerator generator;// = new UUIDGenerator();
+
+//    @Value("${upload.path}")
+//    private String uploadPath;
+
+//    public DocumentServiceImpl(DocumentRepo documentRepo, UUIDGenerator generator, @Value("${upload.path}") String uploadPath) {
+//        this.documentRepo = documentRepo;
+//        this.generator = generator;
+//        this.uploadPath = uploadPath;
+//    }
 
     @SneakyThrows
     @Override
     public DocumentDto addDocument(DocumentRequest request) {
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
 
         MultipartFile file = request.getDocumentFile();
         String filename = file.getOriginalFilename();
-        String docId = UUID.randomUUID().toString();
+        String docId = generator.generateUUID();
         String resultFilename = docId + "." + filename;
-        file.transferTo(new File(uploadPath + "/" + resultFilename));
+        resourceService.saveFile(file, resultFilename);
+        // resourceService.saveFile(Path.of(uploadPath + "/" + resultFilename));
+      //  file.transferTo(Path.of(uploadPath + "/" + resultFilename)); //todo check: uploadPath ends with "/"
+                //new File(uploadPath + "/" + resultFilename));
 
         Document document = new Document();
         document.setName(filename);
@@ -66,7 +80,7 @@ public class DocumentServiceImpl implements DocumentService {
     public DocumentDto getDocumentById(String docId) {
         Document document = documentRepo.findByDocId(docId);
         if (StringUtils.isEmpty(document)) {
-            throw new RuntimeException("document not found");  //fixme make custom exception
+            throw new DocumentServiceException("document not found");  //fixme make custom exception
         }
         return docToDtoMapping(document);
     }
@@ -81,20 +95,16 @@ public class DocumentServiceImpl implements DocumentService {
     public Path getDocumentFileById(String id) {
         Document document = documentRepo.findByDocId(id);
         if (document == null) {
-            throw new RuntimeException("document not found (id:" + id + ")");
+            throw new DocumentServiceException("document not found (id:" + id + ")");
         }
-        return Paths.get(uploadPath, document.getFilename());
+        return resourceService.getFile(document.getFilename());
     }
 
     @Override
     public boolean deleteDocument(String id) {
         Document document = documentRepo.findByDocId(id);
         documentRepo.delete(document);
-
-        File file = new File(uploadPath + "/" + document.getFilename());
-        if (file.exists()) {
-            file.delete();
-        }
+        resourceService.deleteFile(document.getFilename());
         return true;
     }
 
