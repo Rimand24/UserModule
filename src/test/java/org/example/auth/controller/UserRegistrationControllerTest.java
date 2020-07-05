@@ -1,6 +1,7 @@
 package org.example.auth.controller;
 
 import org.example.auth.service.registration.RegistrationRequest;
+import org.example.auth.service.registration.UserRegistrationException;
 import org.example.auth.service.registration.UserRegistrationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-//@WebMvcTest(UserRegistrationController.class)
 class UserRegistrationControllerTest {
 
     @Autowired
@@ -43,7 +44,7 @@ class UserRegistrationControllerTest {
 
     @Test
     public void getRegistrationTest() throws Exception {
-        Assertions.assertEquals(registrationPageName, Objects.requireNonNull(
+        assertEquals(registrationPageName, Objects.requireNonNull(
                 mockMvc
                         .perform(get("/registration"))
                         .andExpect(status().isOk())
@@ -53,7 +54,7 @@ class UserRegistrationControllerTest {
     @Test
     public void postRegistrationTest_success() throws Exception {
 
-        when(registrationService.createUser(ArgumentMatchers.eq(new RegistrationRequest() {
+        when(registrationService.createUser(eq(new RegistrationRequest() {
             {
                 setUsername(username);
                 setPassword(password);
@@ -62,52 +63,56 @@ class UserRegistrationControllerTest {
         })))
                 .thenReturn(true);
 
-        Assertions.assertEquals(registrationSuccessPageName, Objects.requireNonNull(
-                mockMvc
-                        .perform(
-                                post("/registration")
-                                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                        .param("username", username)
-                                        .param("password", password)
-                                        .param("password2", password)
-                                        .param("email", email)
-                        )
+        assertEquals(registrationSuccessPageName, Objects.requireNonNull(
+                mockMvc.perform(
+                        post("/registration")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("username", username)
+                                .param("password", password)
+                                .param("password2", password)
+                                .param("email", email)
+                )
                         .andExpect(status().isOk())
                         .andReturn().getModelAndView()).getViewName());
 
         verify(registrationService).createUser(ArgumentMatchers.any(RegistrationRequest.class));
     }
 
-    @Disabled
     @Test
-    public void postRegistrationTest_fail_incorrectRequest() throws Exception {
+    public void postRegistrationTest_fail_formIsNull() throws Exception {
 //todo  check validation - RegistrationForm must not be incorrect (null/empty/only spaces/incorect symbols)
-        when(registrationService.createUser(ArgumentMatchers.eq(new RegistrationRequest() {
-            {
-                setUsername("");
-                setPassword(null);
-                setEmail("fgsfds!");
-            }
-        })))
-                .thenReturn(false);
+        when(registrationService.createUser(any(RegistrationRequest.class))).thenReturn(false);
 
-        Assertions.assertEquals(registrationPageName, Objects.requireNonNull(
-                mockMvc
-                        .perform(
-                                post("/registration")
-                                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                        .param("username", username)
-                                        .param("password", password)
-                                        .param("password2", password)
-                                        .param("email", email)
-                        )
-                        .andExpect(status().isOk())
-                        .andReturn().getModelAndView()).getModel());
+        assertEquals("fields does not filled",
+                mockMvc.perform(
+                        post("/registration")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("username", "")
+                                .param("password", "")
+                                .param("password2", "")
+                                .param("email", "")
+                ).andReturn().getModelAndView().getModel().get("error").toString()
+        );
 
-
-
-        verify(registrationService, times(0)).createUser(ArgumentMatchers.any(RegistrationRequest.class));
+        verify(registrationService, times(0)).createUser(any(RegistrationRequest.class));
     }
 
+    @Test
+    public void postRegistrationTest_fail_passwordsDoNotMatch() throws Exception {
+        when(registrationService.createUser(any(RegistrationRequest.class))).thenReturn(false);
+
+        assertEquals("passwords does not match",
+                mockMvc.perform(
+                        post("/registration")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("username", username)
+                                .param("password", password)
+                                .param("password2", encryptedPassword)
+                                .param("email", email)
+                ).andReturn().getModelAndView().getModel().get("error").toString()
+        );
+
+        verify(registrationService, times(0)).createUser(any(RegistrationRequest.class));
+    }
 }
 

@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,8 +31,14 @@ public class UserRegistrationController {
     @PostMapping(value = "/registration")
     public String postRegistration(RegistrationForm form, Model model) {
 
-        if (form == null || !form.getPassword().equals(form.getPassword2())) { //fixme extract to validator
-            model.addAttribute("passwords does not match");
+        if (form == null || !StringUtils.hasText(form.getUsername()) || !StringUtils.hasText(form.getEmail())   //fixme extract to validator
+                || !StringUtils.hasText(form.getPassword()) || !StringUtils.hasText(form.getPassword2())) {
+            model.addAttribute("error", "fields does not filled");
+            return "registration";
+        }
+
+        if (!form.getPassword().equals(form.getPassword2())) { //fixme extract to validator
+            model.addAttribute("error", "passwords does not match");
             return "registration";
         }
 
@@ -47,9 +54,9 @@ public class UserRegistrationController {
     }
 
     @GetMapping("/activate/{activationCode}")
-    public String activateUser(@PathVariable String activationCode){
+    public String activateUser(@PathVariable String activationCode) {
         boolean activated = userRegistrationService.activateUser(activationCode);
-        if (activated){
+        if (activated) {
             return "login";
         }
         return "registration";
