@@ -3,9 +3,11 @@ package org.example.auth.service.registration;
 import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
+import org.example.auth.service.mail.MailService;
+import org.example.auth.service.mail.mailRequest;
 import org.example.auth.service.util.TokenService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,14 +20,20 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Autowired
     UserRepo userRepo;
 
-//    @Autowired
-//    ModelMapper modelMapper;
+    @Autowired
+    MailService mailService;
 
     @Autowired
     PasswordEncoder encoder;
 
     @Autowired
     TokenService tokenService;
+
+    @Value("server.address")
+    private String serverAddress;
+
+    @Value("server.port")
+    private String serverPort;
 
     @Override
     public boolean createUser(RegistrationRequest registrationRequest) {
@@ -48,23 +56,21 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             throw new UserRegistrationException("user with such email already exists");
         }
 
+        String username = registrationRequest.getUsername();
+        String email = registrationRequest.getEmail();
+        String activationCode = tokenService.generateEmailVerificationToken(username);
+
         User user = new User();
-        user.setUsername(registrationRequest.getUsername());
+        user.setUsername(username);
         user.setPassword(encoder.encode(registrationRequest.getPassword()));
-        user.setEmail(registrationRequest.getEmail());
-
-    /*    Set<Role> authorities = new HashSet<>() {{
+        user.setEmail(email);
+        user.setAuthorities(new HashSet<>() {{
             add(Role.USER);
-        }};*/
-        //authorities.add(Role.USER);
-        //String activationCode = UUID.randomUUID().toString(); //todo
-        user.setAuthorities(new HashSet<>() {{add(Role.USER);}});
-
-        String activationCode = tokenService.generateEmailVerificationToken(registrationRequest.getUsername());
-        sendActivationCode(activationCode);
+        }});
         user.setActivationCode(activationCode);
-
         userRepo.save(user);
+
+        sendActivationCode(username, email, activationCode);
         return true;
     }
 
@@ -73,7 +79,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
         User user = userRepo.findByActivationCode(activationCode);
         if (user != null) {
-            //boolean verified = tokenService.verifyToken(activationCode);
             if (tokenService.verifyToken(activationCode)) {
                 user.setActivationCode(null);
                 user.setEnabled(true);
@@ -84,8 +89,17 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         return false;
     }
 
-    private void sendActivationCode(String activationCode) {
-        System.out.println(activationCode); //todo email service
+    private void sendActivationCode(String username, String email, String activationCode) {
+        String message = "Hello, " + username + "! Welcome to our site, please follow the link bellow to finish the registration \n\r" +
+                "http://" + serverAddress + serverPort + "/activate/" + activationCode;
+
+        mailRequest request = new mailRequest() {{
+            setAddressee(email);
+            setSubject("Activation code");
+            setMessage(message);
+        }};
+
+        mailService.send(request);
     }
 
 }
