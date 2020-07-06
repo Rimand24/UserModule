@@ -4,7 +4,7 @@ import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
 import org.example.auth.service.mail.MailService;
-import org.example.auth.service.mail.mailRequest;
+import org.example.auth.service.mail.MailRequest;
 import org.example.auth.service.util.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,13 +93,33 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         String message = "Hello, " + username + "! Welcome to our site, please follow the link bellow to finish the registration \n\r" +
                 "http://" + serverAddress + serverPort + "/activate/" + activationCode;
 
-        mailRequest request = new mailRequest() {{
-            setAddressee(email);
-            setSubject("Activation code");
+        MailRequest request = new MailRequest() {{
+            setTo(email);
+            setSubject("Welcome"); //Welcome to Qwiklabs®
             setMessage(message);
         }};
 
         mailService.send(request);
     }
 
+    /**
+     * Welcome to Qwiklabs® John Doe!
+     *
+     * Please click this link to confirm your account:
+     * https://run.qwiklabs.com/users/confirmation?confirmation_token=oTuofqCDEgAKKu4bMbzE&locale=en
+     *
+     * After you confirm your account, you can use your email address to log in at run.qwiklabs.com.
+     *
+     * What next? You can find a variety of labs and quests in the lab catalog.
+     *
+     * You can browse all our introductory labs.
+     *
+     * If you experience any difficulty, please visit our community portal and submit a ticket at: https://qwiklab.zendesk.com.
+     *
+     * Welcome once again - we are happy you're here!
+     *
+     * Thank you,
+     * Qwiklabs Support
+     * support@qwiklabs.com
+     */
 }
