@@ -2,7 +2,7 @@ package org.example.auth.controller;
 
 import org.example.auth.domain.User;
 import org.example.auth.service.document.DocumentDto;
-import org.example.auth.service.document.DocumentRequest;
+import org.example.auth.service.document.DocumentCreationRequestDto;
 import org.example.auth.service.document.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -46,14 +46,15 @@ public class DocumentController {
 
     @GetMapping("/doc/download/{id}")
     public ResponseEntity<Resource> getDocumentFileById(@PathVariable String id) throws IOException {
-        Path path = documentService.getDocumentFileById(id);
-        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+        DocumentDto documentDto = documentService.getDocumentFileById(id);
 
-        String mimeType = Files.probeContentType(path);
-        MediaType mediaType = MediaType.valueOf(mimeType);
+        ByteArrayResource resource = new ByteArrayResource(documentDto.getRawFile());
+
+        //String mimeType = Files.probeContentType(path);
+        //MediaType mediaType = MediaType.valueOf(mimeType);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + path.getFileName().toString())
-                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + documentDto.getName())
+          //      .contentType(mediaType)
                 .contentLength(resource.contentLength())
                 .body(resource);
     }
@@ -72,7 +73,7 @@ public class DocumentController {
                               // BindingResult bindingResult, //fixme BindingResult ????
                               @RequestParam("file") MultipartFile file) {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
-            DocumentRequest request = new DocumentRequest();
+            DocumentCreationRequestDto request = new DocumentCreationRequestDto();
             request.setCreatedBy(user);
             request.setDocumentFile(file);
             DocumentDto document = documentService.addDocument(request);

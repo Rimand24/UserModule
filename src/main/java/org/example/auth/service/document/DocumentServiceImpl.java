@@ -1,8 +1,9 @@
 package org.example.auth.service.document;
 
+import lombok.SneakyThrows;
 import org.example.auth.domain.Document;
 import org.example.auth.repo.DocumentRepo;
-import org.example.auth.service.ResourceService;
+import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.user.UserDto;
 import org.example.auth.service.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,30 +23,32 @@ public class DocumentServiceImpl implements DocumentService {
 //    ModelMapper mapper = new ModelMapper();
 
     @Autowired
-    ResourceService resourceService;
+    StorageService storageService;
 
     @Autowired
     private UUIDGenerator generator;
 
+    @SneakyThrows
     @Override
-    public DocumentDto addDocument(DocumentRequest request) {
+    public DocumentDto addDocument(DocumentCreationRequestDto request) {
 
-        if (request == null || request.getCreatedBy() == null || request.getDocumentFile() == null){
-         throw new DocumentServiceException("document addition request incorrect");
+        if (request == null || request.getCreatedBy() == null || request.getDocumentFile() == null) {
+            throw new DocumentServiceException("document addition request incorrect");
         }
 
-        MultipartFile file = request.getDocumentFile();
-        String filename = file.getOriginalFilename();
+        MultipartFile multipartFile = request.getDocumentFile();
+        String filename = multipartFile.getOriginalFilename();
         String docId = generator.generateUUID();
         String resultFilename = docId + "." + filename;
-        resourceService.saveFile(file, resultFilename);
+
+        storageService.save(multipartFile.getBytes(), resultFilename);
 
         Document document = new Document();
         document.setName(filename);
         document.setDocId(docId);
         document.setFilename(resultFilename);
         //todo add ContentType() to Document entity
-        //document.setContentType(file.getContentType());
+//        document.setContentType(file.getContentType());
         document.setCreatedBy(request.getCreatedBy());
         Document saved = documentRepo.save(document);
 
@@ -75,20 +77,25 @@ public class DocumentServiceImpl implements DocumentService {
         return getDocumentDtos(documents);
     }
 
+    @SneakyThrows
     @Override
-    public Path getDocumentFileById(String id) {
+    public DocumentDto getDocumentFileById(String id) {
         Document document = documentRepo.findByDocId(id);
         if (document == null) {
             throw new DocumentServiceException("document not found (id:" + id + ")");
         }
-        return resourceService.getFile(document.getFilename());
+
+        DocumentDto dto = docToDtoMapping(document);
+        byte[] load = storageService.load(document.getFilename());
+        dto.setRawFile(load);
+        return dto;
     }
 
     @Override
     public boolean deleteDocument(String id) {
         Document document = documentRepo.findByDocId(id);
         documentRepo.delete(document);
-        resourceService.deleteFile(document.getFilename());
+        storageService.delete(document.getFilename());
         return true;
     }
 

@@ -5,11 +5,9 @@ import org.example.auth.domain.User;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class DocumentRequest {
+public class DocumentCreationRequestDto {
 
     private MultipartFile documentFile;
-
     private User createdBy;
-
 
 }

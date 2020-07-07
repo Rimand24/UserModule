@@ -1,9 +1,10 @@
 package org.example.auth.service.document;
 
+import lombok.SneakyThrows;
 import org.example.auth.domain.Document;
 import org.example.auth.domain.User;
 import org.example.auth.repo.DocumentRepo;
-import org.example.auth.service.ResourceService;
+import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.user.UserDto;
 import org.example.auth.service.util.UUIDGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -37,7 +38,7 @@ class DocumentServiceImplTest {
     DocumentRepo documentRepo;
 
     @Mock
-    ResourceService resourceService;
+    StorageService storageService;
 
     @Mock
     UUIDGenerator generator;
@@ -52,9 +53,10 @@ class DocumentServiceImplTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @SneakyThrows
     @Test
     void addDocument_success() {
-        when(resourceService.saveFile(any(MultipartFile.class), anyString())).thenReturn(true);
+        when(storageService.save(any(byte[].class), anyString())).thenReturn(true);
         when(generator.generateUUID()).thenReturn(docId);
         when(documentRepo.save(any(Document.class))).thenReturn(makeMockDocument());
 
@@ -62,13 +64,13 @@ class DocumentServiceImplTest {
 
         assertEquals(makeMockDocumentDto(), result);
         verify(documentRepo).save(any(Document.class));
-        verify(resourceService).saveFile(any(MultipartFile.class), anyString());
+        verify(storageService).save(any(byte[].class), anyString());
     }
 
     @Test
     void addDocument_fail_emptyRequest() {
         Assertions.assertThrows(DocumentServiceException.class, () -> {
-            documentService.addDocument(new DocumentRequest());
+            documentService.addDocument(new DocumentCreationRequestDto());
         });
         verify(documentRepo, times(0)).save(any(Document.class));
     }
@@ -128,21 +130,21 @@ class DocumentServiceImplTest {
     void deleteDocument_success() {
         when(documentRepo.findByDocId(anyString())).thenReturn(makeMockDocument());
         doNothing().when(documentRepo).delete(any(Document.class));
-        when(resourceService.deleteFile(anyString())).thenReturn(true);
+        when(storageService.delete(anyString())).thenReturn(true);
 
         boolean deleted = documentService.deleteDocument(anyString());
 
         assertTrue(deleted);
         verify(documentRepo).delete(any(Document.class));
-        verify(resourceService).deleteFile(anyString());
+        verify(storageService).delete(anyString());
     }
 
-    private DocumentRequest makeMockRequest() {
+    private DocumentCreationRequestDto makeMockRequest() {
         MultipartFile file = new MockMultipartFile("name", name, null, (byte[]) null);
         User user = new User() {{
             setUsername(username);
         }};
-        return new DocumentRequest() {{
+        return new DocumentCreationRequestDto() {{
             setCreatedBy(user);
             setDocumentFile(file);
         }};
