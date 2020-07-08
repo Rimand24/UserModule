@@ -58,7 +58,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
         String username = registrationRequest.getUsername();
         String email = registrationRequest.getEmail();
-        String activationCode = tokenService.generateEmailVerificationToken(username);
+        String activationCode = tokenService.generateEmailVerificationToken();
 
         User user = new User();
         user.setUsername(username);

@@ -1,16 +1,13 @@
 package org.example.auth.service.registration;
 
-import org.example.auth.domain.Document;
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
+import org.example.auth.service.mail.MailRequest;
 import org.example.auth.service.mail.MailService;
-import org.example.auth.service.mail.mailRequest;
 import org.example.auth.service.util.TokenService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -19,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -55,48 +53,48 @@ class UserRegistrationServiceImplTest {
         when(userRepo.findByEmail(anyString())).thenReturn(null);
         when(userRepo.findByUsername(anyString())).thenReturn(null);
         when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
-        when(tokenService.generateEmailVerificationToken(anyString())).thenReturn("anyString");
+        when(tokenService.generateEmailVerificationToken()).thenReturn("anyString");
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
-        doNothing().when(mailService).send(any(mailRequest.class));
+        doNothing().when(mailService).send(any(MailRequest.class));
 
         boolean created = registrationService.createUser(makeMockRegistrationRequest());
 
         assertTrue(created);
-        verify(userRepo).findByEmail(ArgumentMatchers.anyString());
-        verify(userRepo).findByUsername(ArgumentMatchers.anyString());
-        verify(userRepo).save(ArgumentMatchers.any(User.class));
+        verify(userRepo).findByEmail(anyString());
+        verify(userRepo).findByUsername(anyString());
+        verify(userRepo).save(any(User.class));
         verify(passwordEncoder).encode(password);
-        verify(tokenService).generateEmailVerificationToken(ArgumentMatchers.anyString());
+        verify(tokenService).generateEmailVerificationToken();
     }
 
     @Test
     void createUser_fail_usernameAlreadyExists() {
-        when(userRepo.findByEmail(ArgumentMatchers.anyString())).thenReturn(null);
-        when(userRepo.findByUsername(ArgumentMatchers.anyString())).thenReturn(new User());
-        when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn(encryptedPassword);
-        when(userRepo.save(ArgumentMatchers.any(User.class))).thenReturn(makeMockUser());
+        when(userRepo.findByEmail(anyString())).thenReturn(null);
+        when(userRepo.findByUsername(anyString())).thenReturn(new User());
+        when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
+        when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.createUser(makeMockRegistrationRequest());
         });
 
-        verify(userRepo).findByUsername(ArgumentMatchers.anyString());
-        verify(userRepo, times(0)).save(ArgumentMatchers.any(User.class));
+        verify(userRepo).findByUsername(anyString());
+        verify(userRepo, times(0)).save(any(User.class));
     }
 
     @Test
     void createUser_fail_emailAlreadyExists() {
-        when(userRepo.findByEmail(ArgumentMatchers.anyString())).thenReturn(new User());
-        when(userRepo.findByUsername(ArgumentMatchers.anyString())).thenReturn(null);
-        when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn(encryptedPassword);
-        when(userRepo.save(ArgumentMatchers.any(User.class))).thenReturn(makeMockUser());
+        when(userRepo.findByEmail(anyString())).thenReturn(new User());
+        when(userRepo.findByUsername(anyString())).thenReturn(null);
+        when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
+        when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.createUser(makeMockRegistrationRequest());
         });
 
-        verify(userRepo).findByEmail(ArgumentMatchers.anyString());
-        verify(userRepo, times(0)).save(ArgumentMatchers.any(User.class));
+        verify(userRepo).findByEmail(anyString());
+        verify(userRepo, times(0)).save(any(User.class));
     }
 
     @Test
@@ -107,10 +105,10 @@ class UserRegistrationServiceImplTest {
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
         assertThrows(UserRegistrationException.class, () -> {
-            boolean created = registrationService.createUser(new RegistrationRequest());
+            registrationService.createUser(new RegistrationRequest());
         });
 
-        verify(userRepo, times(0)).save(ArgumentMatchers.any(User.class));
+        verify(userRepo, times(0)).save(any(User.class));
     }
 
     @Test

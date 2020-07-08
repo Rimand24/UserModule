@@ -1,10 +1,7 @@
 package org.example.auth.controller;
 
 import org.example.auth.service.registration.RegistrationRequest;
-import org.example.auth.service.registration.UserRegistrationException;
 import org.example.auth.service.registration.UserRegistrationService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -18,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

@@ -1,7 +1,7 @@
 package org.example.auth.service.util;
 
 public interface TokenService {
-    String generateEmailVerificationToken(String username);
+    String generateEmailVerificationToken();
 
     boolean verifyToken(String token);
 }

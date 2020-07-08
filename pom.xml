@@ -4,6 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.example.auth</groupId>
+    <artifactId>AuthModule</artifactId>
+    <version>0.7</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -12,21 +14,14 @@
     </parent>
 
     <dependencies>
-
         <!--     utility   -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
+
+
+
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>2.3.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
         <!--    MVC     -->
@@ -46,7 +41,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -55,50 +49,46 @@
 
 
         <!-- bootstrap and jquery -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>4.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>3.5.1</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.webjars</groupId>-->
+<!--            <artifactId>bootstrap</artifactId>-->
+<!--            <version>4.5.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.webjars</groupId>-->
+<!--            <artifactId>jquery</artifactId>-->
+<!--            <version>3.5.1</version>-->
+<!--        </dependency>-->
 
-        <!--                SECURITY-->
+        <!--         SECURITY       -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.session</groupId>-->
-        <!--            <artifactId>spring-session-jdbc</artifactId>-->
-        <!--        </dependency>-->
-                <dependency>
-                    <groupId>io.jsonwebtoken</groupId>
-                    <artifactId>jjwt</artifactId>
-                    <version>0.9.1</version>
-                </dependency>
-        <!--        EMAIL       -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.boot</groupId>-->
-        <!--            <artifactId>spring-boot-starter-mail</artifactId>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
 
-        <!--    DATA    -->
+        <!--        EMAIL       -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!--    JPA &  DATABASE   -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!--        database    -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -123,11 +113,18 @@
             <scope>test</scope>
         </dependency>
 
+        <!--        DEVELOPERS TOOLS -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
 
     </dependencies>
-    <artifactId>AuthModule</artifactId>
-
-    <version>1.0-SNAPSHOT</version>
 
     <build>
         <plugins>
@@ -145,7 +142,5 @@
             </plugin>
         </plugins>
     </build>
-
-
 
 </project>
