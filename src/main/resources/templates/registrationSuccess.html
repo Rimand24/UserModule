@@ -1,12 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
 </head>
 <body>
-Registration success,
-<a href="/login">login now</a>
-<!--check email for activation code-->
+
+<div>
+    <div>
+        <p> Мы отправили электронное письмо по адресу</p>
+
+
+        <p><strong th:text="${email}">Example@email.com</strong></p>
+        <p> Нажмите по ссылке подтверждения в электронном письме, чтобы приступить к использованию сервиса.</p>
+    </div>
+    <div>
+        <p> Если вы не получили электронное уведомление, </p>
+        <p>
+            <a href="#" th:href="@{/resendActivationCode/{email}(email=${email})}">Отправить уведомление еще раз</a>
+        </p>
+    </div>
+    <div th:if="${resend}">
+        <a href="#">или свяжитесь со службой поддержки</a>
+    </div>
+</div>
 </body>
 </html>

@@ -4,7 +4,7 @@ import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
 import org.example.auth.service.mail.MailService;
-import org.example.auth.service.mail.MailRequest;
+import org.example.auth.service.mail.Mail;
 import org.example.auth.service.util.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,18 +89,30 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         return false;
     }
 
+    @Override
+    public boolean resendActivationCode(String email) {
+        User user = userRepo.findByEmail(email);
+        if (user != null && user.getActivationCode() != null) {
+         sendActivationCode(user.getUsername(), user.getEmail(), user.getActivationCode());
+            return true;
+        }
+        return false;
+    }
+
     private void sendActivationCode(String username, String email, String activationCode) {
         String message = "Hello, " + username + "! Welcome to our site, please follow the link bellow to finish the registration \n\r" +
                 "http://" + serverAddress + serverPort + "/activate/" + activationCode;
 
-        MailRequest request = new MailRequest() {{
+        Mail mail = new Mail() {{
             setTo(email);
             setSubject("Welcome"); //Welcome to Qwiklabs®
-            setMessage(message);
+            setContent(message);
         }};
 
-        mailService.send(request);
+        mailService.send(mail);
     }
+
+
 
     /**
      * Welcome to Qwiklabs® John Doe!

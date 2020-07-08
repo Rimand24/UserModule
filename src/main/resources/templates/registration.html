@@ -9,15 +9,12 @@
     <link rel="stylesheet" href="../static/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/style.css">
 
-<!--    <link href="../static/bootstrap/bootstrap.min.css" rel="stylesheet" th:href="@{/static/bootstrap/bootstrap.min.css}"/>-->
+    <!--    <link href="../static/bootstrap/bootstrap.min.css" rel="stylesheet" th:href="@{/static/bootstrap/bootstrap.min.css}"/>-->
 
 
-
-<!--    <link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}" type="text/css" />-->
-<!--    <link rel="stylesheet" th:href="@{/resources/css/style.css}" type="text/css" />-->
+    <!--    <link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}" type="text/css" />-->
+    <!--    <link rel="stylesheet" th:href="@{/resources/css/style.css}" type="text/css" />-->
 </head>
-
-
 
 
 </head>
@@ -32,13 +29,15 @@
     <form class="needs-validation" action="/registration" method="post" novalidate>
         <div class="form-group">
             <label for="username">Username</label>
-            <input name="username" type="text" class="form-control" id="username" placeholder="Enter username here" required autofocus
+            <input name="username" type="text" class="form-control" id="username" placeholder="Enter username here"
+                   required autofocus
                    pattern="[\dA-Za-z]{2,32}" title="Use only latin letters and numbers with length 2 to 32 symbols">
             <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input name="password" type="password" class="form-control" id="password" placeholder="Enter password here" required>
+            <input name="password" type="password" class="form-control" id="password" placeholder="Enter password here"
+                   required>
             <!--               uncomment to use password validation       -->
             <!--               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" -->
             <!--               title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">-->
@@ -47,13 +46,20 @@
         </div>
         <div class="form-group">
             <label for="password2">Confirm Password</label>
-            <input name="password2" type="password" class="form-control" id="password2" placeholder="Confirm your password" required>
+            <input name="password2" type="password" class="form-control" id="password2"
+                   placeholder="Confirm your password" required>
             <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group">
             <label for="email">Email address</label>
             <input name="email" type="email" class="form-control" id="email" placeholder="Enter email here" required>
             <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div>
+            Регистрируясь, я принимаю
+            <a href="../static/policy.html" th:href="@{../static/policy.html}">Политику конфиденциальности</a>
+            и
+            <a href="../static/policy.html" th:href="@{../static/terms.html}">Условия предоставления услуг</a>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

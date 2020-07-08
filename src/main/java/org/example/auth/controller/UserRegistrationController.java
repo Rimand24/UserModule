@@ -46,6 +46,7 @@ public class UserRegistrationController {
         boolean registrationDone = userRegistrationService.createUser(request);
 
         if (registrationDone) {
+            model.addAttribute("email", form.getEmail());
             return "registrationSuccess";
         } else {
             //model.addAllAttributes(response.getErrors()); //todo errors handling in registration html
@@ -60,6 +61,14 @@ public class UserRegistrationController {
             return "login";
         }
         return "registration";
+    }
+
+    @GetMapping("/resendActivationCode/{email}")
+    public String resendActivationCode(@PathVariable String email, Model model) {
+        userRegistrationService.resendActivationCode(email);
+        model.addAttribute("email", email);
+        model.addAttribute("resend", true);
+        return "registrationSuccess";
     }
 
 }
