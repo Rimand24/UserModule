@@ -1,7 +1,5 @@
 package org.example.auth.service.util;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
 public class TokenServiceException extends RuntimeException {
     public TokenServiceException() {
     }

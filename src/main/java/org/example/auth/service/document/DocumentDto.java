@@ -2,7 +2,6 @@ package org.example.auth.service.document;
 
 import com.sun.istack.Nullable;
 import lombok.Data;
-import org.example.auth.domain.User;
 import org.example.auth.service.user.UserDto;
 
 @Data

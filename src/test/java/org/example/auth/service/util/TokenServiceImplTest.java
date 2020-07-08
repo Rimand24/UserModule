@@ -23,8 +23,9 @@ class TokenServiceImplTest {
     private final String incorrectToken = "120456789";
 
     @InjectMocks
-    TokenServiceImpl tokenService = new TokenServiceImpl(
-            authExpirationTime, activationCodeExpirationTime, passwordResetExpirationTime, tokenSecret);
+    TokenServiceImpl tokenService;
+//    = new TokenServiceImpl(
+//            authExpirationTime, activationCodeExpirationTime, passwordResetExpirationTime, tokenSecret);
 
     @BeforeEach
     void init() {

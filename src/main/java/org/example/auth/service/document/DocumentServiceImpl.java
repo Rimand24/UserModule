@@ -39,7 +39,7 @@ public class DocumentServiceImpl implements DocumentService {
         MultipartFile multipartFile = request.getDocumentFile();
         String filename = multipartFile.getOriginalFilename();
         String docId = generator.generateUUID();
-        String resultFilename = docId + "." + filename;
+        String resultFilename = docId + "." + filename;//todo move rename logic to storage service
 
         storageService.save(multipartFile.getBytes(), resultFilename);
 

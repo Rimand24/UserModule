@@ -2,7 +2,7 @@ package org.example.auth.service.registration;
 
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
-import org.example.auth.service.mail.MailRequest;
+import org.example.auth.service.mail.Mail;
 import org.example.auth.service.mail.MailService;
 import org.example.auth.service.util.TokenService;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +55,7 @@ class UserRegistrationServiceImplTest {
         when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
         when(tokenService.generateEmailVerificationToken()).thenReturn("anyString");
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
-        doNothing().when(mailService).send(any(MailRequest.class));
+        doNothing().when(mailService).send(any(Mail.class));
 
         boolean created = registrationService.createUser(makeMockRegistrationRequest());
 

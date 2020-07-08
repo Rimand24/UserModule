@@ -6,7 +6,13 @@
 </head>
 <body>
 <div th:object="${document}">
+    <div th:text="*{name}">example.txt</div>
+    <div th:text="'Created by '*{createdBy.getUsername()}">username</div>
 document preview
+    WIP
+    https://poi.apache.org/download.html
+    https://github.com/mozilla/pdf.js
+<!--    iframe-->
 </div>
 
 </body>
