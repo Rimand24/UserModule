@@ -19,9 +19,6 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private DocumentRepo documentRepo;
 
-//    @Autowired
-//    ModelMapper mapper = new ModelMapper();
-
     @Autowired
     StorageService storageService;
 
@@ -37,16 +34,14 @@ public class DocumentServiceImpl implements DocumentService {
         }
 
         MultipartFile multipartFile = request.getDocumentFile();
-        String filename = multipartFile.getOriginalFilename();
+        String name = multipartFile.getOriginalFilename();
         String docId = generator.generateUUID();
-        String resultFilename = docId + "." + filename;//todo move rename logic to storage service
-
-        storageService.save(multipartFile.getBytes(), resultFilename);
+        String filename = storageService.save(multipartFile.getBytes(), name, docId);
 
         Document document = new Document();
-        document.setName(filename);
+        document.setName(name);
         document.setDocId(docId);
-        document.setFilename(resultFilename);
+        document.setFilename(filename);
         //todo add ContentType() to Document entity
 //        document.setContentType(file.getContentType());
         document.setCreatedBy(request.getCreatedBy());

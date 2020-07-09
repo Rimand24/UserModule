@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
-public class LocalSystemStorageService implements StorageService{
+public class LocalSystemStorageService implements StorageService {
 
     private final String uploadPath;
 
@@ -19,10 +19,11 @@ public class LocalSystemStorageService implements StorageService{
     }
 
     @Override
-    public boolean save(byte[] file, String filename) throws IOException {
+    public String save(byte[] file, String name, String docId) throws IOException {
+        String filename = docId + "." + name;
         Path path = Path.of(uploadPath + filename);
         Files.write(path, file);
-        return true;
+        return filename;
     }
 
     @Override
