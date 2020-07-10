@@ -56,7 +56,7 @@ class DocumentServiceImplTest {
     @SneakyThrows
     @Test
     void addDocument_success() {
-        when(storageService.save(any(byte[].class), anyString(), anyString())).thenReturn(anyString());
+        when(storageService.save(any(byte[].class), anyString(), anyString())).thenReturn(filename);
         when(generator.generateUUID()).thenReturn(docId);
         when(documentRepo.save(any(Document.class))).thenReturn(makeMockDocument());
 
