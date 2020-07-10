@@ -56,7 +56,7 @@ class DocumentServiceImplTest {
     @SneakyThrows
     @Test
     void addDocument_success() {
-        when(storageService.save(any(byte[].class), anyString())).thenReturn(true);
+        when(storageService.save(any(byte[].class), anyString(), anyString())).thenReturn(anyString());
         when(generator.generateUUID()).thenReturn(docId);
         when(documentRepo.save(any(Document.class))).thenReturn(makeMockDocument());
 
@@ -64,7 +64,7 @@ class DocumentServiceImplTest {
 
         assertEquals(makeMockDocumentDto(), result);
         verify(documentRepo).save(any(Document.class));
-        verify(storageService).save(any(byte[].class), anyString());
+        verify(storageService).save(any(byte[].class), anyString(), anyString());
     }
 
     @Test

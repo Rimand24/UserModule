@@ -1,5 +1,6 @@
 package org.example.auth.controller;
 
+import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.service.document.DocumentDto;
 import org.example.auth.service.document.DocumentCreationRequestDto;
@@ -39,8 +40,12 @@ public class DocumentController {
 
     @GetMapping("/doc/{id}")
     public String getDocumentByPathVariable(@PathVariable String id, Model model) {
-        DocumentDto document = documentService.getDocumentById(id);
+        DocumentDto document = documentService.getDocumentFileById(id);
         model.addAttribute("document", document);
+  //      ByteArrayResource resource = new ByteArrayResource(document.getRawFile());
+//        model.addAttribute("file", resource);
+
+
         return "document";
     }
 
@@ -50,11 +55,9 @@ public class DocumentController {
 
         ByteArrayResource resource = new ByteArrayResource(documentDto.getRawFile());
 
-        //String mimeType = Files.probeContentType(path);
-        //MediaType mediaType = MediaType.valueOf(mimeType);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + documentDto.getName())
-          //      .contentType(mediaType)
+                      .contentType(MediaType.parseMediaType(documentDto.getMediaType()))
                 .contentLength(resource.contentLength())
                 .body(resource);
     }

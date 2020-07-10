@@ -7,12 +7,18 @@ import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.user.UserDto;
 import org.example.auth.service.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
+import java.security.Timestamp;
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -42,13 +48,12 @@ public class DocumentServiceImpl implements DocumentService {
         document.setName(name);
         document.setDocId(docId);
         document.setFilename(filename);
-        //todo add ContentType() to Document entity
-//        document.setContentType(file.getContentType());
+        document.setMediaType(multipartFile.getContentType());
+        document.setSize(multipartFile.getSize());
         document.setCreatedBy(request.getCreatedBy());
+        document.setCreatedAt(LocalDateTime.now());
         Document saved = documentRepo.save(document);
 
-        //fixme: model mapper exception (failed to convert org.hibernate.collection.internal.PersistentSet to java.util.Set.)
-        //return mapper.map(saved, DocumentDto.class);
         return docToDtoMapping(saved);
     }
 
@@ -61,7 +66,7 @@ public class DocumentServiceImpl implements DocumentService {
     public DocumentDto getDocumentById(String docId) {
         Document document = documentRepo.findByDocId(docId);
         if (StringUtils.isEmpty(document)) {
-            throw new DocumentServiceException("document not found");  //fixme make custom exception
+            throw new DocumentServiceException("document not found (id:" + docId + ")");
         }
         return docToDtoMapping(document);
     }
@@ -74,21 +79,16 @@ public class DocumentServiceImpl implements DocumentService {
 
     @SneakyThrows
     @Override
-    public DocumentDto getDocumentFileById(String id) {
-        Document document = documentRepo.findByDocId(id);
-        if (document == null) {
-            throw new DocumentServiceException("document not found (id:" + id + ")");
-        }
-
-        DocumentDto dto = docToDtoMapping(document);
+    public DocumentDto getDocumentFileById(String docId) {
+        DocumentDto document = getDocumentById(docId);
         byte[] load = storageService.load(document.getFilename());
-        dto.setRawFile(load);
-        return dto;
+        document.setRawFile(load);
+        return document;
     }
 
     @Override
-    public boolean deleteDocument(String id) {
-        Document document = documentRepo.findByDocId(id);
+    public boolean deleteDocument(String docId) {
+        Document document = documentRepo.findByDocId(docId);
         documentRepo.delete(document);
         storageService.delete(document.getFilename());
         return true;
@@ -96,12 +96,10 @@ public class DocumentServiceImpl implements DocumentService {
 
     private List<DocumentDto> getDocumentDtos(List<Document> documents) {
         List<DocumentDto> result = new ArrayList<>();
-
         for (Document doc : documents) {
             DocumentDto dto = docToDtoMapping(doc);
             result.add(dto);
         }
-
         return result;
     }
 
@@ -111,6 +109,9 @@ public class DocumentServiceImpl implements DocumentService {
         dto.setName(doc.getName());
         dto.setDocId(doc.getDocId());
         dto.setFilename(doc.getFilename());
+        dto.setMediaType(doc.getMediaType());
+        dto.setCreatedAt(doc.getCreatedAt());
+        dto.setSize(doc.getSize());
         UserDto user = new UserDto() {{
             setUsername(doc.getCreatedBy().getUsername());
             setEmail(doc.getCreatedBy().getEmail());

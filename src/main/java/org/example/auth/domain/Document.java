@@ -4,6 +4,9 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -21,9 +24,15 @@ public class Document implements Serializable {
     private String docId;
     @Column(nullable = false)
     private String filename;
+    @Column(nullable = false)
+    private String mediaType;
+    private long size;
+
 
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
     private User createdBy;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
 }

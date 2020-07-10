@@ -9,26 +9,38 @@
 <table class="documentList" border="2">
     <thead>
     <tr>
-        <th>Name</th>
+        <th>file type</th>
+        <th>File name</th>
+        <th>Upload Date</th>
+        <th>Upload Time</th>
+        <th>size</th>
         <th>Author</th>
-        <th>Action</th>
+        <th>Open</th>
+        <th>Download</th>
+        <th>Delete</th>
+        <!--    Просмотры:25501-->
+        <!--    Скачана:2307 раз-->
     </tr>
     </thead>
     <tbody th:each="document : ${documentList}">
     <tr th:object="${document}">
+        <!--     todo   picture depends on mediaType -->
+        <td th:text="*{mediaType}">file type</td>
         <td th:text="*{name}">695462.pdf</td>
+        <td th:text="*{createdAt.toLocalDate()}">Upload Date</td>
+        <!--     todo    format time to delete nanos -->
+        <td th:text="*{createdAt.toLocalTime()}">Upload Time</td>
+        <td th:text="*{size}">size</td>
         <td th:text="*{createdBy.getUsername()}">Jeb</td>
-        <td>
-            <a href="../templates/document.html" th:href="@{/doc/{id}(id=*{docId})}">Open</a>
-            <p><a href="#" th:href="@{/doc/download/{id}(id=*{docId})}" download>Download</a>
-            <a href="../templates/documentList.html" th:href="@{/doc/delete/{id}(id=*{docId})}">Delete</a>
-        </td>
+        <td><a href="../templates/document.html" th:href="@{/doc/{id}(id=*{docId})}">Open</a></td>
+        <td><a href="#" th:href="@{/doc/download/{id}(id=*{docId})}" download>Download</a></td>
+        <td><a href="../templates/documentList.html" th:href="@{/doc/delete/{id}(id=*{docId})}">Delete</a></td>
     </tr>
     </tbody>
 </table>
 
-<form action="/doc/add" method="post" enctype="multipart/form-data" >
-<p>Upload file (max size 300mb)</p>
+<form action="/doc/add" method="post" enctype="multipart/form-data">
+    <p>Upload file (max size 300mb)</p>
     <div class="form-group">
         <div class="custom-file">
             <input type="file" name="file" id="customFile" placeholder="choose">
