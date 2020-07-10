@@ -1,6 +1,7 @@
 package org.example.auth.service.util;
 
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -9,14 +10,25 @@ import java.util.Date;
 @Service
 public class TokenServiceImpl implements TokenService {
 
-    @Value("${security.expiration-time.auth:86400000}")
+    //@Value("${security.expiration-time.auth:86400000}")
     public long authExpirationTime;
-    @Value("${security.expiration-time.activation-code:86400000}")
+    //@Value("${security.expiration-time.activation-code:86400000}")
     public long activationCodeExpirationTime;
-    @Value("${security.expiration-time.password-reset:86400000}")
+    //@Value("${security.expiration-time.password-reset:86400000}")
     public long passwordResetExpirationTime;
-    @Value("${security.tokenSecret}")
+   // @Value("${security.tokenSecret}")
     public String tokenSecret;
+
+    @Autowired
+    public TokenServiceImpl(@Value("${security.expiration-time.auth:86400000}") long authExpirationTime,
+                            @Value("${security.expiration-time.activation-code:86400000}") long activationCodeExpirationTime,
+                            @Value("${security.expiration-time.password-reset:86400000}") long passwordResetExpirationTime,
+                            @Value("${security.tokenSecret:secret}") String tokenSecret) {
+        this.authExpirationTime = authExpirationTime;
+        this.activationCodeExpirationTime = activationCodeExpirationTime;
+        this.passwordResetExpirationTime = passwordResetExpirationTime;
+        this.tokenSecret = tokenSecret;
+    }
 
     @Override
     public String generateEmailVerificationToken() {
