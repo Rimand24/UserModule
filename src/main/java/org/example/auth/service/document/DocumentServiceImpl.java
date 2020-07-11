@@ -5,6 +5,7 @@ import org.example.auth.domain.Document;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.user.UserDto;
+import org.example.auth.service.util.MapperUtils;
 import org.example.auth.service.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,10 +27,13 @@ public class DocumentServiceImpl implements DocumentService {
     private DocumentRepo documentRepo;
 
     @Autowired
-    StorageService storageService;
+    private StorageService storageService;
 
     @Autowired
     private UUIDGenerator generator;
+
+    @Autowired
+    private MapperUtils mapper;
 
     @SneakyThrows
     @Override
@@ -54,12 +58,12 @@ public class DocumentServiceImpl implements DocumentService {
         document.setCreatedAt(LocalDateTime.now());
         Document saved = documentRepo.save(document);
 
-        return docToDtoMapping(saved);
+        return mapper.docToDtoMapping(saved);
     }
 
     public List<DocumentDto> getAllDocuments() {
         List<Document> documents = documentRepo.findAll();
-        return getDocumentDtos(documents);
+        return mapper.getDocumentDtos(documents);
     }
 
     @Override
@@ -68,13 +72,13 @@ public class DocumentServiceImpl implements DocumentService {
         if (StringUtils.isEmpty(document)) {
             throw new DocumentServiceException("document not found (id:" + docId + ")");
         }
-        return docToDtoMapping(document);
+        return mapper.docToDtoMapping(document);
     }
 
     @Override
     public List<DocumentDto> findDocumentsByName(String name) {
         List<Document> documents = documentRepo.findByNameContains(name);
-        return getDocumentDtos(documents);
+        return mapper.getDocumentDtos(documents);
     }
 
     @SneakyThrows
@@ -94,30 +98,5 @@ public class DocumentServiceImpl implements DocumentService {
         return true;
     }
 
-    private List<DocumentDto> getDocumentDtos(List<Document> documents) {
-        List<DocumentDto> result = new ArrayList<>();
-        for (Document doc : documents) {
-            DocumentDto dto = docToDtoMapping(doc);
-            result.add(dto);
-        }
-        return result;
-    }
-
-    //fixme change method to modelmapper or make generic transformer
-    private DocumentDto docToDtoMapping(Document doc) {
-        DocumentDto dto = new DocumentDto();
-        dto.setName(doc.getName());
-        dto.setDocId(doc.getDocId());
-        dto.setFilename(doc.getFilename());
-        dto.setMediaType(doc.getMediaType());
-        dto.setCreatedAt(doc.getCreatedAt());
-        dto.setSize(doc.getSize());
-        UserDto user = new UserDto() {{
-            setUsername(doc.getCreatedBy().getUsername());
-            setEmail(doc.getCreatedBy().getEmail());
-        }};
-        dto.setCreatedBy(user);
-        return dto;
-    }
 }
 
