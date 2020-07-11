@@ -6,7 +6,7 @@ import org.example.auth.domain.User;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.user.UserDto;
-import org.example.auth.service.util.UUIDGenerator;
+import org.example.auth.service.util.RandomStringGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class DocumentServiceImplTest {
     StorageService storageService;
 
     @Mock
-    UUIDGenerator generator;
+    RandomStringGenerator generator;
 
     private static final String docId = "45f45s78g784ha545Gd51";
     private static final String filename = "45f45s78g784ha545Gd51.document.txt";

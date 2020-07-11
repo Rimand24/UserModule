@@ -4,22 +4,15 @@ import lombok.SneakyThrows;
 import org.example.auth.domain.Document;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;
-import org.example.auth.service.user.UserDto;
 import org.example.auth.service.util.MapperUtils;
-import org.example.auth.service.util.UUIDGenerator;
+import org.example.auth.service.util.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-import java.security.Timestamp;
-import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -30,7 +23,7 @@ public class DocumentServiceImpl implements DocumentService {
     private StorageService storageService;
 
     @Autowired
-    private UUIDGenerator generator;
+    private RandomStringGenerator generator;
 
     @Autowired
     private MapperUtils mapper;

@@ -1,7 +1,9 @@
 package org.example.auth.service.util;
 
 public class TokenServiceException extends RuntimeException {
+
     public TokenServiceException() {
+        super();
     }
 
     public TokenServiceException(String message) {

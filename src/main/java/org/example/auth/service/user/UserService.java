@@ -6,23 +6,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    UserDto getUser(String username);
+    UserDto getUserByUsername(String username);
+
+    UserDto getUserByEmail(String email);
 
     List<UserDto> findAll();
 
 
-//    UserDetails updatePassword(User user, String newPassword);
-//    boolean resetPassword(String token);
+//    UserDto updateUserInfo(String userId, UserDto userDto); //fixme dto consist userId, 1param is rudendant
 
-//    UserDto getUserByEmail(String email);
-//    UserDto getUserByUserId(String userId);
-//
-//    UserDto updateUser(String userId, UserDto userDto); //fixme dto consist userId, 1param is rudendant
-//
 //    List<UserDto> getUsers(int page, int limit);
-//
-//    boolean sendResetPasswordEmail(String email);
-//
-//    boolean changePassword(UserDto userDto);
 
 }

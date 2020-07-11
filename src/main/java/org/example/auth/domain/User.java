@@ -47,4 +47,5 @@ public class User implements UserDetails {
     private boolean credentialsNonExpired = true;
     private boolean enabled;
     private String activationCode;
+    private String passwordResetCode;
 }

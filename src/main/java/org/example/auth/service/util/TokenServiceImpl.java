@@ -41,6 +41,11 @@ public class TokenServiceImpl implements TokenService {
         return true;
     }
 
+    @Override
+    public String generatePasswordResetToken() {
+        return createJWT(passwordResetExpirationTime);
+    }
+
     private String createJWT(long expirationTime) {
         String token = Jwts.builder()
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))

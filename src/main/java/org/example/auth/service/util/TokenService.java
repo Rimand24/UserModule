@@ -4,4 +4,7 @@ public interface TokenService {
     String generateEmailVerificationToken();
 
     boolean verifyToken(String token);
+
+    String generatePasswordResetToken();
 }
+

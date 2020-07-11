@@ -9,9 +9,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.Utilities;
+import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +27,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     MapperUtils mapper;
 
+    @Autowired
+    PasswordEncoder encoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,11 +43,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUser(String username) {
+    public UserDto getUserByUsername(String username) {
         User user = userRepo.findByUsername(username);
-
         if (user == null) {
             throw new UsernameNotFoundException("user " + username + " not found");
+        }
+
+        return mapper.mapUser(user);
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("email " + email + " not found");
         }
 
         return mapper.mapUser(user);

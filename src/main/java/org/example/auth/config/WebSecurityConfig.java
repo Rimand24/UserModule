@@ -34,13 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/registration", "/activate/*", "/static/**").permitAll()
+                .antMatchers("/registration", "/activate/*", "/static/**", "/", "/forgetPassword", "/resetPassword/*").permitAll()
                 .antMatchers("/h2-console/**").permitAll() //fixme H2 database config
-//                .antMatchers("/admin").hasRole("ADMIN") //todo admin page
+                .antMatchers("/admin").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login").permitAll()
                 //.and().formLogin(form -> form.loginPage("/login").permitAll())
-                .and().logout().logoutSuccessUrl("/login")
+                .and().logout().logoutSuccessUrl("/")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 //                .and().rememberMe() //todo https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/#servlet-rememberme
                 .invalidateHttpSession(true)//fixme
