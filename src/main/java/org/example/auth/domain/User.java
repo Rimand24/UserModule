@@ -4,6 +4,10 @@ import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -17,21 +21,29 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String username;
-    @Column(nullable = false)
+//    @Size(min = 3, max = 32) //fixme 3-32
     private String password;
     @Column(nullable = false)
+//    @Size(min = 3, max = 32)
+    private String username;
+    @Column(nullable = false)
+    @Email
     private String email;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "users_id"))
     private Set<Role> authorities;
 
+   // @NotNull
+    private LocalDate registrationDate;
+
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private Set<Document> createdDocuments;
 
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
+    private String accountLockerName;
+    private String accountLockReason;
     private boolean credentialsNonExpired = true;
     private boolean enabled;
     private String activationCode;

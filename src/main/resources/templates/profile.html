@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Title doc list</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- CSS and Bootstrap -->
+    <link rel="icon" href="../static/assets/img/favicon.ico" th:href="@{/static/assets/img/favicon.ico}"/>
+    <link rel="stylesheet" href="../static/assets/bootstrap/bootstrap.min.css"
+          th:href="@{/static/assets/bootstrap/bootstrap.css}"/>
+    <link rel="stylesheet" href="../static/assets/css/style.css" th:href="@{/static/assets/css/style.css}"/>
+</head>
+
+<body>
+
+<header>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="../templates/adminPage.html" th:href="@{/admin}">Admin Page</a>
+            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/doc/all}">Document List</a>
+            <a class="p-2 text-dark" href="../templates/profile.html" th:href="@{/user}">Profile</a>
+        </nav>
+        <div th:if="authenticated">
+            <a class="btn btn-outline-primary" href="#" th:href="@{/logout}">Log Out</a>
+        </div>
+        <div th:if="!authenticated">
+            <a class="btn btn-outline-primary" href="#" th:href="@{/login}">Log In</a>
+        </div>
+    </div>
+</header>
+
+
+<div>
+    <p>Username: <b th:text="${user.username}">Gosling</b></p>
+    <p>Email: <b th:text="${user.email}">email@mail.com</b></p>
+    <p>Roles: <b th:text="${user.roles}">USER</b></p>
+
+    <p><a href="/user/changeEmail">Change email</a></p>
+    <p><a href="/user/changePassword">Change password</a></p>
+</div>
+
+
+<div sec:authorize="hasRole('USER')">Text visible to user.</div>
+<div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+
+
+</body>
+</html>
