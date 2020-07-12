@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 public class MapperUtils {
 
-    //todo maper utils
     public List<UserDto> mapUserList(List<User> users) {
         List<UserDto> dtoList = new ArrayList<>();
         for (User u : users) {
@@ -22,7 +21,6 @@ public class MapperUtils {
         return dtoList;
     }
 
-    //todo maper utils
     public UserDto mapUser(User user) {
         UserDto dto = new UserDto();
         dto.setUsername(user.getUsername());
@@ -34,34 +32,37 @@ public class MapperUtils {
         dto.setBlockReason(user.getAccountLockReason());
 
         List<DocumentDto> docs = new ArrayList<>();
-//        for (Document d : user.getCreatedDocuments()) {
-//            docs.add(new DocumentDto() {{
-//                         setName(d.getName());
-//                         setDocId(d.getDocId());
-//                         setSize(d.getSize());
-//                         setMediaType(d.getMediaType());
-//                         setCreatedAt(d.getCreatedAt());
-//                         setCreatedBy(new UserDto());//dto);
-//                         setFilename(d.getFilename());
-//                     }}
-//            );
-//        }
+        System.out.println(user.getCreatedDocuments());
+
+        for (Document d : user.getCreatedDocuments()) {
+            docs.add(new DocumentDto()
+            {{
+                         setName(d.getName());
+                         setDocId(d.getDocId());
+                         setSize(d.getSize());
+                         setMediaType(d.getMediaType());
+                         setCreatedAt(d.getCreatedAt());
+                         setCreatedBy(new UserDto());//dto);
+                         setFilename(d.getFilename());
+                     }}
+            );
+        }
         dto.setCreatedDocuments(docs);
 
         return dto;
     }
 
-    public List<DocumentDto> getDocumentDtos(List<Document> documents) {
+    public List<DocumentDto> mapDocumentList(List<Document> documents) {
         List<DocumentDto> result = new ArrayList<>();
         for (Document doc : documents) {
-            DocumentDto dto = docToDtoMapping(doc);
+            DocumentDto dto = mapDocument(doc);
             result.add(dto);
         }
         return result;
     }
 
     //fixme change method to modelmapper or make generic transformer
-    public DocumentDto docToDtoMapping(Document doc) {
+    public DocumentDto mapDocument(Document doc) {
         DocumentDto dto = new DocumentDto();
         dto.setName(doc.getName());
         dto.setDocId(doc.getDocId());

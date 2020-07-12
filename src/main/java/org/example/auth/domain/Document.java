@@ -1,6 +1,8 @@
 package org.example.auth.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "document")
 public class Document implements Serializable {

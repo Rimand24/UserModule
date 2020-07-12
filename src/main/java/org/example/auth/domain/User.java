@@ -1,6 +1,8 @@
 package org.example.auth.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -12,7 +14,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
