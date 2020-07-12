@@ -39,10 +39,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Autowired
     RandomStringGenerator generator;
 
-    @Value("server.address")
+    @Value("${server.address}")
     private String serverAddress;
 
-    @Value("server.port")
+    @Value("${server.port}")
     private String serverPort;
 
     @Override
@@ -86,8 +86,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public boolean activateUser(String activationCode) { //todo not null
-
+    public boolean activateUser(String activationCode) {
         User user = userRepo.findByActivationCode(activationCode);
         if (user != null) {
             if (tokenService.verifyToken(activationCode)) {
@@ -152,7 +151,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         User user = userRepo.findByPasswordResetCode(code);
         if (user != null) {
             if (tokenService.verifyToken(code)) {
-
                 String newPassword = generator.generatePassword();
                 user.setPassword(encoder.encode(newPassword));
                 user.setPasswordResetCode(null);
@@ -164,24 +162,23 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         return false;
     }
 
-
     private void sendActivationCode(String username, String email, String activationCode) {
         String message = "Hello, " + username + "! Welcome to our site, please follow the link bellow to finish the registration \n\r" +
-                "http://" + serverAddress + serverPort + "/activate/" + activationCode;
+                "http://" + serverAddress +":"+ serverPort + "/activate/" + activationCode;
 
         sendMail(email, "Welcome", message);
     }
 
     private void sendResetPasswordCode(String username, String email, String code) {
-        String message = username+", follow the link bellow to reset password \n\r " +
-                "http://" + serverAddress + serverPort + "/resetPassword/" + code +
+        String message = username + ", follow the link bellow to reset password \n\r " +
+                "http://" + serverAddress +":"+ serverPort + "/resetPassword/" + code +
                 "if you dont sent reset password request, contact with support";
 
         sendMail(email, "Password reset", message);
     }
 
     private void sendNewPassword(String username, String email, String password) {
-        String message = username+", your password had been successfully changed \n\r " +
+        String message = username + ", your password had been successfully changed \n\r " +
                 "Your new password: " + password;
 
         sendMail(email, "Password changed", message);
