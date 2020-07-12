@@ -3,6 +3,8 @@ package org.example.auth.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,21 +20,20 @@ public class Document implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
     private String name;
-    @Column(nullable = false)
+    @NotBlank
     private String docId;
-    @Column(nullable = false)
+    @NotBlank
     private String filename;
-    @Column(nullable = false)
+    @NotBlank
     private String mediaType;
     private long size;
-
+    @NotNull
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
     private User createdBy;
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
 
 }

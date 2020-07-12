@@ -5,9 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,26 +21,23 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(nullable = false)
-//    @Size(min = 3, max = 32) //fixme 3-32
+    @NotBlank
     private String password;
-    @Column(nullable = false)
-//    @Size(min = 3, max = 32)
+    @NotBlank
     private String username;
-    @Column(nullable = false)
+    @NotBlank
     @Email
     private String email;
+    @NotNull
+    private LocalDate registrationDate;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "users_id"))
     private Set<Role> authorities;
 
-   // @NotNull
-    private LocalDate registrationDate;
-
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-    private Set<Document> createdDocuments;
+    private List<Document> createdDocuments;
 
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
