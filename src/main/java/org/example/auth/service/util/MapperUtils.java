@@ -32,18 +32,18 @@ public class MapperUtils {
         dto.setBlockReason(user.getAccountLockReason());
 
         List<DocumentDto> docs = new ArrayList<>();
-        System.out.println(user.getCreatedDocuments());
 
         for (Document d : user.getCreatedDocuments()) {
-            docs.add(new DocumentDto()
-            {{
+            docs.add(new DocumentDto() {{
                          setName(d.getName());
                          setDocId(d.getDocId());
                          setSize(d.getSize());
                          setMediaType(d.getMediaType());
                          setCreatedAt(d.getCreatedAt());
-                         setCreatedBy(new UserDto());//dto);
                          setFilename(d.getFilename());
+                         setCreatedBy(new UserDto() {{
+                             setUsername(user.getUsername());
+                         }});
                      }}
             );
         }

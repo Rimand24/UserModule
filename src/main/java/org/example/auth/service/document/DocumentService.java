@@ -9,11 +9,15 @@ public interface DocumentService {
 
     DocumentDto getDocumentById(String id);
 
-    List<DocumentDto> findDocumentsByName(String name);
+    List<DocumentDto> searchDocumentsByName(String name);
 
     boolean deleteDocument(String id);
 
+    List<DocumentDto> findDocumentsByUser(String username);
+
     DocumentDto getDocumentFileById(String id);
+
+
 
 }
 

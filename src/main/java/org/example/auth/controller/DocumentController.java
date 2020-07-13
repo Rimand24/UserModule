@@ -1,6 +1,5 @@
 package org.example.auth.controller;
 
-import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.service.document.DocumentDto;
 import org.example.auth.service.document.DocumentCreationRequestDto;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 @Controller
@@ -31,7 +28,25 @@ public class DocumentController {
     @Autowired
     DocumentService documentService;
 
-    @GetMapping("/doc/all")
+    @PostMapping("/doc/add")
+    public String addDocument(@AuthenticationPrincipal User user,
+                              Model model,
+                              // BindingResult bindingResult, //fixme BindingResult ????
+                              @RequestParam("file") MultipartFile file) {
+        if (file != null && !file.getOriginalFilename().isEmpty()) {
+            DocumentCreationRequestDto request = new DocumentCreationRequestDto();
+            request.setCreatedBy(user);
+            request.setDocumentFile(file);
+            DocumentDto document = documentService.addDocument(request);
+
+        } else {
+            model.addAttribute("error", "fileUploadFail");//todo exception
+        }
+
+        return "redirect:/docs";
+    }
+
+    @GetMapping("/docs")
     public String getAllDocuments(Model model) {
         List<DocumentDto> list = documentService.getAllDocuments();
         model.addAttribute("documentList", list);
@@ -63,28 +78,11 @@ public class DocumentController {
     }
 
     //fixme search not used yet
-    @PostMapping("/doc/find/")
-    public String findDocumentsByName(@RequestParam String name, Model model) {
-        List<DocumentDto> documents = documentService.findDocumentsByName(name);
+    @PostMapping("/doc/search")
+    public String searchDocumentsByName(@RequestParam String name, Model model) {
+        List<DocumentDto> documents = documentService.searchDocumentsByName(name);
         model.addAttribute("documentList", documents);
         return "documentList";
-    }
-
-    @PostMapping("/doc/add")
-    public String addDocument(@AuthenticationPrincipal User user,
-                              Model model,
-                              // BindingResult bindingResult, //fixme BindingResult ????
-                              @RequestParam("file") MultipartFile file) {
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
-            DocumentCreationRequestDto request = new DocumentCreationRequestDto();
-            request.setCreatedBy(user);
-            request.setDocumentFile(file);
-            DocumentDto document = documentService.addDocument(request);
-
-        } else {
-            model.addAttribute("error", "filenotfound");//todo exception
-        }
-        return "redirect:/doc/all";
     }
 
     @GetMapping("/doc/delete/{id}")
@@ -93,7 +91,7 @@ public class DocumentController {
         if (!deleted) {
             model.addAttribute("error", "deleteFailed");
         }
-        return "redirect:/doc/all";
+        return "redirect:/docs";
     }
 
 }

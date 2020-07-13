@@ -5,7 +5,7 @@ import org.example.auth.domain.Document;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.util.MapperUtils;
-import org.example.auth.service.util.RandomStringGenerator;
+import org.example.auth.service.util.RandomGeneratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,7 +23,7 @@ public class DocumentServiceImpl implements DocumentService {
     private StorageService storageService;
 
     @Autowired
-    private RandomStringGenerator generator;
+    private RandomGeneratorUtils generator;
 
     @Autowired
     private MapperUtils mapper;
@@ -51,12 +51,12 @@ public class DocumentServiceImpl implements DocumentService {
         document.setCreatedAt(LocalDateTime.now());
         Document saved = documentRepo.save(document);
 
-        return mapper.docToDtoMapping(saved);
+        return mapper.mapDocument(saved);
     }
 
     public List<DocumentDto> getAllDocuments() {
         List<Document> documents = documentRepo.findAll();
-        return mapper.getDocumentDtos(documents);
+        return mapper.mapDocumentList(documents);
     }
 
     @Override
@@ -65,14 +65,22 @@ public class DocumentServiceImpl implements DocumentService {
         if (StringUtils.isEmpty(document)) {
             throw new DocumentServiceException("document not found (id:" + docId + ")");
         }
-        return mapper.docToDtoMapping(document);
+        return mapper.mapDocument(document);
     }
 
     @Override
-    public List<DocumentDto> findDocumentsByName(String name) {
+    public List<DocumentDto> searchDocumentsByName(String name) {
         List<Document> documents = documentRepo.findByNameContains(name);
-        return mapper.getDocumentDtos(documents);
+        return mapper.mapDocumentList(documents);
     }
+
+    @Override
+    public List<DocumentDto> findDocumentsByUser(String username) {
+        List<Document> documents = documentRepo.findAllByCreatedBy_Username(username);
+        return mapper.mapDocumentList(documents);
+    }
+
+
 
     @SneakyThrows
     @Override
