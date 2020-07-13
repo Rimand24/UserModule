@@ -12,10 +12,4 @@ public interface UserRegistrationService {
 
     boolean resendActivationCode(String email);
 
-    boolean changePassword(ChangePasswordRequest request);
-
-    boolean sendResetPasswordCode(String username);
-
-    boolean resetPassword(String code);
-
 }

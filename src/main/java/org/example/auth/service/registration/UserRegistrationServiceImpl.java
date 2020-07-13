@@ -5,19 +5,14 @@ import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
 import org.example.auth.service.mail.MailService;
 import org.example.auth.service.mail.Mail;
-import org.example.auth.service.user.ChangePasswordRequest;
-import org.example.auth.service.user.UserServiceException;
-import org.example.auth.service.util.RandomStringGenerator;
+import org.example.auth.service.util.RandomGeneratorUtils;
 import org.example.auth.service.util.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.validation.constraints.Email;
 import java.time.LocalDate;
 import java.util.HashSet;
 
@@ -37,7 +32,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     TokenService tokenService;
 
     @Autowired
-    RandomStringGenerator generator;
+    RandomGeneratorUtils generator;
 
     @Value("${server.address}")
     private String serverAddress;
@@ -118,49 +113,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         return true;
     }
 
-    @Override
-    public boolean changePassword(ChangePasswordRequest request) {
-        User user = userRepo.findByUsername(request.getUsername());
-        if (user == null) {
-            throw new UsernameNotFoundException("user " + request.getUsername() + " not found");
-        }
-        if (!user.getPassword().equals(encoder.encode(request.getOldPassword()))) {
-            throw new UserServiceException("old password incorrect");
-        }
 
-        user.setPassword(encoder.encode(request.getPassword()));
-        userRepo.save(user);
-        return true;
-    }
-
-    @Override
-    public boolean sendResetPasswordCode(String username) {
-        User user = userRepo.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("user " + username + " not found");
-        }
-        String code = tokenService.generatePasswordResetToken();
-        user.setPasswordResetCode(code);
-        String email = user.getEmail();
-        sendResetPasswordCode(username, email, code);
-        return false;
-    }
-
-    @Override
-    public boolean resetPassword(String code) {
-        User user = userRepo.findByPasswordResetCode(code);
-        if (user != null) {
-            if (tokenService.verifyToken(code)) {
-                String newPassword = generator.generatePassword();
-                user.setPassword(encoder.encode(newPassword));
-                user.setPasswordResetCode(null);
-                sendNewPassword(user.getUsername(), user.getEmail(), newPassword);
-                userRepo.save(user);
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void sendActivationCode(String username, String email, String activationCode) {
         String message = "Hello, " + username + "! Welcome to our site, please follow the link bellow to finish the registration \n\r" +
@@ -169,20 +122,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         sendMail(email, "Welcome", message);
     }
 
-    private void sendResetPasswordCode(String username, String email, String code) {
-        String message = username + ", follow the link bellow to reset password \n\r " +
-                "http://" + serverAddress +":"+ serverPort + "/resetPassword/" + code +
-                "if you dont sent reset password request, contact with support";
 
-        sendMail(email, "Password reset", message);
-    }
-
-    private void sendNewPassword(String username, String email, String password) {
-        String message = username + ", your password had been successfully changed \n\r " +
-                "Your new password: " + password;
-
-        sendMail(email, "Password changed", message);
-    }
 
     private void sendMail(String email, String subject, String message) {
         Mail mail = new Mail() {{

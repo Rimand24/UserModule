@@ -12,7 +12,18 @@ public interface UserService extends UserDetailsService {
 
     List<UserDto> findAll();
 
+    List<UserDto> findAllNotBlocked();
 
+    List<UserDto> findAllBlocked();
+
+    List<UserDto> searchUsersByName(String name);
+
+
+    boolean changePassword(ChangePasswordRequest request);
+
+    boolean sendResetPasswordCode(String username);
+
+    boolean resetPassword(String code);
 //    UserDto updateUserInfo(String userId, UserDto userDto); //fixme dto consist userId, 1param is rudendant
 
 //    List<UserDto> getUsers(int page, int limit);

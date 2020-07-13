@@ -58,7 +58,7 @@ public class UserRegistrationController {
         }
     }
 
-    @GetMapping("/activate/{activationCode}")
+    @GetMapping("/activate/{activationCode:.+}")
     public String activateUser(@PathVariable String activationCode) {
         boolean activated = userRegistrationService.activateUser(activationCode);
         if (activated) return "login";
@@ -74,41 +74,5 @@ public class UserRegistrationController {
         return "registrationSuccess";
     }
 
-    @GetMapping("/changePassword")
-    public String getChangePassword(Model model) {
-        return "changePassword";
-    }
-
-    @PostMapping("/changePassword")
-    public String postChangePassword(@AuthenticationPrincipal User user, PasswordChangeForm passwordChangeForm, Model model) {
-        if (!passwordChangeForm.getPassword().equals(passwordChangeForm.getPassword2())) {
-            System.out.println("pass does not match");//fixme
-            return "redirect:/changePassword";
-        }
-
-        ChangePasswordRequest request = new ChangePasswordRequest(user.getUsername(), passwordChangeForm.getOldPassword(), passwordChangeForm.getPassword());
-        userRegistrationService.changePassword(request);
-        return "login";
-    }
-
-    @GetMapping("/forgetPassword")
-    public String getForgetPassword() {
-        return "forgetPassword";
-    }
-
-    @PostMapping("/forgetPassword")
-    public String postForgetPassword(String username, Model model) {
-        userRegistrationService.sendResetPasswordCode(username);
-        model.addAttribute("message", "reset password code sent, check email");
-        return "messageSentPage";
-    }
-
-    @GetMapping("/resetPassword/{code}")
-    public String resetPassword(@PathVariable String code, Model model) {
-        userRegistrationService.resetPassword(code);
-
-        model.addAttribute("message", "password changed, check email");
-        return "messageSentPage";
-    }
 
 }
