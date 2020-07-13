@@ -38,11 +38,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll() //fixme H2 database config
                 .antMatchers("/admin").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
+                .and().rememberMe()
                 .and().formLogin().loginPage("/login").permitAll()
-                //.and().formLogin(form -> form.loginPage("/login").permitAll())
                 .and().logout().logoutSuccessUrl("/")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                //                .and().rememberMe() //todo https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/#servlet-rememberme
                 .invalidateHttpSession(true)//fixme
                 .clearAuthentication(true)//fixme
 

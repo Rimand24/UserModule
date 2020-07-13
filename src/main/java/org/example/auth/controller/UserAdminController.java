@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
+
 @Controller
 public class UserAdminController {
 
@@ -25,8 +26,7 @@ public class UserAdminController {
 
 
     //fixme return dashboard instead of userlist
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/admin")
     public String getAdminPage(Model model){
         List<UserDto> list = userService.findAll();
@@ -34,6 +34,7 @@ public class UserAdminController {
         return "adminPage";
     }
 
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/admin/users")
     public String getUserList(Model model){
         List<UserDto> list = userService.findAll();

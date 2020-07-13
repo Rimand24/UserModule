@@ -1,8 +1,11 @@
 package org.example.auth.service.admin;
 
+import org.example.auth.domain.Document;
 import org.example.auth.domain.User;
+import org.example.auth.repo.DocumentRepo;
 import org.example.auth.repo.UserRepo;
 import org.example.auth.service.admin.UserAdminService;
+import org.example.auth.service.document.DocumentService;
 import org.example.auth.service.user.UserDto;
 import org.example.auth.service.util.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +21,11 @@ public class UserAdminServiceImpl implements UserAdminService {
     UserRepo userRepo;
 
     @Autowired
+    DocumentService documentService;
+
+    @Autowired
     MapperUtils mapper;
 
-    //todo admin service?
     @Override
     public List<UserDto> findAllBlocked() {
         List<User> all = userRepo.findAllByAccountNonLockedFalse();
@@ -60,9 +65,14 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Override
     public boolean deleteUser(String username) {
         User user = userRepo.findByUsername(username);
+        if (user == null) throw new UsernameNotFoundException("user " + username + " not found");
 
-        if (user == null) {
-            throw new UsernameNotFoundException("user " + username + " not found");
+
+        List<Document> docs = user.getCreatedDocuments();
+        if (!docs.isEmpty()) {
+
+            docs.forEach(document -> documentService.deleteDocument(document.getDocId()));
+           // for (Document d : docs) documentService.deleteDocument(d.getDocId());
         }
 
         userRepo.delete(user);

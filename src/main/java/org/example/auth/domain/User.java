@@ -3,13 +3,11 @@ package org.example.auth.domain;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -24,14 +22,15 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank
-    private String password;
-    @NotBlank
+    @NotBlank (message = "username cannot be blank")
     private String username;
-    @NotBlank
-    @Email
+    @NotBlank (message = "password cannot be blank")
+    private String password;
+    @NotBlank (message = "email cannot be blank")
+    @Email(message = "Email should be valid")
     private String email;
-    @NotNull
+    @NotNull(message = "registrationDate cannot be null")
+    @PastOrPresent(message = "registration Date cannot be in the future")
     private LocalDate registrationDate;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
