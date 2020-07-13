@@ -39,17 +39,41 @@
 
 
 <div>
-    <p>Username: <b th:text="${user.username}">Gosling</b></p>
-    <p>Email: <b th:text="${user.email}">email@mail.com</b></p>
-    <p>Roles: <b th:text="${user.roles}">USER</b></p>
-
-    <p><a href="/user/changeEmail">Change email</a></p>
-    <p><a href="/user/changePassword">Change password</a></p>
+    <table border="1">
+        <tr>
+            <th width="120">Username</th>
+            <td th:text="${user.username}">Gosling</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td th:text="${user.email}">Example@mail.com</td>
+        </tr>
+        <tr>
+            <th>Roles</th>
+            <td th:text="${user.roles}">USER</td>
+        </tr>
+        <tr>
+            <th>Registered Date</th>
+            <td th:text="${user.registrationDate}">20/11/2015</td>
+        </tr>
+        <tr>
+            <th>Document uploaded</th>
+            <td th:text="${user.createdDocuments.size()}">5</td>
+        </tr>
+        <tr >
+            <th>Status</th>
+            <td th:if="${!user.blocked}">Active</td>
+            <td th:if="${user.blocked}">Blocked</td>
+        </tr>
+    </table>
 </div>
 
+<p><a href="/user/changePassword">Change password</a></p>
+<div><a href="/user/changeEmail">Change email</a></div>
 
-<div sec:authorize="hasRole('USER')">Text visible to user.</div>
-<div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+<div sec:authorize="hasAuthority('ADMIN')">
+    <a href="/admin/changeRole">Change role</a>
+</div>
 
 
 </body>

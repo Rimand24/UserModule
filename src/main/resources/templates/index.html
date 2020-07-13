@@ -12,135 +12,89 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- CSS and Bootstrap -->
-    <link rel="icon" href="../static/assets/img/favicon.ico" th:href="@{/static/assets/img/favicon.ico}"/>
+    <link rel="icon" href="../static/assets/img/favicon.ico" th:href="@{../static/assets/img/favicon.ico}"/>
     <link rel="stylesheet" href="../static/assets/bootstrap/bootstrap.min.css"
-          th:href="@{/static/assets/bootstrap/bootstrap.css}"/>
-    <link rel="stylesheet" href="../static/assets/css/style.css" th:href="@{/static/assets/css/style.css}"/>
+          th:href="@{../static/assets/bootstrap/bootstrap.css}"/>
+    <link rel="stylesheet" href="../static/assets/css/style.css" th:href="@{../static/assets/css/style.css}"/>
 </head>
 
 <body>
 
 <header>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+        <a class="my-0 mr-md-auto font-weight-normal" href="../templates/index.html" th:href="@{/}">
+            <img height="50" src="../static/assets/img/Logo.jpg" th:href="@{../static/assets/img/Logo.jpg}"/>
+        </a>
         <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="../templates/adminPage.html" th:href="@{/admin}">Admin Page</a>
-            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/doc/all}">Document List</a>
+            <a class="p-2 text-dark" href="../templates/adminPage.html"
+               sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Admin Page</a>
+            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/docs}">Document List</a>
+            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/users}">User List</a>
             <a class="p-2 text-dark" href="../templates/profile.html" th:href="@{/user}">Profile</a>
         </nav>
-        <div th:if="authenticated">
-            <a class="btn btn-outline-primary" href="#" th:href="@{/logout}">Log Out</a>
-        </div>
-        <div th:if="!authenticated">
-            <a class="btn btn-outline-primary" href="#" th:href="@{/login}">Log In</a>
-        </div>
+        <span sec:authorize="authenticated" sec:authentication="name">Username</span>
+        <span sec:authorize="anonymous">anonymous</span>
+        <a class="btn btn-outline-primary" href="#" sec:authorize="hasAuthority('USER')" th:href="@{/logout}">Log Out</a>
+        <a class="btn btn-outline-primary" href="#" sec:authorize="anonymous" th:href="@{/login}">Log In</a>
+
     </div>
 </header>
-
-
 
 
 <body>
 
 
+<div class="container">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#" th:text="${name}">Project name</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Nav header</li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">Static top</a></li>
+                    <li><a href="#">Fixed top</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
+    <!-- Main component for a primary marketing message or call to action -->
 
-<!--<body>-->
-<!--&lt;!&ndash;LINKS&ndash;&gt;-->
-<!--<p><a href="/doc/all">list</a>-->
-<!--<p><a href="/logout">logout</a>-->
+</div> <!-- /container -->
+<!-- Placed at the end of the document so the pages load faster -->
 
-
-<!--<form action="/doc/add" method="post" enctype="multipart/form-data">-->
-<!--    <div class="form-group">-->
-<!--        <div class="custom-file">-->
-<!--            <input type="file" name="file" id="customFile" placeholder="choose">-->
-<!--            <label class="custom-file-label" for="customFile">Choose file</label>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="form-group">-->
-<!--        <button type="submit" class="btn btn-primary">Post</button>-->
-<!--    </div>-->
-<!--</form>-->
-
-
-<!--EXPERIMENT PART-->
-
-<!--<div th:if="${#authorization.getAuthentication.authorities.equals('USER')}">-->
-<!--    tag works-->
-<!--</div>-->
-
-<!--<div th:text="${#authentication.authorities.contains('USER')}">-->
-<!--    The value of the "name" property of the authentication object should appear here.-->
-<!--</div>-->
-<!--<div th:text="${#authentication.authorities}">-->
-<!--    The value of the "name" property of the authentication object should appear here.-->
-<!--</div>-->
-
-<!--<div th:text="${#authentication.authorities.toArray()}">-->
-<!--    role-->
-<!--</div>-->
-
-<!--<div sec:authorize="hasRole('ROLE_USER')">-->
-<!--    &lt;!&ndash;    https://www.thymeleaf.org/ecosystem.html&ndash;&gt;-->
-<!--    This will only be displayed if authenticated user has role ROLE_ADMIN.-->
-<!--</div>-->
-<!--<div sec:authorize="hasRole('USER')">-->
-<!--    &lt;!&ndash;    https://www.thymeleaf.org/ecosystem.html&ndash;&gt;-->
-<!--    This will only be displayed if authenticated user has role ROLE_ADMIN.-->
-<!--</div>-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-
-<!--<div class="container">-->
-<!--    &lt;!&ndash; Static navbar &ndash;&gt;-->
-<!--    <nav class="navbar navbar-default">-->
-<!--        <div class="container-fluid">-->
-<!--            <div class="navbar-header">-->
-<!--                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"-->
-<!--                        aria-expanded="false" aria-controls="navbar">-->
-<!--                    <span class="sr-only">Toggle navigation</span>-->
-<!--                    <span class="icon-bar"></span>-->
-<!--                    <span class="icon-bar"></span>-->
-<!--                    <span class="icon-bar"></span>-->
-<!--                </button>-->
-<!--                <a class="navbar-brand" href="#" th:text="${name}">Project name</a>-->
-<!--            </div>-->
-<!--            <div id="navbar" class="navbar-collapse collapse">-->
-<!--                <ul class="nav navbar-nav">-->
-<!--                    <li class="active"><a href="#">Home</a></li>-->
-<!--                    <li><a href="#">About</a></li>-->
-<!--                    <li><a href="#">Contact</a></li>-->
-<!--                    <li class="dropdown">-->
-<!--                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"-->
-<!--                           aria-expanded="false">Dropdown <span class="caret"></span></a>-->
-<!--                        <ul class="dropdown-menu">-->
-<!--                            <li><a href="#">Action</a></li>-->
-<!--                            <li><a href="#">Another action</a></li>-->
-<!--                            <li><a href="#">Something else here</a></li>-->
-<!--                            <li role="separator" class="divider"></li>-->
-<!--                            <li class="dropdown-header">Nav header</li>-->
-<!--                            <li><a href="#">Separated link</a></li>-->
-<!--                            <li><a href="#">One more separated link</a></li>-->
-<!--                        </ul>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--                <ul class="nav navbar-nav navbar-right">-->
-<!--                    <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>-->
-<!--                    <li><a href="#">Static top</a></li>-->
-<!--                    <li><a href="#">Fixed top</a></li>-->
-<!--                </ul>-->
-<!--            </div>&lt;!&ndash;/.nav-collapse &ndash;&gt;-->
-<!--        </div>&lt;!&ndash;/.container-fluid &ndash;&gt;-->
-<!--    </nav>-->
-<!--    &lt;!&ndash; Main component for a primary marketing message or call to action &ndash;&gt;-->
-
-<!--</div> &lt;!&ndash; /container &ndash;&gt;-->
-<!--&lt;!&ndash; Placed at the end of the document so the pages load faster &ndash;&gt;-->
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
-<!--<script src="../static/bootstrap/bootstrap.bundle.min.js" th:href="@{/js/bootstrap.js}"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="../static/bootstrap/bootstrap.bundle.min.js" th:href="@{/js/bootstrap.js}"></script>
 
 
-<!--<p>auth stuff up-->
+<p>auth stuff up
 
 </body>
 </html>
