@@ -1,15 +1,28 @@
 package org.example.auth.controller.requestDto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.auth.controller.validator.PasswordMatches;
+import org.example.auth.controller.validator.ValidEmail;
 
-import java.io.Serializable;
+import javax.validation.constraints.*;
 
-@Data
-public class RegistrationForm implements Serializable {
 
-    private static final long serialVersionUID = 5447972861245361282L;
+@Getter
+@Setter
+@PasswordMatches
+public class RegistrationForm {
+    @NotBlank
+    @Size(min = 3, max = 32, message = "username length must be between 3 and 32")
     private String username;
-    private String password;
-    private String password2;
+    @NotBlank
+    @ValidEmail
     private String email;
+    @NotBlank
+    @Size(min = 3, max = 32, message = "password length must be between 3 and 32")
+    private String password;
+    @NotBlank
+    @Size(min = 3, max = 32, message = "password length must be between 3 and 32")
+    private String password2;
 }
