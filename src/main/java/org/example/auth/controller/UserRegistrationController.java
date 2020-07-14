@@ -1,23 +1,25 @@
 package org.example.auth.controller;
 
-import org.example.auth.controller.requestDto.PasswordChangeForm;
 import org.example.auth.controller.requestDto.RegistrationForm;
-import org.example.auth.domain.User;
 import org.example.auth.service.registration.RegistrationRequest;
 import org.example.auth.service.registration.UserRegistrationService;
-import org.example.auth.service.user.ChangePasswordRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
+
 @Controller
 public class UserRegistrationController {
+
+    private static final String REGISTRATION_PAGE = "registration/registration";
+    private static final String REGISTRATION_SUCCESS = "registration/registrationSuccess";
 
     @Autowired
     ModelMapper modelMapper;
@@ -26,35 +28,27 @@ public class UserRegistrationController {
     UserRegistrationService userRegistrationService;
 
     @GetMapping("/registration")
-    public String getRegistration(Model model) {
-        return "registration";
+    public String showRegistrationForm() {
+        return REGISTRATION_PAGE;
     }
 
-    //todo: use Hibernate-Validation annotations to validate RegistrationForm
-    // https://memorynotfound.com/spring-security-user-registration-example-thymeleaf/
-    @PostMapping(value = "/registration")
-    public String postRegistration(RegistrationForm form, Model model) {
+    @PostMapping("/registration")
+    public String createUser(@Valid RegistrationForm form, BindingResult bindingResult, Model model) {
 
-        if (form == null || !StringUtils.hasText(form.getUsername()) || !StringUtils.hasText(form.getEmail())   //fixme extract to validator
-                || !StringUtils.hasText(form.getPassword()) || !StringUtils.hasText(form.getPassword2())) {
-            model.addAttribute("error", "fields does not filled");
-            return "registration";
+        if (bindingResult.hasErrors()){
+            return REGISTRATION_PAGE;
         }
 
-        if (!form.getPassword().equals(form.getPassword2())) { //fixme extract to validator
-            model.addAttribute("error", "passwords does not match");
-            return "registration";
-        }
 
         RegistrationRequest request = modelMapper.map(form, RegistrationRequest.class);
         boolean registrationDone = userRegistrationService.createUser(request);
 
         if (registrationDone) {
             model.addAttribute("email", form.getEmail());
-            return "registrationSuccess";
+            return REGISTRATION_SUCCESS;
         } else {
-            //model.addAllAttributes(response.getErrors()); //todo errors handling in registration html
-            return "registration";
+//            model.addAllAttributes(response.getErrors()); //todo errors handling in registration html
+            return REGISTRATION_PAGE;
         }
     }
 
@@ -62,17 +56,15 @@ public class UserRegistrationController {
     public String activateUser(@PathVariable String activationCode) {
         boolean activated = userRegistrationService.activateUser(activationCode);
         if (activated) return "login";
-        return "registration";
+        return REGISTRATION_PAGE;
     }
 
     @GetMapping("/resendActivationCode/{email}")
     public String resendActivationCode(@PathVariable String email, Model model) {
         boolean activationCodeResent = userRegistrationService.resendActivationCode(email);
-        if(!activationCodeResent) return "registration";
+        if (!activationCodeResent)    return REGISTRATION_PAGE;;
         model.addAttribute("email", email);
-        model.addAttribute("resend", true);
-        return "registrationSuccess";
+        return REGISTRATION_SUCCESS;
     }
-
 
 }

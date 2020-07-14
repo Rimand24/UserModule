@@ -13,7 +13,7 @@
 
     <!-- CSS and Bootstrap -->
     <link rel="icon" href="../static/assets/img/favicon.ico" th:href="@{../static/assets/img/favicon.ico}"/>
-    <link rel="stylesheet" href="../static/assets/bootstrap/bootstrap.min.css"
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css"
           th:href="@{../static/assets/bootstrap/bootstrap.css}"/>
     <link rel="stylesheet" href="../static/assets/css/style.css" th:href="@{../static/assets/css/style.css}"/>
 </head>
@@ -40,9 +40,7 @@
     </div>
 </header>
 
-
-<body>
-
+<!--    <td th:text="${{user.lastAccessDate}}">...</td>-->
 
 <div class="container">
     <!-- Static navbar -->
@@ -90,11 +88,24 @@
 </div> <!-- /container -->
 <!-- Placed at the end of the document so the pages load faster -->
 
+
+<footer>
+
+    Established locale country: <span th:text="${#locale.country}">US</span>.
+<!--    ${#locale}-->
+
+</footer>
+
+
+
+
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../static/bootstrap/bootstrap.bundle.min.js" th:href="@{/js/bootstrap.js}"></script>
 
 
-<p>auth stuff up
+
 
 </body>
 </html>

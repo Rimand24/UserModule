@@ -8,9 +8,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="../static/assets/img/favicon.ico"/>
-    <link rel="stylesheet" href="../static/assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/assets/css/style.css">
-<!--    <link rel="stylesheet" th:href="@{../static/bootstrap/bootstrap.min.css}" type="text/css" />-->
+    <!--    <link rel="stylesheet" th:href="@{../static/bootstrap/bootstrap.min.css}" type="text/css" />-->
 </head>
 
 <body>
@@ -21,37 +21,37 @@
 <!--    You have been logged out.</div>-->
 
 
-
-
-<div class="form container col-3">
-    <div class="h4 text-center">
-        <p>Login form</p>
-        <hr>
+<div class="container">
+    <div class="col-sm-4 sign-up--form order-first order-lg-last">
+        <div class="h4 text-center">
+            <p>Login</p>
+            <hr>
+        </div>
+        <form class="needs-validation" action="/login" method="post" novalidate>
+            <!--        <form class="needs-validation" th:action="@{/login}" action="/login" method="post" novalidate>-->
+            <div class="form-group">
+                <label for="login">Username:</label>
+                <input type="text" class="form-control form-control-lg" id="login" placeholder="Enter username"
+                       name="username" required autofocus>
+                <div class="invalid-feedback">Enter username</div>
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password:</label>
+                <input type="password" class="form-control form-control-lg" id="pwd" placeholder="Enter password"
+                       name="password" required>
+                <div class="invalid-feedback">Enter password</div>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" name="remember"> Remember me
+                </label>
+                <a href="/registration">Registration</a>
+            </div>
+            <button type="submit" class="btn btn-success primary-lg">Log In</button>
+        </form>
+        <br>
     </div>
-    <form class="needs-validation" action="/login" method="post" novalidate>
-<!--        <form class="needs-validation" th:action="@{/login}" action="/login" method="post" novalidate>-->
-        <div class="form-group">
-            <label for="login">Username:</label>
-            <input type="text" class="form-control" id="login" placeholder="Enter username" name="username" required autofocus>
-            <div class="invalid-feedback">Enter username</div>
-        </div>
-        <div class="form-group">
-            <label for="pwd">Password:</label>
-            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password" required>
-            <div class="invalid-feedback">Enter password</div>
-        </div>
-        <div class="form-group form-check">
-            <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" name="remember"> Remember me
-            </label>
-            <a href="/registration">Registration</a>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    <br>
 </div>
-
-
 
 
 <script>

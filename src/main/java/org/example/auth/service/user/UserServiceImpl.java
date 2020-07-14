@@ -9,11 +9,16 @@ import org.example.auth.service.util.RandomGeneratorUtils;
 import org.example.auth.service.util.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -169,4 +174,44 @@ public class UserServiceImpl implements UserService {
 
         mailService.send(mail);
     }
+
+
+//
+//    /////////
+//    /**
+//     * Populates the roles. This method is a shortcut for calling
+//     * {@link #authorities(String...)}, but automatically prefixes each entry with
+//     * "ROLE_". This means the following:
+//     *
+//     * <code>
+//     *     builder.roles("USER","ADMIN");
+//     * </code>
+//     *
+//     * is equivalent to
+//     *
+//     * <code>
+//     *     builder.authorities("ROLE_USER","ROLE_ADMIN");
+//     * </code>
+//     *
+//     * <p>
+//     * This attribute is required, but can also be populated with
+//     * {@link #authorities(String...)}.
+//     * </p>
+//     *
+//     * @param roles the roles for this user (i.e. USER, ADMIN, etc). Cannot be null,
+//     * contain null values or start with "ROLE_"
+//     * @return the {@link org.springframework.security.core.userdetails.User.UserBuilder} for method chaining (i.e. to populate
+//     * additional attributes for this user)
+//     */
+//    public org.springframework.security.core.userdetails.User.UserBuilder roles(String... roles) {
+//        List<GrantedAuthority> authorities = new ArrayList<>(
+//                roles.length);
+//        for (String role : roles) {
+//            Assert.isTrue(!role.startsWith("ROLE_"), () -> role
+//                    + " cannot start with ROLE_ (it is automatically added)");
+//            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+//        }
+//        return authorities(authorities);
+//    }
+//    ///////////////////////////
 }

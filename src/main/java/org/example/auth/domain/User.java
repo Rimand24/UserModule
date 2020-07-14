@@ -39,6 +39,7 @@ public class User implements UserDetails {
     private Set<Role> authorities;
 
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
+   // @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy", orphanRemoval = true)
     private List<Document> createdDocuments;
 
     private boolean accountNonExpired = true;
