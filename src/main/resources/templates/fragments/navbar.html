@@ -1,0 +1,75 @@
+    <div th:fragment="navbar">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <a class="my-0 mr-md-auto font-weight-normal" href="../templates/index.html" th:href="@{/}">
+            <img height="50" src="../static/assets/img/Logo.jpg" th:href="@{../static/assets/img/Logo.jpg}"/>
+        </a>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="../templates/adminPage.html"
+               sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Admin Page</a>
+            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/docs}">Document List</a>
+            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/users}">User List</a>
+            <a class="p-2 text-dark" href="../templates/profile.html" th:href="@{/user}">Profile</a>
+        </nav>
+        <span sec:authorize="authenticated" sec:authentication="name">Username</span>
+        <span sec:authorize="anonymous">anonymous</span>
+        <a class="btn btn-outline-primary" href="#" sec:authorize="hasAuthority('USER')" th:href="@{/logout}">Log Out</a>
+        <a class="btn btn-outline-primary" href="#" sec:authorize="anonymous" th:href="@{/login}">Log In</a>
+
+    </div>
+        <div th:fragment="navbar">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+
+<!--<nav class="navbar navbar-expand-lg navbar-light bg-light">-->
+<!--    <a class="navbar-brand" href="/">Tweater</a>-->
+<!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--        <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
+
+<!--    <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--        <ul class="navbar-nav mr-auto">-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="/static">Home</a>-->
+<!--            </li>-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="/main">Messages</a>-->
+<!--            </li>-->
+
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="/user">Userlist</a>-->
+<!--            </li>-->
+
+
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link" href="/user/profile">Profile</a>-->
+<!--        </li>-->
+
+<!--    </ul>-->
+<!--    <div class="navbar-text mr-3">${name}</div>-->
+
+<!--</div>-->
+<!--</nav>-->
+
+
+<!--</body>-->
+<!--</html>-->

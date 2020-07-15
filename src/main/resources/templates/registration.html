@@ -2,18 +2,21 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <title>Registration</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="../../static/assets/img/favicon.ico"/>
-    <link rel="stylesheet" href="../../static/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../static/assets/css/style.css">
+    <div layout:fragments>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="../static/assets/img/favicon.ico"/>
+        <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../static/assets/css/style.css">
 
-    <link rel="stylesheet" th:href="@{/static/bootstrap/bootstrap.min.css}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/resources/css/style.css}" type="text/css"/>
+        <link rel="stylesheet" th:href="@{/static/bootstrap/bootstrap.min.css}" type="text/css"/>
+        <link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}" type="text/css"/>
+        <link rel="stylesheet" th:href="@{/resources/css/style.css}" type="text/css"/>
+    </div>
 </head>
 
 <body>
@@ -58,9 +61,9 @@
                 </div>
                 <div>
                     By clicking Submit, you agree to our
-                    <a href="../../static/terms.html" th:href="@{../../static/terms.html}">Terms</a>
+                    <a href="../static/terms.html" th:href="@{../static/terms.html}">Terms</a>
                     and that you have read our
-                    <a href="../../static/policy.html" th:href="@{../../static/policy.html}">Data Use Policy</a>
+                    <a href="../static/policy.html" th:href="@{../static/policy.html}">Data Use Policy</a>
                     <!--                    , including our-->
                     <!--                    <a href="../static/cookie.html" th:href="@{../static/cookie.html}">Cookie Use</a>-->
                 </div>

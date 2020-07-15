@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+>
+
+
+<!--<head>-->
+<!--    <title>Home Page</title>-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+<!--    <link th:href="@{../../static/assets/css/style.css}" rel="stylesheet" media="screen" />-->
+<!--    <link href="../../static/assets/css/style.css" rel="stylesheet" media="screen" />-->
+<!--</head>-->
+
+
+<head>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Default Title</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+
+    <!-- CSS and Bootstrap -->
+    <link rel="icon" href="../../static/assets/img/favicon.ico" th:href="@{../../static/assets/img/favicon.ico}"/>
+    <link rel="stylesheet" href="../../static/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/assets/css/style.css">
+    <link rel="stylesheet" th:href="@{../../static/assets/bootstrap/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{../../static/assets/css/style.css}"/>
+
+</head>
+
+
+<body>
+<!--<div th:replace="fragments/header :: header"> This header content is going to be replaced.</div>-->
+<div th:replace="fragments/navbar :: navbar"> This header content is going to be replaced.</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-2" layout:fragment="sidebar">
+            <h1>This is the layout's sidebar</h1>
+            <p>This is the sidebar placeholder. This content will be replaced if the page
+                using the layout also defines a layout:fragment="sidebar" segment.</p>
+        </div>
+        <div class="col" layout:fragment="content">
+            <h1>This is the Layout's main section</h1>
+            <p>This is the main content placeholder. This content will be replaced if the page
+                using the layout also defines a layout:fragment="content" segment. </p>
+        </div>
+    </div>
+</div>
+
+<footer th:insert="fragments/footer :: footer" class="footer">
+    This content will remain, but other content will be inserted after it.
+</footer>
+</body>
+</html>

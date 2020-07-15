@@ -1,111 +1,151 @@
 <!DOCTYPE html>
-<html lang="en"
+<html
+      xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{layouts/layout}"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Title doc list</title>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-    <!-- CSS and Bootstrap -->
-    <link rel="icon" href="../static/assets/img/favicon.ico" th:href="@{../static/assets/img/favicon.ico}"/>
-    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css"
-          th:href="@{../static/assets/bootstrap/bootstrap.css}"/>
-    <link rel="stylesheet" href="../static/assets/css/style.css" th:href="@{../static/assets/css/style.css}"/>
+    <title>Home Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{../static/assets/css/style.css}" rel="stylesheet" media="screen" />
+    <link href="../static/assets/css/style.css" rel="stylesheet" media="screen" />
 </head>
 
 <body>
-
-<header>
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <a class="my-0 mr-md-auto font-weight-normal" href="../templates/index.html" th:href="@{/}">
-            <img height="50" src="../static/assets/img/Logo.jpg" th:href="@{../static/assets/img/Logo.jpg}"/>
-        </a>
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="../templates/adminPage.html"
-               sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Admin Page</a>
-            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/docs}">Document List</a>
-            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/users}">User List</a>
-            <a class="p-2 text-dark" href="../templates/profile.html" th:href="@{/user}">Profile</a>
-        </nav>
-        <span sec:authorize="authenticated" sec:authentication="name">Username</span>
-        <span sec:authorize="anonymous">anonymous</span>
-        <a class="btn btn-outline-primary" href="#" sec:authorize="hasAuthority('USER')" th:href="@{/logout}">Log Out</a>
-        <a class="btn btn-outline-primary" href="#" sec:authorize="anonymous" th:href="@{/login}">Log In</a>
-
-    </div>
-</header>
-
-<!--    <td th:text="${{user.lastAccessDate}}">...</td>-->
-
 <div class="container">
-    <!-- Static navbar -->
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                        aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#" th:text="${name}">Project name</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Static top</a></li>
-                    <li><a href="#">Fixed top</a></li>
-                </ul>
-            </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
-    </nav>
-    <!-- Main component for a primary marketing message or call to action -->
+    <div class="row">
+        wil it work?
 
-</div> <!-- /container -->
-<!-- Placed at the end of the document so the pages load faster -->
-
-
-<footer>
-
-    Established locale country: <span th:text="${#locale.country}">US</span>.
-<!--    ${#locale}-->
-
-</footer>
-
-
-
-
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="../static/bootstrap/bootstrap.bundle.min.js" th:href="@{/js/bootstrap.js}"></script>
-
-
-
-
+        <div class="col-2" layout:fragment="sidebar">
+            <h1>Sidebar</h1>
+            <a href="#">Login</a>
+        </div>
+        <div class="col" layout:fragment="content">
+            <h1>Welcome to the Index page</h1>
+            <br>This content is replacing the content of the layout:fragment="content"<br>
+            placeholder in layout.html</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en"-->
+<!--      xmlns="http://www.w3.org/1999/xhtml"-->
+<!--      xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
+<!--<head>-->
+<!--    <title>Title doc list</title>-->
+
+<!--    <meta charset="utf-8">-->
+<!--    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1"/>-->
+<!--    &lt;!&ndash; The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags &ndash;&gt;-->
+
+<!--    &lt;!&ndash; CSS and Bootstrap &ndash;&gt;-->
+<!--    <link rel="icon" href="../static/assets/img/favicon.ico" th:href="@{../static/assets/img/favicon.ico}"/>-->
+<!--    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css"-->
+<!--          th:href="@{../static/assets/bootstrap/bootstrap.css}"/>-->
+<!--    <link rel="stylesheet" href="../static/assets/css/style.css" th:href="@{../static/assets/css/style.css}"/>-->
+<!--</head>-->
+
+<!--<body>-->
+
+<!--<header>-->
+<!--    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">-->
+<!--        <a class="my-0 mr-md-auto font-weight-normal" href="../templates/index.html" th:href="@{/}">-->
+<!--            <img height="50" src="../static/assets/img/Logo.jpg" th:href="@{../static/assets/img/Logo.jpg}"/>-->
+<!--        </a>-->
+<!--        <nav class="my-2 my-md-0 mr-md-3">-->
+<!--            <a class="p-2 text-dark" href="../templates/adminPage.html"-->
+<!--               sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Admin Page</a>-->
+<!--            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/docs}">Document List</a>-->
+<!--            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/users}">User List</a>-->
+<!--            <a class="p-2 text-dark" href="../templates/profile.html" th:href="@{/user}">Profile</a>-->
+<!--        </nav>-->
+<!--        <span sec:authorize="authenticated" sec:authentication="name">Username</span>-->
+<!--        <span sec:authorize="anonymous">anonymous</span>-->
+<!--        <a class="btn btn-outline-primary" href="#" sec:authorize="hasAuthority('USER')" th:href="@{/logout}">Log Out</a>-->
+<!--        <a class="btn btn-outline-primary" href="#" sec:authorize="anonymous" th:href="@{/login}">Log In</a>-->
+
+<!--    </div>-->
+<!--</header>-->
+
+<!--&lt;!&ndash;    <td th:text="${{user.lastAccessDate}}">...</td>&ndash;&gt;-->
+
+<!--<div class="container">-->
+<!--    &lt;!&ndash; Static navbar &ndash;&gt;-->
+<!--    <nav class="navbar navbar-default">-->
+<!--        <div class="container-fluid">-->
+<!--            <div class="navbar-header">-->
+<!--                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"-->
+<!--                        aria-expanded="false" aria-controls="navbar">-->
+<!--                    <span class="sr-only">Toggle navigation</span>-->
+<!--                    <span class="icon-bar"></span>-->
+<!--                    <span class="icon-bar"></span>-->
+<!--                    <span class="icon-bar"></span>-->
+<!--                </button>-->
+<!--                <a class="navbar-brand" href="#" th:text="${name}">Project name</a>-->
+<!--            </div>-->
+<!--            <div id="navbar" class="navbar-collapse collapse">-->
+<!--                <ul class="nav navbar-nav">-->
+<!--                    <li class="active"><a href="#">Home</a></li>-->
+<!--                    <li><a href="#">About</a></li>-->
+<!--                    <li><a href="#">Contact</a></li>-->
+<!--                    <li class="dropdown">-->
+<!--                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"-->
+<!--                           aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+<!--                        <ul class="dropdown-menu">-->
+<!--                            <li><a href="#">Action</a></li>-->
+<!--                            <li><a href="#">Another action</a></li>-->
+<!--                            <li><a href="#">Something else here</a></li>-->
+<!--                            <li role="separator" class="divider"></li>-->
+<!--                            <li class="dropdown-header">Nav header</li>-->
+<!--                            <li><a href="#">Separated link</a></li>-->
+<!--                            <li><a href="#">One more separated link</a></li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--                <ul class="nav navbar-nav navbar-right">-->
+<!--                    <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>-->
+<!--                    <li><a href="#">Static top</a></li>-->
+<!--                    <li><a href="#">Fixed top</a></li>-->
+<!--                </ul>-->
+<!--            </div>&lt;!&ndash;/.nav-collapse &ndash;&gt;-->
+<!--        </div>&lt;!&ndash;/.container-fluid &ndash;&gt;-->
+<!--    </nav>-->
+<!--    &lt;!&ndash; Main component for a primary marketing message or call to action &ndash;&gt;-->
+
+<!--</div> &lt;!&ndash; /container &ndash;&gt;-->
+<!--&lt;!&ndash; Placed at the end of the document so the pages load faster &ndash;&gt;-->
+
+
+<!--<footer>-->
+
+<!--    Established locale country: <span th:text="${#locale.country}">US</span>.-->
+<!--&lt;!&ndash;    ${#locale}&ndash;&gt;-->
+
+<!--</footer>-->
+
+
+
+
+
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+<!--<script src="../static/bootstrap/bootstrap.bundle.min.js" th:href="@{/js/bootstrap.js}"></script>-->
+
+
+
+
+<!--</body>-->
+<!--</html>-->
