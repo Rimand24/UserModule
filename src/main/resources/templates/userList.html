@@ -1,76 +1,59 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout}">
 <head>
-    <title>Title doc list</title>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>User list</title>
 
     <!-- CSS and Bootstrap -->
-    <link rel="icon" href="../static/assets/img/favicon.ico" th:href="@{../static/assets/img/favicon.ico}"/>
-    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css"
-          th:href="@{../static/assets/bootstrap/bootstrap.css}"/>
-    <link rel="stylesheet" href="../static/assets/css/style.css" th:href="@{../static/assets/css/style.css}"/>
+    <link rel="icon" href="../static/assets/img/favicon.ico"/>
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/assets/css/style.css">
+
 </head>
 
 <body>
 
-<header>
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <a class="my-0 mr-md-auto font-weight-normal" href="../templates/index.html" th:href="@{/}">
-            <img height="50" src="../static/assets/img/Logo.jpg" th:href="@{../static/assets/img/Logo.jpg}"/>
-        </a>
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="../templates/adminPage.html"
-               sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}">Admin Page</a>
-            <a class="p-2 text-dark" href="../templates/documentList.html" th:href="@{/doc/all}">Document List</a>
-            <a class="p-2 text-dark" href="../templates/profile.html" th:href="@{/user}">Profile</a>
-        </nav>
-        <a class="btn btn-outline-primary" href="#" sec:authorize="hasAuthority('USER')" th:href="@{/logout}">Log
-            Out</a>
-        <a class="btn btn-outline-primary" href="#" sec:authorize="anonymous" th:href="@{/login}">Log In</a>
+<div class="container">
+    <div class="col" layout:fragment="content">
+        <table class="users" border="2">
+            <thead align="center">
+            <tr>
+                <!--    todo change text to icons    -->
+                <!--        todo contant width to proportions-->
+                <th width="300">User name</th>
+                <th width="100">Registered Date</th>
+                <th width="100">Document uploaded</th>
+                <th width="100">Roles</th>
+                <th width="80">Open Profile</th>
+                <th width="80">Block</th>
+                <th width="80">Unblock</th>
+                <th width="80">Delete</th>
 
-    </div>
-</header>
-
-<div>
-    <table class="users" border="2">
-        <thead align="center">
-        <tr>
-            <!--    todo change text to icons    -->
-            <!--        todo contant width to proportions-->
-            <th width="300">User name</th>
-            <th width="100">Registered Date</th>
-            <th width="100">Document uploaded</th>
-            <th width="100">Roles</th>
-            <th width="80">Open Profile</th>
-            <th width="80">Block</th>
-            <th width="80">Unblock</th>
-            <th width="80">Delete</th>
-
-        </tr>
-        </thead>
-        <tbody align="center" th:each="user : ${userList}">
-        <tr th:object="${user}">
-            <td th:text="*{username}">Kerman</td>
-            <td th:text="*{registrationDate}">15.11.2008</td>
-            <td th:text="*{createdDocuments.size()}">10</td>
-            <td th:text="*{roles}">USER</td>
-            <td><a href="../templates/profile.html" th:href="@{/user/{username}(username=*{username})}">Open</a></td>
-            <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
-                   th:href="@{/admin/block/{username}(username=*{username})}">Block</a></td>
-            <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
-                   th:href="@{/admin/unblock/{username}(username=*{username})}">Unblock</a></td>
-            <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
-                   th:href="@{/admin/delete/{username}(username=*{username})}">Delete</a></td>
-        </tr>
-        </tbody>
-    </table>
+            </tr>
+            </thead>
+            <tbody align="center" th:each="user : ${userList}">
+            <tr th:object="${user}">
+                <td th:text="*{username}">Kerman</td>
+                <td th:text="*{registrationDate}">15.11.2008</td>
+                <td th:text="*{createdDocuments.size()}">10</td>
+                <td th:text="*{roles}">USER</td>
+                <td><a href="../templates/profile.html" th:href="@{/user/{username}(username=*{username})}">Open</a>
+                </td>
+                <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
+                       th:href="@{/admin/block/{username}(username=*{username})}">Block</a></td>
+                <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
+                       th:href="@{/admin/unblock/{username}(username=*{username})}">Unblock</a></td>
+                <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
+                       th:href="@{/admin/delete/{username}(username=*{username})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div> <!-- fragment.content -->
 </div>
+
 </body>
 </html>

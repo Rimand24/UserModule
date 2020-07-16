@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html
+        lang="en"
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-        xmlns:layout="http://www.w3.org/1999/xhtml">
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
-    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Defaulut Title</title>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Site Name</title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -18,10 +19,10 @@
     <link rel="stylesheet" href="../../static/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../static/assets/css/style.css">
     <!-- CSS and Bootstrap Thymeleaf -->
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}"/>
     <link rel="icon" th:href="@{../../static/assets/img/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{../../static/assets/css/style.css}"/>
-<!--    <link rel="stylesheet" th:href="@{../../static/assets/css/bootstrap.min.css}"/>-->
+    <!--    <link rel="stylesheet" th:href="@{../../static/assets/css/bootstrap.min.css}"/>-->
 </head>
 
 <body>
@@ -29,19 +30,17 @@
 <div class="wrapper">
 
     <header class="header">
-        <div th:replace="fragments/navbar :: navbar" class="navbar navbar-expand-lg navbar-light bg-light"> This header content is going to be replaced with navbar.</div>
+        <div th:replace="fragments/navbar :: navbar" class="navbar navbar-expand-lg navbar-light bg-light"> This header
+            content is going to be replaced with navbar.
+        </div>
     </header>
 
-
     <main class="content">
-
+        <br>
+        <br>
         <div class="container">
             <div class="row">
-<!--                <div class="col-2" layout:fragment="sidebar">-->
-<!--                    <h1>This is the layout's sidebar</h1>-->
-<!--                    <p>This is the sidebar placeholder. This content will be replaced if the page-->
-<!--                        using the layout also defines a layout:fragment="sidebar" segment.</p>-->
-<!--                </div>-->
+
                 <div class="col" layout:fragment="content">
                     <h1>This is the Layout's main section</h1>
                     <p>This is the main content placeholder. This content will be replaced if the page
@@ -50,28 +49,20 @@
             </div>
         </div>
 
-
     </main><!-- .content -->
-
 
 </div><!-- .wrapper -->
 
-
-<footer th:insert="fragments/footer :: footer" class="footer">
+<footer th:replace="fragments/footer :: footer" class="footer">
     This content will remain, but other content will be inserted after it.
-</footer>
+</footer> <!-- .footer -->
 
-
-<!--<link href="style.css" rel="stylesheet">-->
-<!--<script type="text/javascript" > </script>-->
+<!-- JS and JQuery -->
+<div layout:fragment="scripts">
+</div>
 
 </body>
 </html>
-
-
-///////////////////////////////////
-////////////////////////////////////////////////
-
 
 
 

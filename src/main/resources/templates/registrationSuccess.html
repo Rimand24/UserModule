@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Registration</title>
+    <title>Home Page</title>
+
+    <!-- CSS and Bootstrap -->
+    <link rel="icon" href="../static/assets/img/favicon.ico"/>
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/assets/css/style.css">
+
 </head>
+
 <body>
 
-<div>
-    <div>
-        <p> Мы отправили электронное письмо по адресу</p>
-
-
-        <p><strong th:text="${email}">Example@email.com</strong></p>
-        <p> Нажмите по ссылке подтверждения в электронном письме, чтобы приступить к использованию сервиса.</p>
-    </div>
-    <div>
-        <p> Если вы не получили электронное уведомление, </p>
-        <p>
-            <a href="#" th:href="@{/resendActivationCode/{email}(email=${email})}">Отправить уведомление еще раз</a>
-        </p>
-    </div>
-
+<div class="container">
+    <div class="col" layout:fragment="content">
+        <div>
+            <p> Email was sent at</p>
+            <p><strong th:text="${email}">Example@email.com</strong></p>
+            <p> Follow the link in email to activate your account</p>
+        </div>
+        <div>
+            <p>
+                if you have not received your message, </p>
+            <p>
+                <a href="#" th:href="@{/resendActivationCode/{email}(email=${email})}">send email again</a>
+            </p>
+        </div>
+    </div> <!-- fragment.content -->
 </div>
+
 </body>
 </html>

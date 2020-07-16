@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        layout:decorate="~{layouts/layout}">
+
 <head>
     <title>Registration</title>
-    <div layout:fragments>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="shortcut icon" href="../static/assets/img/favicon.ico"/>
-        <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../static/assets/css/style.css">
 
-        <link rel="stylesheet" th:href="@{/static/bootstrap/bootstrap.min.css}" type="text/css"/>
-        <link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}" type="text/css"/>
-        <link rel="stylesheet" th:href="@{/resources/css/style.css}" type="text/css"/>
-    </div>
+    <!-- CSS and Bootstrap -->
+    <link rel="icon" href="../static/assets/img/favicon.ico"/>
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/assets/css/style.css">
 </head>
-
 <body>
 
-
+<div class="col" layout:fragment="content">
 <div class="container">
     <div class="col-sm-4 sign-up--form order-first order-lg-last">
         <div class="h4 text-center">
+            <br><br>
             <p>Registration</p>
             <hr>
         </div>
+
         <div class="row">
             <form class="needs-validation col mx-auto" action="/registration" method="post" novalidate>
                 <div class="form-group">
@@ -75,27 +72,31 @@
         </div>
     </div>
 </div>
+</div> <!-- fragment.content -->
 
 
-<script>
-    // Disable form submissions if there are invalid fields
-    (function () {
-        'use strict';
-        window.addEventListener('load', function () {
-            // Get the forms we want to add validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
-            // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        }, false);
-    })();
-</script>
+<div class="col" layout:fragment="scripts">
+    <script>
+        // Disable form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Get the forms we want to add validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+</div>
+
 </body>
 </html>

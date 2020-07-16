@@ -18,8 +18,8 @@ import javax.validation.Valid;
 @Controller
 public class UserRegistrationController {
 
-    private static final String REGISTRATION_PAGE = "registration/registration";
-    private static final String REGISTRATION_SUCCESS = "registration/registrationSuccess";
+    private static final String REGISTRATION_PAGE = "registration";
+    private static final String REGISTRATION_SUCCESS = "registrationSuccess";
 
     @Autowired
     ModelMapper modelMapper;
