@@ -32,11 +32,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+
         http
                 .authorizeRequests()
-                .antMatchers("/registration", "/activate/*", "/static/**", "/", "/forgetPassword", "/resetPassword/*").permitAll()
+                .antMatchers("/webjars/**", "/static/**").permitAll()     //css+js
+                .antMatchers("/registration", "/activate/*", "/", "/forgetPassword", "/resetPassword/*").permitAll()  //registration controller
+                .antMatchers("/admin/*").hasAuthority("ADMIN")   //admin page
                 .antMatchers("/h2-console/**").permitAll() //fixme H2 database config
-                .antMatchers("/admin").hasAuthority("ADMIN")
+                .antMatchers("/**").permitAll() //fixme debug config - security disabled
+
                 .anyRequest().authenticated()
                 .and().rememberMe()
                 .and().formLogin().loginPage("/login").permitAll()
@@ -46,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)//fixme
 
         ;
+
 
         http.csrf().disable(); //fixme H2 database config
         http.headers().frameOptions().disable();   //fixme H2 database config
