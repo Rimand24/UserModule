@@ -2,7 +2,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
-        <a class="navbar-brand" href="/" th:href="@{/}">Tweater</a>
+        <a class="navbar-brand" href="/" th:href="@{/}">SiteName</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -12,17 +12,19 @@
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="../../templates/adminPage.html" sec:authorize="hasAuthority('ADMIN')"
-                       th:href="@{/admin}">Admin Page</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="../../templates/documentList.html" th:href="@{/docs}">Document List</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../../templates/documentList.html" th:href="@{/users}">User List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../../templates/profile.html" th:href="@{/user}">Profile</a>
+                    <a class="nav-link"
+                       href="../../templates/profile.html" th:href="@{/user/{id}(id=${#authentication.name})}"
+                       sec:authorize="authenticated">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../templates/adminPage.html" sec:authorize="hasAuthority('ADMIN')"
+                       th:href="@{/admin}">Admin Page</a>
                 </li>
             </ul>
         </div>
