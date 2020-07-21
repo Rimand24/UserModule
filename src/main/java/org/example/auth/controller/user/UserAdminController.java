@@ -1,11 +1,10 @@
-package org.example.auth.controller;
+package org.example.auth.controller.user;
 
 import org.example.auth.domain.User;
-import org.example.auth.service.admin.UserAdminService;
-import org.example.auth.service.user.UserDto;
-import org.example.auth.service.user.UserService;
+import org.example.auth.service.user.admin.UserAdminService;
+import org.example.auth.domain.UserDto;
+import org.example.auth.service.user.search.UserSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +18,7 @@ import java.util.List;
 public class UserAdminController {
 
     @Autowired
-    UserService userService;
+    UserSearchService userSearchService;
 
     @Autowired
     UserAdminService adminService;
@@ -29,7 +28,7 @@ public class UserAdminController {
     //@PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/admin")
     public String getAdminPage(Model model){
-        List<UserDto> list = userService.findAll();
+        List<UserDto> list = userSearchService.findAll();
         model.addAttribute("userList", list);
         return "adminPage";
     }
@@ -37,7 +36,7 @@ public class UserAdminController {
     //@PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/admin/users")
     public String getUserList(Model model){
-        List<UserDto> list = userService.findAll();
+        List<UserDto> list = userSearchService.findAll();
 
         model.addAttribute("userList", list);
         return "adminPage";

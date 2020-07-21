@@ -33,7 +33,7 @@
             <div>
                 <span sec:authorize="authenticated" sec:authentication="name">Username</span>
                 <span sec:authorize="anonymous">anonymous</span>
-                <a class="btn btn-outline-primary" href="#" sec:authorize="hasAuthority('USER')" th:href="@{/logout}">Log Out</a>
+                <a class="btn btn-outline-primary" href="#" sec:authorize="authenticated" th:href="@{/logout}">Log Out</a>
                 <a class="btn btn-outline-primary" href="#" sec:authorize="anonymous" th:href="@{/login}">Log In</a>
             </div>
         </div>

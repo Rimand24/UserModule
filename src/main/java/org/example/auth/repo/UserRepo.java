@@ -10,12 +10,19 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
-    User findByUsername(String username); //todo optional
-    User findByEmail(String email);  //todo optional
-    User findByActivationCode(String activationCode);
-    User findByPasswordResetCode(String code);
-    List<User> findAllByAccountNonLockedFalse();
-    List<User> findAllByAccountNonLockedTrue();
+    Optional<User> findByUsername(String username);
+
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByEmailActivationCode(String activationCode);
+
+    Optional<User> findByPasswordResetCode(String code);
+
+    List<User> findAllByAccountNonLockedFalse(); //blocked
+
+    List<User> findAllByEnabledTrue();  //activated
+
+    List<User> findAllByEnabledFalse();  //not activated
 
     List<User> findAllByUsernameContains(String name);
 }

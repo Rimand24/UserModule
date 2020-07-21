@@ -1,13 +1,15 @@
 package org.example.auth.service.util;
 
 import org.example.auth.domain.Document;
+import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.service.document.DocumentDto;
-import org.example.auth.service.user.UserDto;
+import org.example.auth.domain.UserDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MapperUtils {
@@ -25,7 +27,7 @@ public class MapperUtils {
         UserDto dto = new UserDto();
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        dto.setRoles(user.getAuthorities());
+        dto.setRoles((Set<Role>) user.getAuthorities());//fixme
         dto.setActive(user.isEnabled());
         dto.setBlocked(!user.isAccountNonLocked());
         dto.setRegistrationDate(user.getRegistrationDate());

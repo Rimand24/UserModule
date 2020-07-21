@@ -46,6 +46,11 @@ public class TokenServiceImpl implements TokenService {
         return createJWT(passwordResetExpirationTime);
     }
 
+    @Override
+    public String getEmailFromToken(String code) {
+        return getStringFromToken(code);
+    }
+
     private String createJWT(long expirationTime) {
         String token = Jwts.builder()
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
@@ -67,5 +72,10 @@ public class TokenServiceImpl implements TokenService {
         } catch (JwtException e) {
             throw new TokenServiceException("token incorrect", e);
         }
+    }
+
+    private String getStringFromToken(String code) {
+        Claims claims = decodeJWT(code);
+        return claims.getSubject();
     }
 }

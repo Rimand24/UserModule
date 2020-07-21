@@ -14,21 +14,31 @@
     <div class="col" layout:fragment="content">
 
         <div>
+            <a href="#">All users</a>
+        </div>
+        <div>
+            <a href="#">Blocked Users</a>
+        </div>
+        <div>
+            <a href="#">Not Activated Users</a>
+        </div>
+
+
+        <div>
             <table class="users" border="2">
                 <thead align="center">
                 <tr>
                     <!--    todo change text to icons    -->
                     <!--        todo contant width to proportions-->
                     <th width="300">User name</th>
-                    <th width="100">Registered Date</th>
+                    <th width="100">Registration Date</th>
                     <th width="100">Document uploaded</th>
                     <th width="100">Roles</th>
-                    <th width="100">is active</th>
-                    <th width="100">is blocked</th>
+                    <th width="100">Status</th>
                     <th width="100">block reason</th>
                     <th width="80">Open Profile</th>
                     <th width="80">Block</th>
-                    <th width="80">Unblock</th>
+<!--                    <th width="80">Unblock</th>-->
                     <th width="80">Delete</th>
 
                 </tr>
@@ -39,12 +49,17 @@
                     <td th:text="*{registrationDate}">15.11.2008</td>
                     <td th:text="*{createdDocuments.size()}">10</td>
                     <td th:text="*{roles}">USER</td>
-                    <td th:text="*{active}">true</td>
-                    <td th:text="*{blocked}">false</td>
+
+                    <td th:if="*{!active}">Not Activated</td>
+                    <td th:if="*{blocked}">Blocked</td>
+                    <td th:if="(*{active}) and (*{!blocked})">Active</td>
+
                     <td th:text="*{blockReason}">spam</td>
-                    <td><a href="../templates/profile.html" th:href="@{/user/{username}(id=*{username})}">Open</a></td>
-                    <td><a href="#" th:href="@{/admin/block/{username}(username=*{username})}">Block</a></td>
-                    <td><a href="#" th:href="@{/admin/unblock/{username}(username=*{username})}">Unblock</a></td>
+                    <td><a href="../templates/profile.html" th:href="@{/user/{username}(username=*{username})}">Open</a></td>
+
+                        <td th:if="*{!blocked}"><a href="#" th:href="@{/admin/block/{username}(username=*{username})}">Block</a></td>
+                        <td th:if="*{blocked}"><a href="#" th:href="@{/admin/unblock/{username}(username=*{username})}">Unblock</a></td>
+
                     <td><a href="#" th:href="@{/admin/delete/{username}(username=*{username})}">Delete</a></td>
                 </tr>
                 </tbody>

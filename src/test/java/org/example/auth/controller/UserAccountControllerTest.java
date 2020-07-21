@@ -1,7 +1,7 @@
 package org.example.auth.controller;
 
-import org.example.auth.service.registration.RegistrationRequest;
-import org.example.auth.service.registration.UserRegistrationService;
+import org.example.auth.service.user.account.request.RegistrationRequest;
+import org.example.auth.service.user.account.UserAccountService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -24,13 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserRegistrationControllerTest {
+class UserAccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserRegistrationService registrationService;
+    private UserAccountService registrationService;
 
     private final String username = "Alex";
     private final String email = "example@mail.com";

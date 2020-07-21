@@ -1,4 +1,4 @@
-package org.example.auth.service.user;
+package org.example.auth.domain;
 
 import lombok.Data;
 import org.example.auth.domain.Role;

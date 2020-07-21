@@ -1,5 +1,6 @@
-package org.example.auth.service.user;
+package org.example.auth.service.user.search;
 
+@Deprecated
 public class UserServiceException extends RuntimeException {
     public UserServiceException() {
         super();

@@ -1,6 +1,6 @@
-package org.example.auth.service.admin;
+package org.example.auth.service.user.admin;
 
-import org.example.auth.service.user.UserDto;
+import org.example.auth.domain.UserDto;
 
 import java.util.List;
 
