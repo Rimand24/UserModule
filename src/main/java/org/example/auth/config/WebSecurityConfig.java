@@ -1,10 +1,13 @@
 package org.example.auth.config;
 
-import org.example.auth.service.user.UserService;
-import org.example.auth.service.user.UserServiceImpl;
+import org.example.auth.domain.Role;
+import org.example.auth.service.user.account.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,18 +15,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
+//@Profile("dev")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserService userService;
+    private UserAccountService userAccountService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+//    @Autowired
+//    private AuthenticationSuccessHandler successHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -35,20 +44,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http
+                //TLS
+//                .requiresChannel().anyRequest().requiresSecure() //todo tls
+//                .and()
                 .authorizeRequests()
                 .antMatchers("/webjars/**", "/static/**").permitAll()     //css+js
                 .antMatchers("/registration", "/activate/*", "/", "/forgetPassword", "/resetPassword/*").permitAll()  //registration controller
-                .antMatchers("/admin/*").hasAuthority("ADMIN")   //admin page
+                .antMatchers("/admin/**").hasAuthority(Role.ADMIN.name())   //admin page
                 .antMatchers("/h2-console/**").permitAll() //fixme H2 database config
-                .antMatchers("/**").permitAll() //fixme debug config - security disabled
-
+//                .antMatchers("/**").permitAll() //fixme debug config - security disabled
                 .anyRequest().authenticated()
-                .and().rememberMe()
-                .and().formLogin().loginPage("/login").permitAll()
-                .and().logout().logoutSuccessUrl("/")
+
+                .and()
+                .rememberMe()
+                .and()
+                .formLogin().loginPage("/login").permitAll().failureUrl("/login?error")
+                .and()
+                .logout().logoutSuccessUrl("/")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .invalidateHttpSession(true)//fixme
-                .clearAuthentication(true)//fixme
+                .invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").permitAll()
+
 
         ;
 
@@ -59,6 +74,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userAccountService).passwordEncoder(passwordEncoder);
+    }
+
+    @Autowired
+    private RoleHierarchy roleHierarchy;
+
+    private SecurityExpressionHandler<FilterInvocation> webExpressionHandler() {
+        DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
+        defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
+        return defaultWebSecurityExpressionHandler;
+    }
+
+    @Bean
+    public RoleHierarchyImpl roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > DOC_REDACTOR\n" +
+                "DOC_REDACTOR > USER");
+        return roleHierarchy;
     }
 }
