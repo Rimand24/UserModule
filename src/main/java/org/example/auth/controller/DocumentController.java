@@ -31,7 +31,7 @@ public class DocumentController {
     @PostMapping("/doc/add")
     public String addDocument(@AuthenticationPrincipal User user,
                               Model model,
-                              // BindingResult bindingResult, //fixme BindingResult ????
+                              // BindingResult bindingResult, //fixme BindingResult
                               @RequestParam("file") MultipartFile file) {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
             DocumentCreationRequestDto request = new DocumentCreationRequestDto();

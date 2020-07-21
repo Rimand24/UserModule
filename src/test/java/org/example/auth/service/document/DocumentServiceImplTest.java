@@ -5,7 +5,7 @@ import org.example.auth.domain.Document;
 import org.example.auth.domain.User;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;
-import org.example.auth.service.user.UserDto;
+import org.example.auth.domain.UserDto;
 import org.example.auth.service.util.RandomGeneratorUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

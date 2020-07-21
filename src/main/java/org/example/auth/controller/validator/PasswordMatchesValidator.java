@@ -1,6 +1,6 @@
 package org.example.auth.controller.validator;
 
-import org.example.auth.controller.requestDto.RegistrationForm;
+import org.example.auth.controller.user.requestDto.RegistrationForm;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

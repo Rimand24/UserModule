@@ -3,7 +3,7 @@ package org.example.auth.service.document;
 import com.sun.istack.Nullable;
 import lombok.Data;
 import lombok.ToString;
-import org.example.auth.service.user.UserDto;
+import org.example.auth.domain.UserDto;
 
 import java.time.LocalDateTime;
 
