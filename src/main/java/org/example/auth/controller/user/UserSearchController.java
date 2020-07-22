@@ -1,12 +1,8 @@
 package org.example.auth.controller.user;
 
-import org.example.auth.controller.user.requestDto.PasswordChangeForm;
-import org.example.auth.domain.User;
-import org.example.auth.service.user.account.request.ChangePasswordRequest;
 import org.example.auth.domain.UserDto;
 import org.example.auth.service.user.search.UserSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

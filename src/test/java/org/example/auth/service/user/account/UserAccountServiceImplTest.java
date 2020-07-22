@@ -4,7 +4,9 @@ import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
 import org.example.auth.service.mail.Mail;
 import org.example.auth.service.mail.MailService;
-import org.example.auth.service.user.account.request.RegistrationRequest;
+import org.example.auth.service.user.account.dto.RegistrationRequest;
+import org.example.auth.service.user.account.dto.UserAccountResponse;
+import org.example.auth.service.user.account.dto.UserAccountServiceErrorCode;
 import org.example.auth.service.util.TokenService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +59,7 @@ class UserAccountServiceImplTest {
 
     @Test
     void loadUserByUsername_success() {
-        User mockUser = new User(){{
+        User mockUser = new User() {{
             setUsername("username");
             setPassword("pass");
             setEmail("mail@mail.pp");
@@ -67,7 +69,7 @@ class UserAccountServiceImplTest {
         UserDetails user = accountService.loadUserByUsername(anyString());
 
         assertNotNull(user);
-        assertEquals(mockUser,user);
+        assertEquals(mockUser, user);
     }
 
     @Test
@@ -89,9 +91,9 @@ class UserAccountServiceImplTest {
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
         doNothing().when(mailService).send(any(Mail.class));
 
-        boolean created = accountService.createUser(makeMockRegistrationRequest());
+        UserAccountResponse response = accountService.createUser(makeMockRegistrationRequest());
 
-        assertTrue(created);
+        assertTrue(response.isSuccess());
         verify(userRepo).findByEmail(anyString());
         verify(userRepo).findByUsername(anyString());
         verify(userRepo).save(any(User.class));
@@ -106,9 +108,8 @@ class UserAccountServiceImplTest {
         when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
-        assertThrows(UserAccountServiceException.class, () -> {
-            accountService.createUser(makeMockRegistrationRequest());
-        });
+        UserAccountResponse response = accountService.createUser(makeMockRegistrationRequest());
+        assertEquals(response.getError(), UserAccountServiceErrorCode.USERNAME_ALREADY_EXISTS);
 
         verify(userRepo).findByUsername(anyString());
         verify(userRepo, times(0)).save(any(User.class));
@@ -121,9 +122,8 @@ class UserAccountServiceImplTest {
         when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
-        assertThrows(UserAccountServiceException.class, () -> {
-            accountService.createUser(makeMockRegistrationRequest());
-        });
+        UserAccountResponse response = accountService.createUser(makeMockRegistrationRequest());
+        assertEquals(response.getError(), UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
 
         verify(userRepo).findByEmail(anyString());
         verify(userRepo, times(0)).save(any(User.class));
@@ -136,9 +136,8 @@ class UserAccountServiceImplTest {
         when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
-        assertThrows(UserAccountServiceException.class, () -> {
-            accountService.createUser(new RegistrationRequest());
-        });
+        UserAccountResponse response = accountService.createUser(makeMockRegistrationRequest());
+        assertEquals(response.getError(), UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
 
         verify(userRepo, times(0)).save(any(User.class));
     }
@@ -149,9 +148,9 @@ class UserAccountServiceImplTest {
         when(tokenService.verifyToken(anyString())).thenReturn(true);
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
-        boolean correctToken = accountService.activateUser(anyString());
+        UserAccountResponse response = accountService.activateUser(anyString());
 
-        assertTrue(correctToken);
+        assertTrue(response.isSuccess());
         verify(userRepo).findByEmailActivationCode(anyString());
         verify(tokenService).verifyToken(anyString());
         verify(userRepo).save(any(User.class));
@@ -163,9 +162,10 @@ class UserAccountServiceImplTest {
         when(tokenService.verifyToken(anyString())).thenReturn(false);
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
-        boolean correctToken = accountService.activateUser("incorrectToken");
+        UserAccountResponse response = accountService.activateUser("incorrectToken");
 
-        assertFalse(correctToken);
+        assertFalse(response.isSuccess());
+        assertEquals(response.getError(), UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
         verify(userRepo).findByEmailActivationCode(anyString());
         verify(tokenService).verifyToken(anyString());
         verify(userRepo, times(0)).save(any(User.class));
@@ -177,9 +177,10 @@ class UserAccountServiceImplTest {
         when(tokenService.verifyToken(anyString())).thenReturn(true);
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
-        boolean correctToken = accountService.activateUser("incorrectToken");
+        UserAccountResponse response = accountService.activateUser("incorrectToken");
 
-        assertFalse(correctToken);
+        assertFalse(response.isSuccess());
+        assertEquals(response.getError(), UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
         verify(userRepo).findByEmailActivationCode(anyString());
         verify(tokenService, times(0)).verifyToken(anyString());
         verify(userRepo, times(0)).save(any(User.class));

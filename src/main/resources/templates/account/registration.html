@@ -20,6 +20,12 @@
             <hr>
         </div>
 
+        <div th:if="${error != null}">
+            <div class="alert alert-danger" th:text="${error}">
+                registration error text
+            </div>
+        </div>
+
         <div class="row">
             <form class="needs-validation col mx-auto" action="/registration" method="post" novalidate>
                 <div class="form-group">
@@ -53,15 +59,15 @@
                 </div>
                 <div>
                     By clicking Submit, you agree to our
-                    <a href="../static/terms.html" th:href="@{../static/terms.html}">Terms</a>
+                    <a href="../../static/terms.html" th:href="@{../../static/terms.html}">Terms</a>
                     and that you have read our
-                    <a href="../static/policy.html" th:href="@{../static/policy.html}">Data Use Policy</a>
+                    <a href="../../static/policy.html" th:href="@{../../static/policy.html}">Data Use Policy</a>
                     <!--                    , including our-->
                     <!--                    <a href="../static/cookie.html" th:href="@{../static/cookie.html}">Cookie Use</a>-->
                 </div>
                 <div>
                     <button type="submit" class="btn btn-success primary-lg">Create account</button>
-                    Already registered? <a href="/login">Login here</a>
+                    <p>Already registered? <a href="/login">Login here</a></p>
 
                 </div>
             </form>

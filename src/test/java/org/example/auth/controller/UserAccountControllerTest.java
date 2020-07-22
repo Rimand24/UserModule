@@ -1,7 +1,9 @@
 package org.example.auth.controller;
 
-import org.example.auth.service.user.account.request.RegistrationRequest;
+import org.example.auth.service.user.account.dto.RegistrationRequest;
 import org.example.auth.service.user.account.UserAccountService;
+import org.example.auth.service.user.account.dto.UserAccountResponse;
+import org.example.auth.service.user.account.dto.UserAccountServiceErrorCode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -58,7 +60,9 @@ class UserAccountControllerTest {
                 setEmail(email);
             }
         })))
-                .thenReturn(true);
+                .thenReturn(new UserAccountResponse() {{
+                    setSuccess(true);
+                }});
 
         assertEquals(registrationSuccessPageName, Objects.requireNonNull(
                 mockMvc.perform(
@@ -78,7 +82,10 @@ class UserAccountControllerTest {
     @Test
     public void postRegistrationTest_fail_formIsNull() throws Exception {
 //todo  check validation - RegistrationForm must not be incorrect (null/empty/only spaces/incorect symbols)
-        when(registrationService.createUser(any(RegistrationRequest.class))).thenReturn(false);
+        when(registrationService.createUser(any(RegistrationRequest.class))).thenReturn((new UserAccountResponse() {{
+            setSuccess(false);
+            setError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
+        }}));
 
         assertEquals("fields does not filled",
                 mockMvc.perform(
@@ -96,7 +103,10 @@ class UserAccountControllerTest {
 
     @Test
     public void postRegistrationTest_fail_passwordsDoNotMatch() throws Exception {
-        when(registrationService.createUser(any(RegistrationRequest.class))).thenReturn(false);
+        when(registrationService.createUser(any(RegistrationRequest.class))).thenReturn(new UserAccountResponse() {{
+            setSuccess(false);
+            setError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
+        }});
 
         assertEquals("passwords does not match",
                 mockMvc.perform(
