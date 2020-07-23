@@ -26,6 +26,11 @@
                         Invalid username or password.
                     </div>
                 </div>
+                <div th:if="${message != null}">
+                    <div class="alert alert-danger" th:text="message">
+                        Invalid username or password.
+                    </div>
+                </div>
                 <!--        <form class="needs-validation" th:action="@{/login}" action="/login" method="post" novalidate>-->
                 <div class="form-group">
                     <label for="login">Username:</label>

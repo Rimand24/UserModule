@@ -1,9 +1,10 @@
 package org.example.auth.service.user.account.dto;
 
-import org.example.auth.service.ErrorCode;
+import org.example.auth.service.ServiceResponseCode;
 
-public enum UserAccountServiceErrorCode implements ErrorCode {
+public enum UserAccountServiceResponseCode implements ServiceResponseCode {
 
+    OK,
     USERNAME_NOT_FOUND,
     USERNAME_ALREADY_EXISTS,
     PASSWORD_TOKEN_NOT_FOUND,

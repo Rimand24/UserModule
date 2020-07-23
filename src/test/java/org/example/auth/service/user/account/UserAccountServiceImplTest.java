@@ -6,7 +6,7 @@ import org.example.auth.service.mail.Mail;
 import org.example.auth.service.mail.MailService;
 import org.example.auth.service.user.account.dto.RegistrationRequest;
 import org.example.auth.service.user.account.dto.UserAccountResponse;
-import org.example.auth.service.user.account.dto.UserAccountServiceErrorCode;
+import org.example.auth.service.user.account.dto.UserAccountServiceResponseCode;
 import org.example.auth.service.util.TokenService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,7 +109,7 @@ class UserAccountServiceImplTest {
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
         UserAccountResponse response = accountService.createUser(makeMockRegistrationRequest());
-        assertEquals(response.getError(), UserAccountServiceErrorCode.USERNAME_ALREADY_EXISTS);
+        assertEquals(response.getStatus(), UserAccountServiceResponseCode.USERNAME_ALREADY_EXISTS);
 
         verify(userRepo).findByUsername(anyString());
         verify(userRepo, times(0)).save(any(User.class));
@@ -123,7 +123,7 @@ class UserAccountServiceImplTest {
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
         UserAccountResponse response = accountService.createUser(makeMockRegistrationRequest());
-        assertEquals(response.getError(), UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
+        assertEquals(response.getStatus(), UserAccountServiceResponseCode.EMAIL_ALREADY_EXISTS);
 
         verify(userRepo).findByEmail(anyString());
         verify(userRepo, times(0)).save(any(User.class));
@@ -137,7 +137,7 @@ class UserAccountServiceImplTest {
         when(userRepo.save(any(User.class))).thenReturn(makeMockUser());
 
         UserAccountResponse response = accountService.createUser(makeMockRegistrationRequest());
-        assertEquals(response.getError(), UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
+        assertEquals(response.getStatus(), UserAccountServiceResponseCode.USERNAME_NOT_FOUND);
 
         verify(userRepo, times(0)).save(any(User.class));
     }
@@ -165,7 +165,7 @@ class UserAccountServiceImplTest {
         UserAccountResponse response = accountService.activateUser("incorrectToken");
 
         assertFalse(response.isSuccess());
-        assertEquals(response.getError(), UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
+        assertEquals(response.getStatus(), UserAccountServiceResponseCode.TOKEN_NOT_VERIFIED);
         verify(userRepo).findByEmailActivationCode(anyString());
         verify(tokenService).verifyToken(anyString());
         verify(userRepo, times(0)).save(any(User.class));
@@ -180,7 +180,7 @@ class UserAccountServiceImplTest {
         UserAccountResponse response = accountService.activateUser("incorrectToken");
 
         assertFalse(response.isSuccess());
-        assertEquals(response.getError(), UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
+        assertEquals(response.getStatus(), UserAccountServiceResponseCode.EMAIL_TOKEN_NOT_FOUND);
         verify(userRepo).findByEmailActivationCode(anyString());
         verify(tokenService, times(0)).verifyToken(anyString());
         verify(userRepo, times(0)).save(any(User.class));

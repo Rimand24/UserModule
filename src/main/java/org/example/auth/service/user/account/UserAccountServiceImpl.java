@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.example.auth.service.user.account.dto.UserAccountServiceResponseCode.*;
+
 @Slf4j
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
@@ -47,7 +49,7 @@ public class UserAccountServiceImpl implements UserAccountService {
             throw new UsernameNotFoundException("user not found:" + username);
         }
         User user = optional.get();
-        if (!user.isAccountNonLocked()){
+        if (!user.isAccountNonLocked()) {
             log.debug("user login failed:(username:{}, reason: user blocked)", username);
             throw new UsernameNotFoundException("user blocked:" + username);
         }
@@ -70,18 +72,14 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
         //todo end
 
-        UserAccountResponse response = new UserAccountResponse();
-
         if (userRepo.findByUsername(registrationRequest.getUsername()).isPresent()) {
-            response.setError(UserAccountServiceErrorCode.USERNAME_ALREADY_EXISTS);
-            log.debug("Registration error: {}", UserAccountServiceErrorCode.USERNAME_ALREADY_EXISTS);
-            return response;
+            log.debug("Registration error: {}", USERNAME_ALREADY_EXISTS);
+            return new UserAccountResponse(USERNAME_ALREADY_EXISTS);
         }
 
         if (userRepo.findByEmail(registrationRequest.getEmail()).isPresent()) {
-            response.setError(UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
-            log.debug("Registration error: {}", UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
-            return response;
+            log.debug("Registration error: {}", EMAIL_ALREADY_EXISTS);
+            return new UserAccountResponse(EMAIL_ALREADY_EXISTS);
         }
 
         String username = registrationRequest.getUsername();
@@ -95,31 +93,28 @@ public class UserAccountServiceImpl implements UserAccountService {
         user.setEmailActivationCode(activationCode);
         user.setRegistrationDate(LocalDate.now());
         userRepo.save(user);
-        log.info("User saved: (username:{},email:{})", user.getUsername(), user.getEmail());
 
         mailService.sendActivationCode(username, email, activationCode);
 
-        response.setSuccess(true);
-        return response;
+        log.info("User saved: (username:{},email:{})", user.getUsername(), user.getEmail());
+        return new UserAccountResponse(OK);
+
     }
 
     @Override
     public UserAccountResponse activateUser(String activationCode) {
         log.debug("Activating code:{}", activationCode);
-        UserAccountResponse response = new UserAccountResponse();
 
         Optional<User> optional = userRepo.findByEmailActivationCode(activationCode);
 
         if (optional.isEmpty()) {
-            response.setError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
-            log.debug("Activation error:{}", UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
-            return response;
+            log.debug("Activation error:{}", EMAIL_TOKEN_NOT_FOUND);
+            return new UserAccountResponse(EMAIL_TOKEN_NOT_FOUND);
         }
 
         if (!tokenService.verifyToken(activationCode)) {
-            response.setError(UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
-            log.debug("Activation error:{}", UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
-            return response;
+            log.debug("Activation error:{}", TOKEN_NOT_VERIFIED);
+            return new UserAccountResponse(TOKEN_NOT_VERIFIED);
         }
 
         User user = optional.get();
@@ -128,30 +123,25 @@ public class UserAccountServiceImpl implements UserAccountService {
         userRepo.save(user);
 
         log.info("User activated:{}", user.getUsername());
-        response.setSuccess(true);
-        return response;
+        return new UserAccountResponse(OK);
     }
-
 
     @Override
     public UserAccountResponse resendActivationCode(String email) {
         log.debug("resend activation code at email:{}", email);
-        UserAccountResponse response = new UserAccountResponse();
 
         Optional<User> optional = userRepo.findByEmail(email);
 
         if (optional.isEmpty()) {
-            response.setError(UserAccountServiceErrorCode.EMAIL_NOT_FOUND);
-            log.debug("Activation code resend error:{}", UserAccountServiceErrorCode.EMAIL_NOT_FOUND);
-            return response;
+            log.debug("Activation code resend error:{}", EMAIL_NOT_FOUND);
+            return new UserAccountResponse(EMAIL_NOT_FOUND);
         }
 
         User user = optional.get();
 
         if (user.getEmailActivationCode() == null) {
-            response.setError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
-            log.debug("Activation code resend error:{}", UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
-            return response;
+            log.debug("Activation code resend error:{}", EMAIL_TOKEN_NOT_FOUND);
+            return new UserAccountResponse(EMAIL_TOKEN_NOT_FOUND);
         }
 
         String activationCode = tokenService.generateEmailVerificationToken();
@@ -160,50 +150,43 @@ public class UserAccountServiceImpl implements UserAccountService {
         mailService.sendActivationCode(user.getUsername(), email, activationCode);
 
         log.debug("Activation code resent:(email:{}, code:{})", email, activationCode);
-        response.setSuccess(true);
-        return response;
+        return new UserAccountResponse(OK);
     }
 
     @Override
     public UserAccountResponse changePassword(ChangePasswordRequest request) {
         log.debug("change password username:{}", request.getUsername());
-        UserAccountResponse response = new UserAccountResponse();
 
         Optional<User> optional = userRepo.findByUsername(request.getUsername());
 
         if (optional.isEmpty()) {
-            response.setError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
-            log.debug("Change password error:{}", UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
-            return response;
+            log.debug("Change password error:{}", USERNAME_NOT_FOUND);
+            return new UserAccountResponse(USERNAME_NOT_FOUND);
         }
 
         User user = optional.get();
 
         if (!user.getPassword().equals(encoder.encode(request.getOldPassword()))) {
-            response.setError(UserAccountServiceErrorCode.PASSWORD_INCORRECT);
-            log.debug("Change password error:{}", UserAccountServiceErrorCode.PASSWORD_INCORRECT);
-            return response;
+            log.debug("Change password error:{}", PASSWORD_INCORRECT);
+            return new UserAccountResponse(PASSWORD_INCORRECT);
         }
 
         user.setPassword(encoder.encode(request.getPassword()));
         userRepo.save(user);
 
         log.debug("Password changed for user:{}", request.getUsername());
-        response.setSuccess(true);
-        return response;
+        return new UserAccountResponse(OK);
     }
 
     @Override
     public UserAccountResponse sendResetPasswordCode(String username) {
         log.debug("sending reset password for username:{}", username);
-        UserAccountResponse response = new UserAccountResponse();
 
         Optional<User> optional = userRepo.findByUsername(username);
 
         if (optional.isEmpty()) {
-            response.setError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
-            log.debug("Send reset password code error:{}", UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
-            return response;
+            log.debug("Send reset password code error:{}", USERNAME_NOT_FOUND);
+            return new UserAccountResponse(USERNAME_NOT_FOUND);
         }
 
         User user = optional.get();
@@ -214,26 +197,22 @@ public class UserAccountServiceImpl implements UserAccountService {
         mailService.sendResetPasswordCode(username, email, code);
 
         log.debug("Reset password code resent:(email:{}, code:{})", email, code);
-        response.setSuccess(true);
-        return response;
+        return new UserAccountResponse(OK);
     }
 
     @Override
     public UserAccountResponse resetPassword(String code) {
         log.debug("reset password for code:{}", code);
-        UserAccountResponse response = new UserAccountResponse();
 
         Optional<User> optional = userRepo.findByPasswordResetCode(code);
         if (optional.isEmpty()) {
-            response.setError(UserAccountServiceErrorCode.PASSWORD_TOKEN_NOT_FOUND);
-            log.debug("Reset password error:{}", UserAccountServiceErrorCode.PASSWORD_TOKEN_NOT_FOUND);
-            return response;
+            log.debug("Reset password error:{}", PASSWORD_TOKEN_NOT_FOUND);
+            return new UserAccountResponse(PASSWORD_TOKEN_NOT_FOUND);
         }
 
         if (!tokenService.verifyToken(code)) {
-            response.setError(UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
-            log.debug("Reset password error:{}", UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
-            return response;
+            log.debug("Reset password error:{}", TOKEN_NOT_VERIFIED);
+            return new UserAccountResponse(TOKEN_NOT_VERIFIED);
         }
 
         User user = optional.get();
@@ -245,40 +224,34 @@ public class UserAccountServiceImpl implements UserAccountService {
         userRepo.save(user);
 
         log.debug("Password changed for user:{}", user.getUsername());
-        response.setSuccess(true);
-        return response;
+        return new UserAccountResponse(OK);
     }
 
     @Override
     public UserAccountResponse changeEmail(@Valid ChangeEmailRequest request) {
         log.debug("change email request:(username:{}, email:{})", request.getUsername(), request.getEmail());
-        UserAccountResponse response = new UserAccountResponse();
 
         Optional<User> optional = userRepo.findByUsername(request.getUsername());
         if (optional.isEmpty()) {
-            response.setError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
-            log.debug("Email change error:{}", UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
-            return response;
+            log.debug("Email change error:{}", USERNAME_NOT_FOUND);
+            return new UserAccountResponse(USERNAME_NOT_FOUND);
         }
 
         User user = optional.get();
 
         if (!user.getPassword().equals(encoder.encode(request.getPassword()))) {
-            response.setError(UserAccountServiceErrorCode.PASSWORD_INCORRECT);
-            log.debug("Email change error:{}", UserAccountServiceErrorCode.PASSWORD_INCORRECT);
-            return response;
+            log.debug("Email change error:{}", PASSWORD_INCORRECT);
+            return new UserAccountResponse(PASSWORD_INCORRECT);
         }
 
         if (user.getEmail().equals(request.getEmail())) {
-            response.setError(UserAccountServiceErrorCode.NEW_EMAIL_IS_THE_SAME);
-            log.debug("Email change error:{}", UserAccountServiceErrorCode.NEW_EMAIL_IS_THE_SAME);
-            return response;
+            log.debug("Email change error:{}", NEW_EMAIL_IS_THE_SAME);
+            return new UserAccountResponse(NEW_EMAIL_IS_THE_SAME);
         }
 
-        if (userRepo.findByEmail(request.getEmail()).isPresent()){
-            response.setError(UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
-            log.debug("Email change error:{}", UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
-            return response;
+        if (userRepo.findByEmail(request.getEmail()).isPresent()) {
+            log.debug("Email change error:{}", EMAIL_ALREADY_EXISTS);
+            return new UserAccountResponse(EMAIL_ALREADY_EXISTS);
         }
 
         String code = tokenService.generateEmailVerificationToken();
@@ -288,20 +261,17 @@ public class UserAccountServiceImpl implements UserAccountService {
         mailService.sendNewEmailConfirmCode(request.getUsername(), request.getEmail(), code);
 
         log.debug("Email change code resent:(email:{}, code:{})", request.getEmail(), code);
-        response.setSuccess(true);
-        return response;
+        return new UserAccountResponse(OK);
     }
 
     @Override
     public UserAccountResponse confirmChangeEmail(String code) {
         log.debug("change email for code:{}", code);
-        UserAccountResponse response = new UserAccountResponse();
 
         Optional<User> optional = userRepo.findByEmailActivationCode(code);
         if (optional.isEmpty()) {
-            response.setError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
-            log.debug("Email change error:{}", UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
-            return response;
+            log.debug("Email change error:{}", EMAIL_TOKEN_NOT_FOUND);
+            return new UserAccountResponse(EMAIL_TOKEN_NOT_FOUND);
         }
 
         String email = tokenService.getEmailFromToken(code);
@@ -312,7 +282,6 @@ public class UserAccountServiceImpl implements UserAccountService {
         mailService.sendNewEmailConfirmSuccess(user.getUsername(), email);
 
         log.debug("Email changed for user:{}", user.getUsername());
-        response.setSuccess(true);
-        return response;
+        return new UserAccountResponse(OK);
     }
 }

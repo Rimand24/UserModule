@@ -25,6 +25,11 @@
                 registration error text
             </div>
         </div>
+        <div th:if="${message != null}">
+            <div class="alert alert-danger" th:text="${message}">
+                registration error text
+            </div>
+        </div>
 
         <div class="row">
             <form class="needs-validation col mx-auto" action="/registration" method="post" novalidate>
