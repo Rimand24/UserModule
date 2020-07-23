@@ -4,22 +4,20 @@ import org.example.auth.controller.user.requestDto.EmailChangeForm;
 import org.example.auth.controller.user.requestDto.PasswordChangeForm;
 import org.example.auth.controller.user.requestDto.RegistrationForm;
 import org.example.auth.domain.User;
+import org.example.auth.service.user.account.UserAccountService;
 import org.example.auth.service.user.account.dto.ChangeEmailRequest;
 import org.example.auth.service.user.account.dto.ChangePasswordRequest;
 import org.example.auth.service.user.account.dto.RegistrationRequest;
-import org.example.auth.service.user.account.UserAccountService;
 import org.example.auth.service.user.account.dto.UserAccountResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
@@ -42,90 +40,83 @@ public class UserAccountController {
     @Autowired
     UserAccountService userAccountService;
 
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return LOGIN;
+    }
+
     @GetMapping("/registration")
     public String showRegistrationPage() {
         return REGISTRATION_PAGE;
     }
 
     @PostMapping("/registration")
-    public String createUser(@Valid RegistrationForm form, BindingResult bindingResult, Model model) {
+    public ModelAndView createUser(@Valid RegistrationForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) { //fixme not tested
-            return REGISTRATION_PAGE;
+            return new ModelAndView(REGISTRATION_PAGE);
         }
         RegistrationRequest request = new RegistrationRequest(form.getUsername(), form.getPassword(), form.getEmail());
         UserAccountResponse serviceResponse = userAccountService.createUser(request);
         if (!serviceResponse.isSuccess()) {
-            model.addAttribute("error", serviceResponse.getError());
-            return REGISTRATION_PAGE;
+            return new ModelAndView (REGISTRATION_PAGE,"error", serviceResponse.getError());
         }
-        model.addAttribute("email", form.getEmail());
-        return REGISTRATION_SUCCESS;
+        return new ModelAndView(REGISTRATION_SUCCESS, "email", form.getEmail());
     }
 
     @GetMapping("/activate/{activationCode:.+}")
-    public String activateUser(@PathVariable String activationCode, Model model) {
+    public ModelAndView activateUser(@PathVariable String activationCode) {
         UserAccountResponse serviceResponse = userAccountService.activateUser(activationCode);
         if (!serviceResponse.isSuccess()) {
-            model.addAttribute("error", serviceResponse.getError());
-            return RESEND_ACTIVATION_CODE;
+            return new ModelAndView(RESEND_ACTIVATION_CODE,"error", serviceResponse.getError());
         }
-        return LOGIN;
+        return new ModelAndView(LOGIN, "message", "email activated, now you can login");
     }
 
 
     @GetMapping("/resendActivationCode")
-    public String resendActivationCodePage(@RequestParam(required = false) String email) {
-        if (StringUtils.hasText(email)) {
-            return "redirect:/resendActivationCode/"+email;
-        }
-        return RESEND_ACTIVATION_CODE;
+    public ModelAndView resendActivationCodePage() {
+        return new ModelAndView(RESEND_ACTIVATION_CODE);
     }
 
     @GetMapping("/resendActivationCode/{email}")
-    public String resendActivationCode(@PathVariable String email, Model model) {
+    public ModelAndView resendActivationCode(@PathVariable String email) {
         UserAccountResponse serviceResponse = userAccountService.resendActivationCode(email);
         if (!serviceResponse.isSuccess()) {
-            model.addAttribute("error", serviceResponse.getError());
-            return REGISTRATION_PAGE;
+            return new ModelAndView(REGISTRATION_PAGE,"error", serviceResponse.getError());
         }
-        model.addAttribute("email", email);
-        return REGISTRATION_SUCCESS;
+        return new ModelAndView(REGISTRATION_SUCCESS,"email", email);
     }
 
     @GetMapping("/forgetPassword")
-    public String showForgetPasswordForm() {
-        return FORGET_PASSWORD;
+    public ModelAndView showForgetPasswordForm() {
+        return new ModelAndView(FORGET_PASSWORD);
     }
 
     @PostMapping("/forgetPassword")
-    public String forgetPassword(String username, Model model) {
+    public ModelAndView forgetPassword(String username) {
         UserAccountResponse serviceResponse = userAccountService.sendResetPasswordCode(username);
         if (!serviceResponse.isSuccess()) {
-            model.addAttribute("error", serviceResponse.getError());
-            return FORGET_PASSWORD;
+            return new ModelAndView (FORGET_PASSWORD, "error", serviceResponse.getError());
         }
-        model.addAttribute("message", "reset password code sent, check email"); //todo change attr
-        return MESSAGE_SENT;
+        return new ModelAndView (MESSAGE_SENT,"message", "reset password code sent, check email");
     }
 
     @GetMapping("/resetPassword/{code:.+}")
-    public String resetPassword(@PathVariable String code, Model model) {
+    public ModelAndView resetPassword(@PathVariable String code) {
         UserAccountResponse serviceResponse = userAccountService.resetPassword(code);
         if (!serviceResponse.isSuccess()) {
-            model.addAttribute("error", serviceResponse.getError());
-            return FORGET_PASSWORD;
+            return new ModelAndView(FORGET_PASSWORD, "error", serviceResponse.getError());
         }
-        model.addAttribute("message", "password changed, check email for new password"); //todo change attr
-        return MESSAGE_SENT;
+        return new ModelAndView(MESSAGE_SENT,"message", "password changed, check email for new password"); //todo change attr
     }
 
     @GetMapping("/changePassword")
-    public String showChangePasswordForm() {
-        return CHANGE_PASSWORD;
+    public ModelAndView showChangePasswordForm() {
+        return new ModelAndView(CHANGE_PASSWORD);
     }
 
     @PostMapping("/changePassword")
-    public String changePassword(@AuthenticationPrincipal User user, @Valid PasswordChangeForm passwordChangeForm, Model model) {
+    public ModelAndView changePassword(@AuthenticationPrincipal User user, @Valid PasswordChangeForm passwordChangeForm) {
 //        if (!passwordChangeForm.getPassword().equals(passwordChangeForm.getPassword2())) {
 //            System.out.println("pass does not match");//fixme use bindingf results instead
 //            return "redirect:/changePassword";
@@ -134,38 +125,32 @@ public class UserAccountController {
         UserAccountResponse serviceResponse = userAccountService.changePassword(request);
 
         if (!serviceResponse.isSuccess()) {
-            model.addAttribute("error", serviceResponse.getError());
-            return CHANGE_PASSWORD;
+            return new ModelAndView(CHANGE_PASSWORD,"error", serviceResponse.getError());
         }
-
-        model.addAttribute("status", "password changed");//todo view does not use attr atm
-        return LOGIN;
+        return new ModelAndView(LOGIN, "message", "password changed");
     }
 
     @GetMapping("/changeEmail")
-    public String showChangeEmailForm() {
-        return CHANGE_EMAIL;
+    public ModelAndView showChangeEmailForm() {
+        return new ModelAndView(CHANGE_EMAIL);
     }
 
     @PostMapping("/changeEmail")
-    public String changeEmailRequest(@AuthenticationPrincipal User user, @Valid EmailChangeForm emailChangeForm, Model model) {
+    public ModelAndView changeEmailRequest(@AuthenticationPrincipal User user, @Valid EmailChangeForm emailChangeForm) {
         ChangeEmailRequest request = new ChangeEmailRequest(user.getUsername(),emailChangeForm.getEmail(), emailChangeForm.getPassword());
         UserAccountResponse serviceResponse = userAccountService.changeEmail(request);
         if (!serviceResponse.isSuccess()) {
-            model.addAttribute("error", serviceResponse.getError());
-            return CHANGE_EMAIL;
+            return new ModelAndView(CHANGE_EMAIL,"error", serviceResponse.getError());
         }
-        model.addAttribute("message", "reset email code sent, check email");
-        return MESSAGE_SENT;
+        return new ModelAndView(MESSAGE_SENT,"message", "reset email code sent, check email");
     }
 
     @GetMapping("/changeEmail/{confirmCode:.+}")
-    public String changeEmailConfirm(@PathVariable String confirmCode, Model model) {
+    public ModelAndView changeEmailConfirm(@PathVariable String confirmCode) {
         UserAccountResponse serviceResponse = userAccountService.confirmChangeEmail(confirmCode);
         if (!serviceResponse.isSuccess()) {
-            model.addAttribute("error", serviceResponse.getError());
-            return CHANGE_EMAIL;
+            return new ModelAndView(CHANGE_EMAIL, "error", serviceResponse.getError());
         }
-        return PROFILE;
+        return new ModelAndView(PROFILE);
     }
 }
