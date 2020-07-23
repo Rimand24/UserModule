@@ -12,6 +12,7 @@ public enum UserAccountServiceErrorCode implements ErrorCode {
     EMAIL_ALREADY_EXISTS,
     NEW_EMAIL_IS_THE_SAME,
     EMAIL_TOKEN_NOT_FOUND,
-    TOKEN_NOT_VERIFIED;
+    TOKEN_NOT_VERIFIED,
+    UNDEFINED_ACCOUNT_SERVICE_ERROR;
 
 }

@@ -1,16 +1,22 @@
 package org.example.auth.service.user.account.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.auth.service.ErrorCode;
 import org.example.auth.service.ServiceResponse;
 
 @Data
+@NoArgsConstructor
 public class UserAccountResponse implements ServiceResponse {
     boolean success;
-    ErrorCode error;
+    ErrorCode error = UserAccountServiceErrorCode.UNDEFINED_ACCOUNT_SERVICE_ERROR;
 
-    @Override
-    public void addError(ErrorCode errorCode) {
-        this.error=errorCode;
+    public UserAccountResponse(boolean success) {
+        this.success = success;
+    }
+
+    public UserAccountResponse(boolean success, ErrorCode error) {
+        this.success = success;
+        this.error = error;
     }
 }

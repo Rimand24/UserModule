@@ -73,13 +73,13 @@ public class UserAccountServiceImpl implements UserAccountService {
         UserAccountResponse response = new UserAccountResponse();
 
         if (userRepo.findByUsername(registrationRequest.getUsername()).isPresent()) {
-            response.addError(UserAccountServiceErrorCode.USERNAME_ALREADY_EXISTS);
+            response.setError(UserAccountServiceErrorCode.USERNAME_ALREADY_EXISTS);
             log.debug("Registration error: {}", UserAccountServiceErrorCode.USERNAME_ALREADY_EXISTS);
             return response;
         }
 
         if (userRepo.findByEmail(registrationRequest.getEmail()).isPresent()) {
-            response.addError(UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
+            response.setError(UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
             log.debug("Registration error: {}", UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
             return response;
         }
@@ -111,13 +111,13 @@ public class UserAccountServiceImpl implements UserAccountService {
         Optional<User> optional = userRepo.findByEmailActivationCode(activationCode);
 
         if (optional.isEmpty()) {
-            response.addError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
+            response.setError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
             log.debug("Activation error:{}", UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
             return response;
         }
 
         if (!tokenService.verifyToken(activationCode)) {
-            response.addError(UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
+            response.setError(UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
             log.debug("Activation error:{}", UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
             return response;
         }
@@ -141,7 +141,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         Optional<User> optional = userRepo.findByEmail(email);
 
         if (optional.isEmpty()) {
-            response.addError(UserAccountServiceErrorCode.EMAIL_NOT_FOUND);
+            response.setError(UserAccountServiceErrorCode.EMAIL_NOT_FOUND);
             log.debug("Activation code resend error:{}", UserAccountServiceErrorCode.EMAIL_NOT_FOUND);
             return response;
         }
@@ -149,7 +149,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         User user = optional.get();
 
         if (user.getEmailActivationCode() == null) {
-            response.addError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
+            response.setError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
             log.debug("Activation code resend error:{}", UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
             return response;
         }
@@ -172,7 +172,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         Optional<User> optional = userRepo.findByUsername(request.getUsername());
 
         if (optional.isEmpty()) {
-            response.addError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
+            response.setError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
             log.debug("Change password error:{}", UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
             return response;
         }
@@ -180,7 +180,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         User user = optional.get();
 
         if (!user.getPassword().equals(encoder.encode(request.getOldPassword()))) {
-            response.addError(UserAccountServiceErrorCode.PASSWORD_INCORRECT);
+            response.setError(UserAccountServiceErrorCode.PASSWORD_INCORRECT);
             log.debug("Change password error:{}", UserAccountServiceErrorCode.PASSWORD_INCORRECT);
             return response;
         }
@@ -201,7 +201,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         Optional<User> optional = userRepo.findByUsername(username);
 
         if (optional.isEmpty()) {
-            response.addError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
+            response.setError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
             log.debug("Send reset password code error:{}", UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
             return response;
         }
@@ -225,13 +225,13 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         Optional<User> optional = userRepo.findByPasswordResetCode(code);
         if (optional.isEmpty()) {
-            response.addError(UserAccountServiceErrorCode.PASSWORD_TOKEN_NOT_FOUND);
+            response.setError(UserAccountServiceErrorCode.PASSWORD_TOKEN_NOT_FOUND);
             log.debug("Reset password error:{}", UserAccountServiceErrorCode.PASSWORD_TOKEN_NOT_FOUND);
             return response;
         }
 
         if (!tokenService.verifyToken(code)) {
-            response.addError(UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
+            response.setError(UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
             log.debug("Reset password error:{}", UserAccountServiceErrorCode.TOKEN_NOT_VERIFIED);
             return response;
         }
@@ -256,7 +256,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         Optional<User> optional = userRepo.findByUsername(request.getUsername());
         if (optional.isEmpty()) {
-            response.addError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
+            response.setError(UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
             log.debug("Email change error:{}", UserAccountServiceErrorCode.USERNAME_NOT_FOUND);
             return response;
         }
@@ -264,19 +264,19 @@ public class UserAccountServiceImpl implements UserAccountService {
         User user = optional.get();
 
         if (!user.getPassword().equals(encoder.encode(request.getPassword()))) {
-            response.addError(UserAccountServiceErrorCode.PASSWORD_INCORRECT);
+            response.setError(UserAccountServiceErrorCode.PASSWORD_INCORRECT);
             log.debug("Email change error:{}", UserAccountServiceErrorCode.PASSWORD_INCORRECT);
             return response;
         }
 
         if (user.getEmail().equals(request.getEmail())) {
-            response.addError(UserAccountServiceErrorCode.NEW_EMAIL_IS_THE_SAME);
+            response.setError(UserAccountServiceErrorCode.NEW_EMAIL_IS_THE_SAME);
             log.debug("Email change error:{}", UserAccountServiceErrorCode.NEW_EMAIL_IS_THE_SAME);
             return response;
         }
 
         if (userRepo.findByEmail(request.getEmail()).isPresent()){
-            response.addError(UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
+            response.setError(UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
             log.debug("Email change error:{}", UserAccountServiceErrorCode.EMAIL_ALREADY_EXISTS);
             return response;
         }
@@ -299,7 +299,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         Optional<User> optional = userRepo.findByEmailActivationCode(code);
         if (optional.isEmpty()) {
-            response.addError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
+            response.setError(UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
             log.debug("Email change error:{}", UserAccountServiceErrorCode.EMAIL_TOKEN_NOT_FOUND);
             return response;
         }

@@ -1,4 +1,4 @@
-package org.example.auth.controller;
+package org.example.auth.controller.user;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

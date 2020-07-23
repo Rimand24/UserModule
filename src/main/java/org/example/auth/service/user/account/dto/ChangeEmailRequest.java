@@ -15,8 +15,9 @@ public class ChangeEmailRequest implements Serializable {
     private static final long serialVersionUID = 6269245425803257744L;
     @NotBlank
     private String username;
-    @NotBlank
-    private String password;
     @ValidEmail
     private String email;
+    @NotBlank
+    private String password;
+
 }

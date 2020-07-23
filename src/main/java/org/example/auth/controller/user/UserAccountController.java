@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -32,17 +34,13 @@ public class UserAccountController {
     private static final String LOGIN = "account/login";
     private static final String CHANGE_EMAIL = "account/changeEmail";
     private static final String PROFILE = "account/profile";
+    private static final String RESEND_ACTIVATION_CODE = "account/resendActivationCode";
 
     @Autowired
     ModelMapper modelMapper;
 
     @Autowired
     UserAccountService userAccountService;
-
-    @GetMapping("/login")
-    public String login() {
-        return LOGIN;
-    }
 
     @GetMapping("/registration")
     public String showRegistrationPage() {
@@ -69,9 +67,18 @@ public class UserAccountController {
         UserAccountResponse serviceResponse = userAccountService.activateUser(activationCode);
         if (!serviceResponse.isSuccess()) {
             model.addAttribute("error", serviceResponse.getError());
-            return REGISTRATION_PAGE;
+            return RESEND_ACTIVATION_CODE;
         }
         return LOGIN;
+    }
+
+
+    @GetMapping("/resendActivationCode")
+    public String resendActivationCodePage(@RequestParam(required = false) String email) {
+        if (StringUtils.hasText(email)) {
+            return "redirect:/resendActivationCode/"+email;
+        }
+        return RESEND_ACTIVATION_CODE;
     }
 
     @GetMapping("/resendActivationCode/{email}")
@@ -94,9 +101,8 @@ public class UserAccountController {
     public String forgetPassword(String username, Model model) {
         UserAccountResponse serviceResponse = userAccountService.sendResetPasswordCode(username);
         if (!serviceResponse.isSuccess()) {
-            //todo add some error - dont work with redirect?
-            //model.addAttribute("error", serviceResponse.getError());
-            return "redirect:/forgetPassword";
+            model.addAttribute("error", serviceResponse.getError());
+            return FORGET_PASSWORD;
         }
         model.addAttribute("message", "reset password code sent, check email"); //todo change attr
         return MESSAGE_SENT;
@@ -143,7 +149,7 @@ public class UserAccountController {
 
     @PostMapping("/changeEmail")
     public String changeEmailRequest(@AuthenticationPrincipal User user, @Valid EmailChangeForm emailChangeForm, Model model) {
-        ChangeEmailRequest request = new ChangeEmailRequest(user.getUsername(), emailChangeForm.getPassword(), emailChangeForm.getEmail());
+        ChangeEmailRequest request = new ChangeEmailRequest(user.getUsername(),emailChangeForm.getEmail(), emailChangeForm.getPassword());
         UserAccountResponse serviceResponse = userAccountService.changeEmail(request);
         if (!serviceResponse.isSuccess()) {
             model.addAttribute("error", serviceResponse.getError());
