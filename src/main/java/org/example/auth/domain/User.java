@@ -29,18 +29,18 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank (message = "username cannot be blank")
+    @NotBlank(message = "username cannot be blank")
     private String username;
 
-    @NotBlank (message = "password cannot be blank")
+    @NotBlank(message = "password cannot be blank")
     private String password;
 
-    @NotBlank (message = "email cannot be blank")
+    @NotBlank(message = "email cannot be blank")
     @Email(message = "Email should be valid")
     private String email;
 
     @NotNull(message = "registrationDate cannot be null")
-    @PastOrPresent(message = "registration Date cannot be in the future")
+    @PastOrPresent(message = "registration date cannot be in the future")
     private LocalDate registrationDate;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -49,16 +49,18 @@ public class User implements UserDetails {
     private Set<Role> authorities;
 
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-   // @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy", orphanRemoval = true)
+    // @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy", orphanRemoval = true)
     private List<Document> createdDocuments;
 
     private boolean accountNonExpired = true;
 
     private boolean accountNonLocked = true;
 
-    private String accountLockerName;
-
-    private String accountLockReason;
+    //todo Block Details
+    private String accountBlockerName;
+    private String accountBlockReason;
+    @PastOrPresent(message = "block date cannot be in the future")
+    private LocalDate accountBlockDate;
 
     private boolean credentialsNonExpired = true;
 
@@ -67,7 +69,6 @@ public class User implements UserDetails {
     private String emailActivationCode;
 
     private String passwordResetCode;
-
 
 
     public Collection<Role> getRoles() {

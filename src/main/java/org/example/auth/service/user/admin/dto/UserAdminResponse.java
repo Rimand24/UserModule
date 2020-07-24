@@ -20,7 +20,7 @@ public class UserAdminResponse implements ServiceResponse {
     }
 
     @Override
-    public ServiceResponseCode getStatus(){
+    public ServiceResponseCode getStatus() {
         return status;
     }
 }

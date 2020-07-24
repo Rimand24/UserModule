@@ -1,7 +1,6 @@
 package org.example.auth.domain;
 
 import lombok.Data;
-import org.example.auth.domain.Role;
 import org.example.auth.service.document.DocumentDto;
 
 import java.time.LocalDate;

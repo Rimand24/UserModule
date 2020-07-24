@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.example.auth.controller.validator.PasswordMatches;
 import org.example.auth.controller.validator.ValidEmail;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 

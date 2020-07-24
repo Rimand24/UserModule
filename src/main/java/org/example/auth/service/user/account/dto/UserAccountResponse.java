@@ -2,8 +2,8 @@ package org.example.auth.service.user.account.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.auth.service.ServiceResponseCode;
 import org.example.auth.service.ServiceResponse;
+import org.example.auth.service.ServiceResponseCode;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +20,7 @@ public class UserAccountResponse implements ServiceResponse {
     }
 
     @Override
-    public ServiceResponseCode getStatus(){
+    public ServiceResponseCode getStatus() {
         return status;
     }
 

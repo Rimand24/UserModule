@@ -31,7 +31,7 @@ public class MapperUtils {
         dto.setActive(user.isEnabled());
         dto.setBlocked(!user.isAccountNonLocked());
         dto.setRegistrationDate(user.getRegistrationDate());
-        dto.setBlockReason(user.getAccountLockReason());
+        dto.setBlockReason(user.getAccountBlockReason());
 
         List<DocumentDto> docs = new ArrayList<>();
 

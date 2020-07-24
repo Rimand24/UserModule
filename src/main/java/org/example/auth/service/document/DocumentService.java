@@ -17,7 +17,6 @@ public interface DocumentService {
 
     DocumentDto getDocumentFileById(String id);
 
-
-
+    boolean changeOwnerToDeleted(String docId);
 }
 

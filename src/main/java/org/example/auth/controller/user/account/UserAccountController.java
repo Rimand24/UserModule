@@ -2,7 +2,10 @@ package org.example.auth.controller.user.account;
 
 import org.example.auth.domain.User;
 import org.example.auth.service.user.account.UserAccountService;
-import org.example.auth.service.user.account.dto.*;
+import org.example.auth.service.user.account.dto.ChangeEmailRequest;
+import org.example.auth.service.user.account.dto.ChangePasswordRequest;
+import org.example.auth.service.user.account.dto.RegistrationRequest;
+import org.example.auth.service.user.account.dto.UserAccountResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -52,7 +55,7 @@ public class UserAccountController {
         RegistrationRequest request = new RegistrationRequest(form.getUsername(), form.getPassword(), form.getEmail());
         UserAccountResponse serviceResponse = userAccountService.createUser(request);
         if (!serviceResponse.isSuccess()) {
-            return new ModelAndView (REGISTRATION_PAGE,"error", serviceResponse.getStatus());
+            return new ModelAndView(REGISTRATION_PAGE, "error", serviceResponse.getStatus());
         }
         return new ModelAndView(REGISTRATION_SUCCESS, "email", form.getEmail());
     }
@@ -61,7 +64,7 @@ public class UserAccountController {
     public ModelAndView activateUser(@PathVariable String activationCode) {
         UserAccountResponse serviceResponse = userAccountService.activateUser(activationCode);
         if (!serviceResponse.isSuccess()) {
-            return new ModelAndView(RESEND_ACTIVATION_CODE,"error", serviceResponse.getStatus());
+            return new ModelAndView(RESEND_ACTIVATION_CODE, "error", serviceResponse.getStatus());
         }
         return new ModelAndView(LOGIN, "message", "email activated, now you can login");
     }
@@ -76,9 +79,9 @@ public class UserAccountController {
     public ModelAndView resendActivationCode(@PathVariable String email) {
         UserAccountResponse serviceResponse = userAccountService.resendActivationCode(email);
         if (!serviceResponse.isSuccess()) {
-            return new ModelAndView(REGISTRATION_PAGE,"error", serviceResponse.getStatus());
+            return new ModelAndView(REGISTRATION_PAGE, "error", serviceResponse.getStatus());
         }
-        return new ModelAndView(REGISTRATION_SUCCESS,"email", email);
+        return new ModelAndView(REGISTRATION_SUCCESS, "email", email);
     }
 
     @GetMapping("/forgetPassword")
@@ -90,9 +93,9 @@ public class UserAccountController {
     public ModelAndView forgetPassword(String username) {
         UserAccountResponse serviceResponse = userAccountService.sendResetPasswordCode(username);
         if (!serviceResponse.isSuccess()) {
-            return new ModelAndView (FORGET_PASSWORD, "error", serviceResponse.getStatus());
+            return new ModelAndView(FORGET_PASSWORD, "error", serviceResponse.getStatus());
         }
-        return new ModelAndView (MESSAGE_SENT,"message", "reset password code sent, check email");
+        return new ModelAndView(MESSAGE_SENT, "message", "reset password code sent, check email");
     }
 
     @GetMapping("/resetPassword/{code:.+}")
@@ -101,7 +104,7 @@ public class UserAccountController {
         if (!serviceResponse.isSuccess()) {
             return new ModelAndView(FORGET_PASSWORD, "error", serviceResponse.getStatus());
         }
-        return new ModelAndView(MESSAGE_SENT,"message", "password changed, check email for new password"); //todo change attr
+        return new ModelAndView(MESSAGE_SENT, "message", "password changed, check email for new password"); //todo change attr
     }
 
     @GetMapping("/changePassword")
@@ -118,7 +121,7 @@ public class UserAccountController {
         UserAccountResponse serviceResponse = userAccountService.changePassword(request);
 
         if (!serviceResponse.isSuccess()) {
-            return new ModelAndView(CHANGE_PASSWORD,"error", serviceResponse.getStatus());
+            return new ModelAndView(CHANGE_PASSWORD, "error", serviceResponse.getStatus());
         }
         return new ModelAndView(LOGIN, "message", "password changed");
     }
@@ -130,12 +133,12 @@ public class UserAccountController {
 
     @PostMapping("/changeEmail")
     public ModelAndView changeEmailRequest(@AuthenticationPrincipal User user, @Valid EmailChangeForm emailChangeForm) {
-        ChangeEmailRequest request = new ChangeEmailRequest(user.getUsername(),emailChangeForm.getEmail(), emailChangeForm.getPassword());
+        ChangeEmailRequest request = new ChangeEmailRequest(user.getUsername(), emailChangeForm.getEmail(), emailChangeForm.getPassword());
         UserAccountResponse serviceResponse = userAccountService.changeEmail(request);
         if (!serviceResponse.isSuccess()) {
-            return new ModelAndView(CHANGE_EMAIL,"error", serviceResponse.getStatus());
+            return new ModelAndView(CHANGE_EMAIL, "error", serviceResponse.getStatus());
         }
-        return new ModelAndView(MESSAGE_SENT,"message", "reset email code sent, check email");
+        return new ModelAndView(MESSAGE_SENT, "message", "reset email code sent, check email");
     }
 
     @GetMapping("/changeEmail/{confirmCode:.+}")

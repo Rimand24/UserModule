@@ -25,6 +25,12 @@ public class UserSearchServiceImpl implements UserSearchService {
         return mapper.mapUser(user);
     }
 
+//    @Override
+//    public List<UserDto> findAllBlocked() {
+//        List<User> all = userRepo.findAllByAccountNonLockedFalse();
+//        return mapper.mapUserList(all);
+//    }
+
     @Override
     public UserDto getUserByEmail(String email) {
         User user = userRepo.findByEmail(email)

@@ -2,6 +2,7 @@ package org.example.auth.service.document;
 
 import lombok.SneakyThrows;
 import org.example.auth.domain.Document;
+import org.example.auth.domain.User;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.util.MapperUtils;
@@ -89,6 +90,16 @@ public class DocumentServiceImpl implements DocumentService {
         byte[] load = storageService.load(document.getFilename());
         document.setRawFile(load);
         return document;
+    }
+
+    @Override
+    public boolean changeOwnerToDeleted(String docId) {
+        Document document = documentRepo.findByDocId(docId);
+        User user = new User();//fixme validation exception - not all field filled
+        user.setUsername("USER_DELETED");
+        document.setCreatedBy(user);
+        documentRepo.save(document);
+        return true;
     }
 
     @Override

@@ -10,5 +10,6 @@ public class UserBlockRequest {
     private String username;
     @NotNull
     private String blocker;
+    @NotNull
     private String reason;
 }

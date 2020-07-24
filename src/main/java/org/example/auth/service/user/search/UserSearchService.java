@@ -21,4 +21,6 @@ public interface UserSearchService {
 
 //    List<UserDto> getUsers(int page, int limit);
 
+
+//    List<UserDto> findAllNotActivated();
 }
