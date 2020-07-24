@@ -1,4 +1,4 @@
-package org.example.auth.controller.user;
+package org.example.auth.controller.user.search;
 
 import org.example.auth.domain.UserDto;
 import org.example.auth.service.user.search.UserSearchService;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -17,12 +18,42 @@ public class UserSearchController {
     @Autowired
     UserSearchService userSearchService;
 
+    private static final String USER_LIST = "userList";
+
     @GetMapping("/user/{username}")
     public String getUser(@PathVariable String username, Model model) {
         UserDto dto = userSearchService.getUserByUsername(username);
         model.addAttribute("user", dto);
         return "profile";
     }
+
+    ///////////////////
+    //@PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/admin/users/total")
+    public ModelAndView getUsersAll(){
+        List<UserDto> list = userSearchService.findAll();
+        return new ModelAndView(USER_LIST, "userList", list);
+    }
+
+    @GetMapping("/admin/users/all")
+    public ModelAndView getUsersActivated(){
+        List<UserDto> list = userSearchService.findAllActivated();
+        return new ModelAndView(USER_LIST, "userList", list);
+    }
+
+    @GetMapping("/admin/users/notActivated")
+    public ModelAndView getUsersNotActivated(){
+        List<UserDto> list = userSearchService.findAllNotActivated();
+        return new ModelAndView(USER_LIST, "userList", list);
+    }
+
+    @GetMapping("/admin/users/blocked")
+    public ModelAndView getUsersBlocked(){
+        List<UserDto> list = userSearchService.findAllBlocked();
+        return new ModelAndView(USER_LIST, "userList", list);
+    }
+//////////////
+
 
 //    @GetMapping("/user")
 //    public String getUserSelf(@AuthenticationPrincipal User user, Model model) {

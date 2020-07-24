@@ -1,8 +1,5 @@
-package org.example.auth.controller.user;
+package org.example.auth.controller.user.account;
 
-import org.example.auth.controller.user.requestDto.EmailChangeForm;
-import org.example.auth.controller.user.requestDto.PasswordChangeForm;
-import org.example.auth.controller.user.requestDto.RegistrationForm;
 import org.example.auth.domain.User;
 import org.example.auth.service.user.account.UserAccountService;
 import org.example.auth.service.user.account.dto.*;

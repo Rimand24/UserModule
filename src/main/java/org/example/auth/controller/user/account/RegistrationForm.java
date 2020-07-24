@@ -1,4 +1,4 @@
-package org.example.auth.controller.user.requestDto;
+package org.example.auth.controller.user.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
