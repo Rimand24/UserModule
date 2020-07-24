@@ -63,15 +63,6 @@ public class UserAccountServiceImpl implements UserAccountService {
                 registrationRequest.getPassword(),
                 registrationRequest.getEmail());
 
-        //todo delete after tests
-        if (registrationRequest == null
-                || !StringUtils.hasText(registrationRequest.getUsername())
-                || !StringUtils.hasText(registrationRequest.getEmail())
-                || !StringUtils.hasText(registrationRequest.getPassword())) {
-            throw new RuntimeException("username, email or password is invalid");
-        }
-        //todo end
-
         if (userRepo.findByUsername(registrationRequest.getUsername()).isPresent()) {
             log.debug("Registration error: {}", USERNAME_ALREADY_EXISTS);
             return new UserAccountResponse(USERNAME_ALREADY_EXISTS);
@@ -139,9 +130,10 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         User user = optional.get();
 
+        //fixme posible logic error/ send code or generate new?
         if (user.getEmailActivationCode() == null) {
-            log.debug("Activation code resend error:{}", EMAIL_TOKEN_NOT_FOUND);
-            return new UserAccountResponse(EMAIL_TOKEN_NOT_FOUND);
+            log.debug("Activation code resend error:{}", ALREADY_ACTIVATED);
+            return new UserAccountResponse(ALREADY_ACTIVATED);
         }
 
         String activationCode = tokenService.generateEmailVerificationToken();

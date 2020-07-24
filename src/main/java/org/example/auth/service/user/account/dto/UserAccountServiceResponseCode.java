@@ -13,6 +13,7 @@ public enum UserAccountServiceResponseCode implements ServiceResponseCode {
     EMAIL_ALREADY_EXISTS,
     NEW_EMAIL_IS_THE_SAME,
     EMAIL_TOKEN_NOT_FOUND,
+    ALREADY_ACTIVATED,
     TOKEN_NOT_VERIFIED,
     UNDEFINED_ACCOUNT_SERVICE_ERROR;
 
