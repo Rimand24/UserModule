@@ -1,17 +1,20 @@
 package org.example.auth.service.user.admin;
 
-import org.example.auth.domain.UserDto;
-
-import java.util.List;
+import org.example.auth.domain.Role;
+import org.example.auth.service.user.admin.dto.UserAdminResponse;
+import org.example.auth.service.user.admin.dto.UserBlockRequest;
 
 public interface UserAdminService {
-    List<UserDto> findAllBlocked();
 
-//    List<UserDto> findAllNotActivated();
+    UserAdminResponse blockUser(UserBlockRequest blockRequest);
 
-    boolean blockUser(String username, String blocker, String reason);
+    UserAdminResponse unblockUser(String username);
 
-    boolean unblockUser(String username);
+    UserAdminResponse deleteUser(String username);
 
-    boolean deleteUser(String username);
+    UserAdminResponse deleteUserOnly(String username);
+
+    UserAdminResponse addUserRole(String username, Role role);
+
+    UserAdminResponse removeUserRole(String username, Role role);
 }
