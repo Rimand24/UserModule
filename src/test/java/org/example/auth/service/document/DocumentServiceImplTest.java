@@ -156,7 +156,7 @@ class DocumentServiceImplTest {
             setFilename(filename);
             setName(name);
             setDocId(docId);
-            setCreatedBy(new User() {{
+            setAuthor(new User() {{
                 setUsername(username);
             }});
         }};
@@ -167,9 +167,7 @@ class DocumentServiceImplTest {
             setFilename(filename);
             setName(name);
             setDocId(docId);
-            setAuthor(new UserDto() {{
-                setUsername(username);
-            }});
+            setAuthor(username);
         }};
     }
 }

@@ -49,8 +49,8 @@ public class DocumentServiceImpl implements DocumentService {
         document.setFilename(filename);
         document.setMediaType(multipartFile.getContentType());
         document.setSize(multipartFile.getSize());
-        document.setCreatedBy(request.getCreatedBy());
-        document.setCreatedAt(LocalDateTime.now());
+        document.setAuthor(request.getCreatedBy());
+        document.setCreationDateTime(LocalDateTime.now());
         Document saved = documentRepo.save(document);
 
         return mapper.mapDocument(saved);
@@ -78,7 +78,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<DocumentDto> findDocumentsByUser(String username) {
-        List<Document> documents = documentRepo.findAllByCreatedBy_Username(username);
+        List<Document> documents = documentRepo.findByAuthor(username);
         return mapper.mapDocumentList(documents);
     }
 
@@ -98,7 +98,7 @@ public class DocumentServiceImpl implements DocumentService {
         Document document = documentRepo.findByDocId(docId);
         User user = new User();//fixme validation exception - not all field filled
         user.setUsername("USER_DELETED");
-        document.setCreatedBy(user);
+        document.setAuthor(user);
         documentRepo.save(document);
         return true;
     }
