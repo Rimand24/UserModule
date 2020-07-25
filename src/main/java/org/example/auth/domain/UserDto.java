@@ -1,7 +1,6 @@
 package org.example.auth.domain;
 
 import lombok.Data;
-import org.example.auth.service.document.DocumentDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,4 +16,5 @@ public class UserDto {
     private boolean active;
     private boolean blocked;
     private String blockReason;
+    private LocalDate blockDate;
 }

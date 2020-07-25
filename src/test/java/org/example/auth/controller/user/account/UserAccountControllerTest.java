@@ -1,13 +1,10 @@
-package org.example.auth.controller.user;
+package org.example.auth.controller.user.account;
 
-import org.example.auth.controller.user.requestDto.PasswordChangeForm;
-import org.example.auth.controller.user.requestDto.RegistrationForm;
 import org.example.auth.service.user.account.UserAccountService;
 import org.example.auth.service.user.account.dto.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,11 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = UserAccountController.class)
-//@AutoConfigureMockMvc
 class UserAccountControllerTest {
-
-    @MockBean
-    ModelMapper modelMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,10 +37,10 @@ class UserAccountControllerTest {
     private static final String PROFILE = "account/profile";
     private static final String RESEND_ACTIVATION_CODE = "account/resendActivationCode";
 
-    private final String username = "Alex";
-    private final String email = "example@mail.com";
-    private final String password = "1234";
-    private final String encryptedPassword = "4Fhd6h5gs85dS";
+    private static final String username = "Alex";
+    private static final String email = "example@mail.com";
+    private static final String password = "1234";
+    private static final String encryptedPassword = "4Fhd6h5gs85dS";
     private static final String TOKEN = "token.with.dots";
 
 
@@ -174,7 +167,7 @@ class UserAccountControllerTest {
         verify(accountService).resendActivationCode(anyString());
     }
 
-        @Disabled //No ModelAndView found
+    @Disabled //No ModelAndView found
     @Test
     void resendActivationCode_fail() throws Exception {
         when(accountService.resendActivationCode(anyString()))

@@ -20,15 +20,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 import static org.example.auth.service.user.account.dto.UserAccountServiceResponseCode.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -52,13 +49,13 @@ class UserAccountServiceImplTest {
     @Mock
     MailService mailService;
 
-    private final String username = "Alex";
-    private final String email = "example@mail.com";
-    private final String password = "1234";
-    private final String encryptedPassword = "4Fhd6h5gs85dS";
-    private static final String TOKEN = "token.with.dots";
+    private static final String username = "Alex";
+    private static final String email = "example@mail.com";
+    private static final String newEmail = "newEmail@mail.com";
+    private static final String password = "1234";
     private static final String newPassword = "newPassword";
-    private static final String newEmail = "newEmail";
+    private static final String encryptedPassword = "4Fhd6h5gs85dS";
+    private static final String TOKEN = "token.with.dots";
 
     @BeforeEach
     void init() {
