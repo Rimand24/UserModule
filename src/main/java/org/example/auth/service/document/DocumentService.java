@@ -1,24 +1,108 @@
 package org.example.auth.service.document;
 
+import lombok.SneakyThrows;
+import org.example.auth.domain.Document;
 import org.example.auth.domain.DocumentDto;
+import org.example.auth.domain.User;
+import org.example.auth.repo.DocumentRepo;
+import org.example.auth.service.storage.StorageService;
+import org.example.auth.service.util.MapperUtils;
+import org.example.auth.service.util.RandomGeneratorUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-public interface DocumentService {
-    DocumentDto addDocument(DocumentCreationRequestDto request);
+@Service
+public class DocumentService  {
+    @Autowired
+    private DocumentRepo documentRepo;
 
-    List<DocumentDto> getAllDocuments();
+    @Autowired
+    private StorageService storageService;
 
-    DocumentDto getDocumentById(String id);
+    @Autowired
+    private RandomGeneratorUtils generator;
 
-    List<DocumentDto> searchDocumentsByName(String name);
+    @Autowired
+    private MapperUtils mapper;
 
-    boolean deleteDocument(String id);
+    @SneakyThrows
+    public DocumentDto addDocument(DocumentCreationRequestDto request) {
 
-    List<DocumentDto> findDocumentsByUser(String username);
+        if (request == null || request.getCreatedBy() == null || request.getDocumentFile() == null) {
+            throw new DocumentServiceException("document addition request incorrect");
+        }
 
-    DocumentDto getDocumentFileById(String id);
+        MultipartFile multipartFile = request.getDocumentFile();
+        String name = multipartFile.getOriginalFilename();
+        String docId = generator.generateUUID();
+        String filename = storageService.save(multipartFile.getBytes(), name, docId);
 
-    boolean changeOwnerToDeleted(String docId);
+        Document document = new Document();
+        document.setName(name);
+        document.setDocId(docId);
+        document.setFilename(filename);
+        document.setMediaType(multipartFile.getContentType());
+        document.setSize(multipartFile.getSize());
+        document.setAuthor(request.getCreatedBy());
+        document.setCreationDateTime(LocalDateTime.now());
+        Document saved = documentRepo.save(document);
+
+        return mapper.mapDocument(saved);
+    }
+
+    public List<DocumentDto> getAllDocuments() {
+        List<Document> documents = documentRepo.findAll();
+        return mapper.mapDocumentList(documents);
+    }
+
+    public DocumentDto getDocumentById(String docId) {
+        Document document = documentRepo.findByDocId(docId);
+        if (StringUtils.isEmpty(document)) {
+            throw new DocumentServiceException("document not found (id:" + docId + ")");
+        }
+        return mapper.mapDocument(document);
+    }
+
+    public List<DocumentDto> searchDocumentsByName(String name) {
+        List<Document> documents = documentRepo.findByNameContains(name);
+        return mapper.mapDocumentList(documents);
+    }
+
+    public List<DocumentDto> findDocumentsByUser(String username) {
+        List<Document> documents = documentRepo.findByAuthor_Username(username);
+        return mapper.mapDocumentList(documents);
+    }
+
+
+
+    @SneakyThrows
+    public DocumentDto getDocumentFileById(String docId) {
+        DocumentDto document = getDocumentById(docId);
+        byte[] load = storageService.load(document.getFilename());
+        document.setRawFile(load);
+        return document;
+    }
+
+    public boolean changeOwnerToDeleted(String docId) {
+        Document document = documentRepo.findByDocId(docId);
+        User user = new User();//fixme validation exception - not all field filled
+        user.setUsername("USER_DELETED");
+        document.setAuthor(user);
+        documentRepo.save(document);
+        return true;
+    }
+
+    public boolean deleteDocument(String docId) {
+        Document document = documentRepo.findByDocId(docId);
+        documentRepo.delete(document);
+        storageService.delete(document.getFilename());
+        return true;
+    }
+
 }
 

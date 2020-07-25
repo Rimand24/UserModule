@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PreDestroy;
 import java.util.concurrent.Future;
 
 @Service
@@ -34,7 +35,7 @@ public class MailService {
     private final String SITE_LINK = "http://" + serverAddress + ":" + serverPort;
     private static final String ACTIVATION_ADDRESS = "/activate";
     private static final String RESET_PASS_ADDRESS = "/resetPassword";
-    private static final String EMAIL_CONFIRM_ADDRESS = "/activate";
+    private static final String EMAIL_CONFIRM_ADDRESS = "/changeEmail";
 
     @Async
     public Future<Boolean> sendActivationCode(String username, String email, String activationCode) {
@@ -115,7 +116,6 @@ public class MailService {
             setText(message);
         }};
         mailSender.send(simpleMailMessage);
-        return new AsyncResult<Boolean>(true);
+        return new AsyncResult<>(true);
     }
-
 }

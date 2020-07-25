@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-class TokenServiceImplTest {
+class TokenServiceTest {
 
     public long authExpirationTime = 600000L;
     public long activationCodeExpirationTime = 600000L;
@@ -23,7 +23,7 @@ class TokenServiceImplTest {
     private final String incorrectToken = "120456789";
 
     @InjectMocks
-    TokenServiceImpl tokenService = new TokenServiceImpl(
+    TokenService tokenService = new TokenService(
             authExpirationTime, activationCodeExpirationTime, passwordResetExpirationTime, tokenSecret);
 
     @BeforeEach

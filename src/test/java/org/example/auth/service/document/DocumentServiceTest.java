@@ -6,7 +6,6 @@ import org.example.auth.domain.DocumentDto;
 import org.example.auth.domain.User;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;
-import org.example.auth.domain.UserDto;
 import org.example.auth.service.util.RandomGeneratorUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,10 +29,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class DocumentServiceImplTest {
+class DocumentServiceTest {
 
     @InjectMocks
-    DocumentServiceImpl documentService;
+    DocumentService documentService;
 
     @Mock
     DocumentRepo documentRepo;

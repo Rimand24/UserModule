@@ -2,7 +2,6 @@ package org.example.auth.service.user.account;
 
 import org.example.auth.domain.User;
 import org.example.auth.repo.UserRepo;
-import org.example.auth.service.mail.Mail;
 import org.example.auth.service.mail.MailService;
 import org.example.auth.service.user.account.dto.*;
 import org.example.auth.service.util.RandomGeneratorUtils;
@@ -29,10 +28,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class UserAccountServiceImplTest {
+class UserAccountServiceTest {
 
     @InjectMocks
-    UserAccountServiceImpl accountService;
+    UserAccountService accountService;
 
     @Mock
     UserRepo userRepo;
@@ -90,7 +89,7 @@ class UserAccountServiceImplTest {
         when(passwordEncoder.encode(anyString())).thenReturn(encryptedPassword);
         when(tokenService.generateEmailVerificationToken()).thenReturn("anyString");
         when(userRepo.save(any(User.class))).thenReturn(mockUser());
-        when(mailService.send(any(Mail.class))).thenReturn(null);
+        when(mailService.sendActivationCode(anyString(), anyString(), anyString())).thenReturn(null);
 
         UserAccountResponse response = accountService.createUser(mockRegistrationRequest());
 

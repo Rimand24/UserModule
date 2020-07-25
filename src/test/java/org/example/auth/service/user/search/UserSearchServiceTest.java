@@ -25,10 +25,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class UserSearchServiceImplTest {
+class UserSearchServiceTest {
 
     @InjectMocks
-    UserSearchServiceImpl userSearchService;
+    UserSearchService userSearchService;
 
     @Mock
     UserRepo userRepo;

@@ -25,10 +25,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class UserAdminServiceImplTest {
+class UserAdminServiceTest {
 
     @InjectMocks
-    UserAdminServiceImpl adminService;
+    UserAdminService adminService;
 
     @Mock
     UserRepo userRepo;
