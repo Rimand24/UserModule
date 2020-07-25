@@ -31,8 +31,6 @@ public class UserAccountController {
     private static final String PROFILE = "account/profile";
     private static final String RESEND_ACTIVATION_CODE = "account/resendActivationCode";
 
-    @Autowired
-    ModelMapper modelMapper;
 
     @Autowired
     UserAccountService userAccountService;
