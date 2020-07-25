@@ -2,7 +2,9 @@ package org.example.auth.service.user.account.dto;
 
 import org.example.auth.service.ServiceResponseCode;
 
-public enum UserAccountServiceResponseCode implements ServiceResponseCode {
+import java.io.Serializable;
+
+public enum UserAccountServiceResponseCode implements ServiceResponseCode{
 
     OK,
     USERNAME_NOT_FOUND,

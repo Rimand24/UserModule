@@ -9,13 +9,15 @@ import org.example.auth.controller.validator.ValidEmail;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @PasswordMatches
-public class RegistrationForm {
+public class RegistrationForm implements Serializable {
+    private static final long serialVersionUID = 7597033568461316970L;
     @NotBlank
     @Size(min = 3, max = 32, message = "username length must be between 3 and 32")
     private String username;

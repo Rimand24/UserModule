@@ -1,4 +1,4 @@
-package org.example.auth.service.document;
+package org.example.auth.domain;
 
 import com.sun.istack.Nullable;
 import lombok.Data;
