@@ -149,7 +149,7 @@ class UserAdminControllerTest {
 
     @Test
     void deleteUser_success() throws Exception {
-        when(adminService.deleteUser(anyString())).thenReturn(new UserAdminResponse(OK));
+        when(adminService.deleteUserWithUploads(anyString())).thenReturn(new UserAdminResponse(OK));
 
         mockMvc.perform(post("/admin/users/delete/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -159,12 +159,12 @@ class UserAdminControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("error"));
         //  .andExpect(MockMvcResultMatchers.model().attribute("error", USER_NOT_BLOCKED));
 
-        verify(adminService).deleteUser(anyString());
+        verify(adminService).deleteUserWithUploads(anyString());
     }
 
     @Test
     void deleteUser_fail_userNotFound() throws Exception {
-        when(adminService.deleteUser(anyString())).thenReturn(new UserAdminResponse(USERNAME_NOT_FOUND));
+        when(adminService.deleteUserWithUploads(anyString())).thenReturn(new UserAdminResponse(USERNAME_NOT_FOUND));
 
         mockMvc.perform(post("/admin/users/delete/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -173,7 +173,7 @@ class UserAdminControllerTest {
                 .andExpect(view().name(REDIRECT_USERS_ACTIVATED_LIST))
                 .andExpect(MockMvcResultMatchers.model().attribute("error", USERNAME_NOT_FOUND));
 
-        verify(adminService).deleteUser(anyString());
+        verify(adminService).deleteUserWithUploads(anyString());
     }
 
     @Test

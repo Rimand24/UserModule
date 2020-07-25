@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+@PreAuthorize("hasAuthority('ADMIN')")
 @Controller
 public class UserAdminController {
 
@@ -24,15 +26,20 @@ public class UserAdminController {
     UserAdminService adminService;
 
     private static final String ADMIN_PAGE = "adminPage";
-    private static final String REDIRECT_USERS_ACTIVATED_LIST = "redirect:/admin/users/all";
+    private static final String BLOCK_FORM = "blockForm";
+    private static final String REDIRECT_USERS_ACTIVATED_LIST = "redirect:/users/all";
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/admin")
     public ModelAndView getAdminPage() {
         return new ModelAndView(ADMIN_PAGE);
     }
 
-    @PostMapping("/admin/users/block/")
+    @GetMapping("/admin/users/block")
+    public ModelAndView getBlockPage() {
+        return new ModelAndView(BLOCK_FORM);
+    }
+
+    @PostMapping("/admin/users/block")
     public ModelAndView blockUser(@AuthenticationPrincipal User user, @Valid UserBlockForm form) {
         UserBlockRequest request = new UserBlockRequest();
         request.setUsername(form.getUsername());
@@ -45,7 +52,12 @@ public class UserAdminController {
         return new ModelAndView(REDIRECT_USERS_ACTIVATED_LIST);
     }
 
-    @PostMapping("/admin/users/unblock/")
+    @GetMapping("/admin/users/unblock/{username}")
+    public ModelAndView unblockUserPathVar(@PathVariable String username) {
+        return unblockUser(username);
+    }
+
+    @PostMapping("/admin/users/unblock")
     public ModelAndView unblockUser(@RequestParam @NotNull String username) {
         UserAdminResponse response = adminService.unblockUser(username);
         if (!response.isSuccess()) {
@@ -54,17 +66,17 @@ public class UserAdminController {
         return new ModelAndView(REDIRECT_USERS_ACTIVATED_LIST);
     }
 
-    @PostMapping("/admin/users/delete/")
-    public ModelAndView deleteUser(@RequestParam @NotNull String username) {
-        UserAdminResponse response = adminService.deleteUser(username);
+    @PostMapping("/admin/users/delete")
+    public ModelAndView deleteUserWithDocuments(@RequestParam @NotNull String username) {
+        UserAdminResponse response = adminService.deleteUserWithUploads(username);
         if (!response.isSuccess()) {
             return new ModelAndView(REDIRECT_USERS_ACTIVATED_LIST, "error", response.getStatus());
         }
         return new ModelAndView(REDIRECT_USERS_ACTIVATED_LIST);
     }
 
-    @PostMapping("/admin/users/safeDelete/")
-    public ModelAndView safeDeleteUser(@RequestParam @NotNull String username) {
+    @PostMapping("/admin/users/safeDelete")
+    public ModelAndView deleteUserOnly(@RequestParam @NotNull String username) {
         UserAdminResponse response = adminService.deleteUserOnly(username);
         if (!response.isSuccess()) {
             return new ModelAndView(REDIRECT_USERS_ACTIVATED_LIST, "error", response.getStatus());

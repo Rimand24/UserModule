@@ -78,7 +78,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
-    public UserAdminResponse deleteUser(String username) {
+    public UserAdminResponse deleteUserWithUploads(String username) {
         Optional<User> optional = userRepo.findByUsername(username);
         if (optional.isEmpty()) {
             log.debug("User delete error:{}:{}", USERNAME_NOT_FOUND, username);

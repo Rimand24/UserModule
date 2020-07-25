@@ -10,7 +10,7 @@ public interface UserAdminService {
 
     UserAdminResponse unblockUser(String username);
 
-    UserAdminResponse deleteUser(String username);
+    UserAdminResponse deleteUserWithUploads(String username);
 
     UserAdminResponse deleteUserOnly(String username);
 

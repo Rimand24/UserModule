@@ -123,7 +123,7 @@ class UserAdminServiceImplTest {
         when(documentService.deleteDocument(anyString())).thenReturn(true);
         doNothing().when(userRepo).delete(any(User.class));
 
-        UserAdminResponse response = adminService.deleteUser(username);
+        UserAdminResponse response = adminService.deleteUserWithUploads(username);
 
         verify(userRepo).findByUsername(anyString());
         verify(userRepo).delete(any(User.class));
@@ -136,7 +136,7 @@ class UserAdminServiceImplTest {
         when(documentService.deleteDocument(anyString())).thenReturn(true);
         doNothing().when(userRepo).delete(any(User.class));
 
-        UserAdminResponse response = adminService.deleteUser(username);
+        UserAdminResponse response = adminService.deleteUserWithUploads(username);
 
         verify(userRepo).findByUsername(anyString());
         verify(userRepo, times(0)).delete(any(User.class));

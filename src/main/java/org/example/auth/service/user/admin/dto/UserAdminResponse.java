@@ -8,7 +8,7 @@ import org.example.auth.service.ServiceResponseCode;
 @Data
 @NoArgsConstructor
 public class UserAdminResponse implements ServiceResponse {
-    ServiceResponseCode status = UserAdminServiceResponseCode.UNDEFINED_ACCOUNT_SERVICE_ERROR;
+    ServiceResponseCode status = UserAdminServiceResponseCode.UNDEFINED_ADMIN_SERVICE_ERROR;
 
     public UserAdminResponse(ServiceResponseCode status) {
         this.status = status;
