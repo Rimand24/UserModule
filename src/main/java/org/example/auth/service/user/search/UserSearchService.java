@@ -3,11 +3,12 @@ package org.example.auth.service.user.search;
 import org.example.auth.domain.UserDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserSearchService {
-    UserDto getUserByUsername(String username);
+    Optional<UserDto> findByUsername(String username);
 
-    UserDto getUserByEmail(String email);
+    Optional<UserDto> findByEmail(String email);
 
     List<UserDto> findAll();
 
@@ -19,8 +20,4 @@ public interface UserSearchService {
 
     List<UserDto> searchUsersByName(String name);
 
-//    List<UserDto> getUsers(int page, int limit);
-
-
-//    List<UserDto> findAllNotActivated();
 }
