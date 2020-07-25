@@ -11,41 +11,72 @@
 
 <body>
 
-    <div class="col" layout:fragment="content">
-        <table class="users" border="2">
-            <thead align="center">
-            <tr>
-                <!--    todo change text to icons    -->
-                <!--        todo contant width to proportions-->
-                <th width="300">User name</th>
-                <th width="100">Registered Date</th>
-                <th width="100">Document uploaded</th>
-                <th width="100">Roles</th>
-                <th width="80">Open Profile</th>
-                <th width="80">Block</th>
-                <th width="80">Unblock</th>
-                <th width="80">Delete</th>
+<div class="col" layout:fragment="content">
+    <table class="users" border="2">
+        <thead align="center">
+        <tr>
+            <!--        todo contant width to proportions-->
+            <th width="300">User name</th>
+            <th width="100">Registered Date</th>
+            <th width="100">Document uploaded</th>
+            <th>Roles</th>
+            <th width="100">Status</th>
+            <th width="100">Block Reason</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Block</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
+        </tr>
+        </thead>
+        <tbody align="center" th:each="user : ${userList}">
+        <tr th:object="${user}">
 
-            </tr>
-            </thead>
-            <tbody align="center" th:each="user : ${userList}">
-            <tr th:object="${user}">
-                <td th:text="*{username}">Kerman</td>
-                <td th:text="*{registrationDate}">15.11.2008</td>
-                <td th:text="*{createdDocuments.size()}">10</td>
-                <td th:text="*{roles}">USER</td>
-                <td><a href="../templates/profile.html" th:href="@{/user/{username}(username=*{username})}">Open</a>
-                </td>
-                <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
-                       th:href="@{/admin/block/{username}(username=*{username})}">Block</a></td>
-                <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
-                       th:href="@{/admin/unblock/{username}(username=*{username})}">Unblock</a></td>
-                <td><a href="#" sec:authorize="hasAuthority('ADMIN')"
-                       th:href="@{/admin/delete/{username}(username=*{username})}">Delete</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div> <!-- fragment.content -->
+            <td><a href="#" th:href="@{/users/{username}(username=*{username})}" th:text="*{username}">Kerman</a></td>
+            <td th:text="*{registrationDate}">15.11.2008</td>
+            <td th:text="*{createdDocuments.size()}">10</td>
+            <td th:text="*{roles}">USER</td>
+
+            <td th:if="*{!active}">Not Activated</td>
+            <td th:if="*{blocked}">Blocked</td>
+            <td th:if="(*{active}) and (*{!blocked})">Active</td>
+
+            <td th:text="*{blockReason}">block reason</td>
+
+
+
+            <td sec:authorize="hasAuthority('ADMIN')" th:if="*{!blocked}" class="">
+                <form th:action="@{/admin/users/block}" method="post">
+                    <input type="hidden" name="username" th:value="*{username}">
+<!--                    todo modal form for ban reason-->
+                    <input type="hidden" name="reason" value="no reason">
+                    <input type="submit" value="block" class="btn-warning">
+                </form>
+            </td>
+
+            <td sec:authorize="hasAuthority('ADMIN')" th:if="*{blocked}">
+                <form th:action="@{/admin/users/unblock}" method="post">
+                    <input type="hidden" name="username" th:value="*{username}">
+                    <input type="submit" value="unblock" class="btn-success">
+                </form>
+            </td>
+
+            <td sec:authorize="hasAuthority('ADMIN')">
+                <form th:action="@{/admin/users/safeDelete}" method="post">
+                    <input hidden="hidden" type="text" name="username" th:value="*{username}">
+                    <input type="submit" value="Delete user only" class="btn-danger">
+                </form>
+            </td>
+
+            <td sec:authorize="hasAuthority('ADMIN')">
+                <form th:action="@{/admin/users/safeDelete}" method="post">
+                    <input type="hidden" name="username" th:value="*{username}">
+                    <input type="submit" value="Delete with documents" class="btn-danger">
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div> <!-- fragment.content -->
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 package org.example.auth.service.user.search;
 
+import org.example.auth.domain.Role;
 import org.example.auth.domain.UserDto;
 
 import java.util.List;
@@ -20,4 +21,5 @@ public interface UserSearchService {
 
     List<UserDto> searchUsersByName(String name);
 
+    List<UserDto> findAllByRole(Role role);
 }

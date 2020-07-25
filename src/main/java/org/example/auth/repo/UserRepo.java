@@ -1,8 +1,8 @@
 package org.example.auth.repo;
 
+import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,11 +18,13 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     Optional<User> findByPasswordResetCode(String code);
 
-    List<User> findAllByAccountNonLockedFalse(); //blocked
+    List<User> findAllByAccountNonLockedFalse(); //blocked users
 
-    List<User> findAllByEnabledTrue();  //activated
+    List<User> findAllByEnabledTrue();  //activated users
 
-    List<User> findAllByEnabledFalse();  //not activated
+    List<User> findAllByEnabledFalse();  //not activated users
+
+    List<User> findByAuthoritiesContains(Role role);
 
     List<User> findAllByUsernameContains(String name);
 }

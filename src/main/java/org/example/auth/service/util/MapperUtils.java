@@ -3,7 +3,7 @@ package org.example.auth.service.util;
 import org.example.auth.domain.Document;
 import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
-import org.example.auth.service.document.DocumentDto;
+import org.example.auth.domain.DocumentDto;
 import org.example.auth.domain.UserDto;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +32,7 @@ public class MapperUtils {
         dto.setBlocked(!user.isAccountNonLocked());
         dto.setRegistrationDate(user.getRegistrationDate());
         dto.setBlockReason(user.getAccountBlockReason());
+        dto.setBlockDate(user.getAccountBlockDate());
 
         List<DocumentDto> docs = new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package org.example.auth.controller.user.search;
 
+import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.domain.UserDto;
 import org.example.auth.service.user.search.UserSearchService;
@@ -23,7 +24,7 @@ public class UserSearchController {
 
     private static final String USER_LIST = "userList";
     private static final String PROFILE = "account/profile";
-    private static final String USER_NOT_FOUND = "userNotFound"; //fixme?
+    private static final String USER_NOT_FOUND = "userNotFound";
     private static final String REDIRECT_GET_USER = "redirect:/users/";
 
     @GetMapping("/users")
@@ -76,9 +77,16 @@ public class UserSearchController {
         return new ModelAndView(USER_LIST, "userList", list);
     }
 
+    @PostMapping("/users/byRole")
+    public ModelAndView getUsersByRole(@RequestParam Role role) {
+        List<UserDto> users = userSearchService.findAllByRole(role);
+        return new ModelAndView(USER_LIST, "userList", users);
+    }
+
     @PostMapping("/users/search")
-    public ModelAndView searchUserByName(@RequestParam String name) {
+    public ModelAndView searchUsers(@RequestParam String name) {
         List<UserDto> users = userSearchService.searchUsersByName(name);
         return new ModelAndView(USER_LIST, "userList", users);
     }
+
 }
