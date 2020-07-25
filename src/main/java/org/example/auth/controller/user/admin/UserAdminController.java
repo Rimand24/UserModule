@@ -22,12 +22,17 @@ import javax.validation.constraints.NotNull;
 @Controller
 public class UserAdminController {
 
-    @Autowired
-    UserAdminService adminService;
+    private final UserAdminService adminService;
 
     private static final String ADMIN_PAGE = "adminPage";
     private static final String BLOCK_FORM = "blockForm";
     private static final String REDIRECT_USERS_ACTIVATED_LIST = "redirect:/users/all";
+
+    @Autowired
+    public UserAdminController(UserAdminService adminService) {
+        this.adminService = adminService;
+    }
+
 
     @GetMapping("/admin")
     public ModelAndView getAdminPage() {

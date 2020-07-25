@@ -30,20 +30,21 @@ import static org.example.auth.service.user.account.dto.UserAccountServiceRespon
 @Service
 public class UserAccountService implements UserDetailsService {
 
-    @Autowired
-    UserRepo userRepo;
+    private final UserRepo userRepo;
+    private final MailService mailService;
+    private final PasswordEncoder encoder;
+    private final TokenService tokenService;
+    private final RandomGeneratorUtils generator;
 
     @Autowired
-    MailService mailService;
+    public UserAccountService(UserRepo userRepo, MailService mailService, PasswordEncoder encoder, TokenService tokenService, RandomGeneratorUtils generator) {
+        this.userRepo = userRepo;
+        this.mailService = mailService;
+        this.encoder = encoder;
+        this.tokenService = tokenService;
+        this.generator = generator;
+    }
 
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    TokenService tokenService;
-
-    @Autowired
-    RandomGeneratorUtils generator;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optional = userRepo.findByUsername(username);

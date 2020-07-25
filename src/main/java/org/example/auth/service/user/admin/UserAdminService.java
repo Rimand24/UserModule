@@ -24,11 +24,15 @@ import static org.example.auth.service.user.admin.dto.UserAdminServiceResponseCo
 @Service
 public class UserAdminService {
 
-    @Autowired
-    UserRepo userRepo;
+    private final UserRepo userRepo;
+    private final DocumentService documentService;
 
     @Autowired
-    DocumentService documentService;
+    public UserAdminService(UserRepo userRepo, DocumentService documentService) {
+        this.userRepo = userRepo;
+        this.documentService = documentService;
+    }
+
 
     public UserAdminResponse blockUser(@Valid UserBlockRequest request) {
         Optional<User> optional = userRepo.findByUsername(request.getUsername());

@@ -19,13 +19,24 @@ import java.util.Optional;
 
 @Controller
 public class UserSearchController {
-    @Autowired
-    UserSearchService userSearchService;
 
+    private final UserSearchService userSearchService;
+
+    //view names
     private static final String USER_LIST = "userList";
     private static final String PROFILE = "account/profile";
     private static final String USER_NOT_FOUND = "userNotFound";
     private static final String REDIRECT_GET_USER = "redirect:/users/";
+
+    //models
+    private static final String MODEL_NAME_USER = "user";
+    private static final String MODEL_NAME_USERS = "userList";
+
+    @Autowired
+    public UserSearchController(UserSearchService userSearchService) {
+        this.userSearchService = userSearchService;
+    }
+
 
     @GetMapping("/users")
     public String getUserSelf(@AuthenticationPrincipal User user) {
@@ -38,7 +49,7 @@ public class UserSearchController {
         if (optional.isEmpty()) {
             return new ModelAndView(USER_NOT_FOUND); //fixme
         }
-        return new ModelAndView(PROFILE, "user", optional.get());
+        return new ModelAndView(PROFILE, MODEL_NAME_USER, optional.get());
     }
 
     @GetMapping("/users/{email:.+}") //todo redirect to getUserByName with dto as param
@@ -47,46 +58,46 @@ public class UserSearchController {
         if (optional.isEmpty()) {
             return new ModelAndView(USER_NOT_FOUND); //fixme
         }
-        return new ModelAndView(PROFILE, "user", optional.get());
+        return new ModelAndView(PROFILE, MODEL_NAME_USER, optional.get());
     }
 
     @GetMapping("/users/all")
     public ModelAndView getUsersActivated() {
         List<UserDto> list = userSearchService.findAllActivated();
-        return new ModelAndView(USER_LIST, "userList", list);
+        return new ModelAndView(USER_LIST, MODEL_NAME_USERS, list);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/users/total")
     public ModelAndView getUsersAll() {
         List<UserDto> list = userSearchService.findAll();
-        return new ModelAndView(USER_LIST, "userList", list);
+        return new ModelAndView(USER_LIST, MODEL_NAME_USERS, list);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/users/notActivated")
     public ModelAndView getUsersNotActivated() {
         List<UserDto> list = userSearchService.findAllNotActivated();
-        return new ModelAndView(USER_LIST, "userList", list);
+        return new ModelAndView(USER_LIST, MODEL_NAME_USERS, list);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/users/blocked")
     public ModelAndView getUsersBlocked() {
         List<UserDto> list = userSearchService.findAllBlocked();
-        return new ModelAndView(USER_LIST, "userList", list);
+        return new ModelAndView(USER_LIST, MODEL_NAME_USERS, list);
     }
 
     @PostMapping("/users/byRole")
     public ModelAndView getUsersByRole(@RequestParam Role role) {
         List<UserDto> users = userSearchService.findAllByRole(role);
-        return new ModelAndView(USER_LIST, "userList", users);
+        return new ModelAndView(USER_LIST, MODEL_NAME_USERS, users);
     }
 
     @PostMapping("/users/search")
-    public ModelAndView searchUsers(@RequestParam String name) {
-        List<UserDto> users = userSearchService.searchUsersByName(name);
-        return new ModelAndView(USER_LIST, "userList", users);
+    public ModelAndView searchUsers(@RequestParam String username) {
+        List<UserDto> users = userSearchService.searchUsersByName(username);
+        return new ModelAndView(USER_LIST, MODEL_NAME_USERS, users);
     }
 
 }

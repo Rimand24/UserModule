@@ -1,9 +1,6 @@
 package org.example.auth.controller.user.account;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.example.auth.controller.validator.PasswordMatches;
 
 import javax.validation.constraints.Email;
@@ -11,10 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @PasswordMatches
 public class RegistrationForm implements Serializable {
     private static final long serialVersionUID = 7597033568461316970L;

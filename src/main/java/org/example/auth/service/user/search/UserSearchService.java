@@ -5,6 +5,7 @@ import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.domain.UserDto;
 import org.example.auth.repo.UserRepo;
+import org.example.auth.service.document.DocumentService;
 import org.example.auth.service.util.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,15 @@ import java.util.Optional;
 @Service
 public class UserSearchService {
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
+    private final MapperUtils mapper;
 
     @Autowired
-    private MapperUtils mapper;
+    public UserSearchService(UserRepo userRepo, MapperUtils mapper) {
+        this.userRepo = userRepo;
+        this.mapper = mapper;
+    }
+
 
     public Optional<UserDto> findByUsername(@NotNull String username) {
         Optional<User> optional = userRepo.findByUsername(username);

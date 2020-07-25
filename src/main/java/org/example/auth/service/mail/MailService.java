@@ -8,14 +8,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PreDestroy;
 import java.util.concurrent.Future;
 
 @Service
 public class MailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     private String from;
@@ -36,6 +34,12 @@ public class MailService {
     private static final String ACTIVATION_ADDRESS = "/activate";
     private static final String RESET_PASS_ADDRESS = "/resetPassword";
     private static final String EMAIL_CONFIRM_ADDRESS = "/changeEmail";
+
+    @Autowired
+    public MailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
 
     @Async
     public Future<Boolean> sendActivationCode(String username, String email, String activationCode) {
