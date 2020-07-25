@@ -23,6 +23,7 @@
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <bootstrap.version>4.5.0</bootstrap.version>
         <jquery.version>3.5.1</jquery.version>
+        <font-awesome.version>5.13.1</font-awesome.version>
         <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
@@ -75,16 +76,16 @@
             <artifactId>bootstrap</artifactId>
             <version>${bootstrap.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.webjars</groupId>-->
-<!--            <artifactId>jquery</artifactId>-->
-<!--            <version>${jquery.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.webjars</groupId>-->
-<!--            <artifactId>font-awesome</artifactId>-->
-<!--            <version>5.13.1</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${jquery.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>${font-awesome.version}</version>
+        </dependency>
 
         <!--         SECURITY       -->
         <dependency>
@@ -109,18 +110,21 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!--    JPA &  DATABASE   -->
-
+        <!--=====================================-->
+        <!--||         JPA &  DATABASE         ||-->
+        <!--=====================================-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.postgresql</groupId>-->
-<!--            <artifactId>postgresql</artifactId>-->
-<!--        </dependency>-->
+        <!--        prod DB          -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
 
+        <!--        dev DB          -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

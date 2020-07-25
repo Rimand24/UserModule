@@ -1,5 +1,7 @@
 package org.example.auth.service.document;
 
+import org.example.auth.domain.DocumentDto;
+
 import java.util.List;
 
 public interface DocumentService {

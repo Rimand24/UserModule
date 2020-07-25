@@ -2,6 +2,7 @@ package org.example.auth.service.document;
 
 import lombok.SneakyThrows;
 import org.example.auth.domain.Document;
+import org.example.auth.domain.DocumentDto;
 import org.example.auth.domain.User;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;

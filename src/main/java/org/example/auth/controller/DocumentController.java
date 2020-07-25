@@ -1,7 +1,7 @@
 package org.example.auth.controller;
 
 import org.example.auth.domain.User;
-import org.example.auth.service.document.DocumentDto;
+import org.example.auth.domain.DocumentDto;
 import org.example.auth.service.document.DocumentCreationRequestDto;
 import org.example.auth.service.document.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;

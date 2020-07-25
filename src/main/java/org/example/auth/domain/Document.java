@@ -30,10 +30,10 @@ public class Document implements Serializable {
     private String mediaType;
     private long size;
     @NotNull
-    private LocalDateTime createdAt;
+    private LocalDateTime creationDateTime;
 
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
-    private User createdBy;
+    private User author;
 
 }

@@ -48,8 +48,8 @@ public class User implements UserDetails {
     @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "users_id"))
     private Set<Role> authorities;
 
-    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-    // @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy", orphanRemoval = true)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy", orphanRemoval = true)
     private List<Document> createdDocuments;
 
     private boolean accountNonExpired = true;

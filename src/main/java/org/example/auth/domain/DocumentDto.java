@@ -13,8 +13,8 @@ public class DocumentDto {
     private String name;
     private String docId;
     private String filename;
-    private UserDto createdBy;
-    private LocalDateTime createdAt;
+    private String author;
+    private LocalDateTime creationDateTime;
     private String mediaType;
     private long size;
     @Nullable

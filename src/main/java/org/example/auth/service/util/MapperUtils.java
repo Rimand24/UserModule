@@ -1,15 +1,14 @@
 package org.example.auth.service.util;
 
 import org.example.auth.domain.Document;
-import org.example.auth.domain.Role;
-import org.example.auth.domain.User;
 import org.example.auth.domain.DocumentDto;
+import org.example.auth.domain.User;
 import org.example.auth.domain.UserDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class MapperUtils {
@@ -27,31 +26,26 @@ public class MapperUtils {
         UserDto dto = new UserDto();
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        dto.setRoles((Set<Role>) user.getAuthorities());//fixme
+        dto.setRoles(user.getAuthorities());
         dto.setActive(user.isEnabled());
         dto.setBlocked(!user.isAccountNonLocked());
         dto.setRegistrationDate(user.getRegistrationDate());
         dto.setBlockReason(user.getAccountBlockReason());
         dto.setBlockDate(user.getAccountBlockDate());
 
-        List<DocumentDto> docs = new ArrayList<>();
+        List<DocumentDto> docs = user.getCreatedDocuments().stream().map(doc -> new DocumentDto() {
+            {
+                setName(doc.getName());
+                setDocId(doc.getDocId());
+                setSize(doc.getSize());
+                setMediaType(doc.getMediaType());
+                setCreationDateTime(doc.getCreatedAt());
+                setFilename(doc.getFilename());
+                setAuthor(user.getUsername());
+            }
+        }).collect(Collectors.toList());
 
-        for (Document d : user.getCreatedDocuments()) {
-            docs.add(new DocumentDto() {{
-                         setName(d.getName());
-                         setDocId(d.getDocId());
-                         setSize(d.getSize());
-                         setMediaType(d.getMediaType());
-                         setCreatedAt(d.getCreatedAt());
-                         setFilename(d.getFilename());
-                         setCreatedBy(new UserDto() {{
-                             setUsername(user.getUsername());
-                         }});
-                     }}
-            );
-        }
         dto.setCreatedDocuments(docs);
-
         return dto;
     }
 
@@ -64,20 +58,19 @@ public class MapperUtils {
         return result;
     }
 
-    //fixme change method to modelmapper or make generic transformer
     public DocumentDto mapDocument(Document doc) {
         DocumentDto dto = new DocumentDto();
         dto.setName(doc.getName());
         dto.setDocId(doc.getDocId());
         dto.setFilename(doc.getFilename());
         dto.setMediaType(doc.getMediaType());
-        dto.setCreatedAt(doc.getCreatedAt());
+        dto.setCreationDateTime(doc.getCreatedAt());
         dto.setSize(doc.getSize());
         UserDto user = new UserDto() {{
             setUsername(doc.getCreatedBy().getUsername());
             setEmail(doc.getCreatedBy().getEmail());
         }};
-        dto.setCreatedBy(user);
+        dto.setAuthor(user.getUsername());
         return dto;
     }
 }
