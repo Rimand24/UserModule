@@ -10,7 +10,6 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChangeEmailRequest implements Serializable {
     private static final long serialVersionUID = 6269245425803257744L;
     @NotBlank

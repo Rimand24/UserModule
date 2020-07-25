@@ -52,7 +52,10 @@ public class UserAccountController {
         if (bindingResult.hasErrors()) { //fixme not tested
             return new ModelAndView(REGISTRATION_PAGE);
         }
-        RegistrationRequest request = new RegistrationRequest(form.getUsername(), form.getPassword(), form.getEmail());
+        RegistrationRequest request = new RegistrationRequest();
+        request.setUsername(form.getUsername());
+        request.setEmail(form.getEmail());
+        request.setPassword(form.getPassword());
         UserAccountResponse serviceResponse = userAccountService.createUser(request);
         if (!serviceResponse.isSuccess()) {
             return new ModelAndView(REGISTRATION_PAGE, "error", serviceResponse.getStatus());
@@ -117,7 +120,10 @@ public class UserAccountController {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(CHANGE_PASSWORD, "error", "passwords don't match"); //fixme message to var
         }
-        ChangePasswordRequest request = new ChangePasswordRequest(user.getUsername(), passwordChangeForm.getOldPassword(), passwordChangeForm.getPassword());
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setUsername(user.getUsername());
+        request.setOldPassword(passwordChangeForm.getOldPassword());
+        request.setPassword(passwordChangeForm.getPassword());
         UserAccountResponse serviceResponse = userAccountService.changePassword(request);
 
         if (!serviceResponse.isSuccess()) {
@@ -132,8 +138,11 @@ public class UserAccountController {
     }
 
     @PostMapping("/changeEmail")
-    public ModelAndView changeEmailRequest(@AuthenticationPrincipal User user, @Valid EmailChangeForm emailChangeForm) {
-        ChangeEmailRequest request = new ChangeEmailRequest(user.getUsername(), emailChangeForm.getEmail(), emailChangeForm.getPassword());
+    public ModelAndView changeEmailRequest(@AuthenticationPrincipal User user, @Valid EmailChangeForm form) {
+        ChangeEmailRequest request = new ChangeEmailRequest();
+        request.setUsername(user.getUsername());
+        request.setEmail(form.getEmail());
+        request.setPassword(form.getPassword());
         UserAccountResponse serviceResponse = userAccountService.changeEmail(request);
         if (!serviceResponse.isSuccess()) {
             return new ModelAndView(CHANGE_EMAIL, "error", serviceResponse.getStatus());

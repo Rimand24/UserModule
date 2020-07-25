@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChangePasswordRequest implements Serializable {
     private static final long serialVersionUID = 2048403331822785746L;
     private String username;

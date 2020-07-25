@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class RegistrationRequest implements Serializable {
     private static final long serialVersionUID = -1064645942032271857L;
     private String username;

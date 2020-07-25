@@ -332,15 +332,28 @@ class UserAccountControllerTest {
     }
 
     private RegistrationRequest mockRegistrationRequest() {
-        return new RegistrationRequest(username, email, password);
+        RegistrationRequest request = new RegistrationRequest();
+        request.setUsername(username);
+        request.setEmail(email);
+        request.setPassword(password);
+        return request;
     }
 
     private RegistrationForm mockRegistrationForm() {
-        return new RegistrationForm(username, email, password, password);
+        RegistrationForm form = new RegistrationForm();
+        form.setUsername(username);
+        form.setEmail(email);
+        form.setPassword(password);
+        form.setPassword2(password);
+        return form;
     }
 
     private ChangeEmailRequest mockEmailRequest() {
-        return new ChangeEmailRequest(username, email, password);
+        ChangeEmailRequest request = new ChangeEmailRequest();
+        request.setUsername(username);
+        request.setPassword(password);
+        request.setEmail(email);
+        return request;
     }
 
     private ChangePasswordRequest mockChangePasswordRequest() {
