@@ -16,12 +16,14 @@
         <div>
             <div>
                 <p> File name: <b th:text="${document.name}">example.txt</b>
-                <p>Uploaded by <b th:text="${document.createdBy.getUsername()}">username</b>
+                <p>Uploaded by <b th:text="${document.getAuthor.getUsername()}">username</b>
                     <a href="#" th:href="@{/doc/download/{id}(id=${document.docId})}"> Download</a>
             </div>
         </div>
 
         <iframe width="100%" height="750"
+
+
                 src="http://www.africau.edu/images/default/sample.pdf"
                 th:src="${document.getRawFile()}">
 

@@ -1,0 +1,3 @@
+    @GetMapping("/user/changePassword")
+    public String showChangePasswordPage(Locale locale){
+            return "redirect:/login.html?lang="+locale.getLanguage() + "&message=" + message;}

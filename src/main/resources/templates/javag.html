@@ -38,7 +38,7 @@
             </div>
 
             <h1>Registration</h1>
-            <form th:action="@{/registration}" th:object="${user}" method="post">
+            <form th:action="@{/templates/account}" th:object="${user}" method="post">
 
                 <p class="error-message" th:if="${#fields.hasGlobalErrors()}"
                    th:each="error : ${#fields.errors('global')}" th:text="${error}">Validation

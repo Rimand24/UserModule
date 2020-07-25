@@ -39,7 +39,7 @@ public class MapperUtils {
                 setDocId(doc.getDocId());
                 setSize(doc.getSize());
                 setMediaType(doc.getMediaType());
-                setCreationDateTime(doc.getCreatedAt());
+                setCreationDateTime(doc.getCreationDateTime());
                 setFilename(doc.getFilename());
                 setAuthor(user.getUsername());
             }
@@ -64,13 +64,9 @@ public class MapperUtils {
         dto.setDocId(doc.getDocId());
         dto.setFilename(doc.getFilename());
         dto.setMediaType(doc.getMediaType());
-        dto.setCreationDateTime(doc.getCreatedAt());
+        dto.setCreationDateTime(doc.getCreationDateTime());
         dto.setSize(doc.getSize());
-        UserDto user = new UserDto() {{
-            setUsername(doc.getCreatedBy().getUsername());
-            setEmail(doc.getCreatedBy().getEmail());
-        }};
-        dto.setAuthor(user.getUsername());
+        dto.setAuthor(doc.getAuthor().getUsername());
         return dto;
     }
 }

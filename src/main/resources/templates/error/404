@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>404 Error</title>
+</head>
+
+<body>
+        <div class="col" layout:fragment="content">
+            <h1>Page not Found</h1>
+        </div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div th:if="${param.error}">-->
+<!--    Invalid username and password.</div>-->
+<!--<div th:if="${param.logout}">-->
+<!--    You have been logged out.</div>-->

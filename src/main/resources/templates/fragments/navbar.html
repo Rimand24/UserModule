@@ -38,6 +38,22 @@
             </div>
         </div>
 
+
+
+        <div sec:authorize="anonymous" >
+            <form th:action="@{/login}" method="post">
+                <input type="text" name="username">
+                <input type="text" name="password">
+                <input type="submit" class="btn-success">
+            </form>
+        </div>
+
+
+
+
+
+
+
     </nav>
 
 </div>
