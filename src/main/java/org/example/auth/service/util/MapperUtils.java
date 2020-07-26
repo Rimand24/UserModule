@@ -1,9 +1,11 @@
 package org.example.auth.service.util;
 
+import org.example.auth.controller.file.DocsUploadForm;
 import org.example.auth.domain.Document;
 import org.example.auth.domain.DocumentDto;
 import org.example.auth.domain.User;
 import org.example.auth.domain.UserDto;
+import org.example.auth.service.document.DocumentCreationRequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,9 +41,9 @@ public class MapperUtils {
                 setDocId(doc.getDocId());
                 setSize(doc.getSize());
                 setMediaType(doc.getMediaType());
-                setCreationDateTime(doc.getCreationDateTime());
+                setUploadDateTime(doc.getUploadDateTime());
                 setFilename(doc.getFilename());
-                setAuthor(user.getUsername());
+                setUploader(user.getUsername());
             }
         }).collect(Collectors.toList());
 
@@ -64,9 +66,16 @@ public class MapperUtils {
         dto.setDocId(doc.getDocId());
         dto.setFilename(doc.getFilename());
         dto.setMediaType(doc.getMediaType());
-        dto.setCreationDateTime(doc.getCreationDateTime());
+        dto.setUploadDateTime(doc.getUploadDateTime());
         dto.setSize(doc.getSize());
-        dto.setAuthor(doc.getAuthor().getUsername());
+        dto.setUploader(doc.getUploader().getUsername());
         return dto;
+    }
+
+    public DocumentCreationRequestDto mapDocFormToDocRequest(DocsUploadForm form, User user) {
+        DocumentCreationRequestDto requestDto = new DocumentCreationRequestDto();
+        requestDto.setDocumentFile(form.getFile());
+        requestDto.setCreatedBy(user); //todo User to String?
+return requestDto;
     }
 }
