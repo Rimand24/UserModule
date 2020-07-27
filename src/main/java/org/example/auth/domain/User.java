@@ -1,8 +1,6 @@
 package org.example.auth.domain;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,42 +16,30 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode
-@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-    private static final long serialVersionUID = 372821945756910420L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @NotBlank(message = "username cannot be blank")
     private String username;
-
     @NotBlank(message = "password cannot be blank")
     private String password;
-
     @NotBlank(message = "email cannot be blank")
     @Email(message = "Email should be valid")
     private String email;
-
     @NotNull(message = "registrationDate cannot be null")
     @PastOrPresent(message = "registration date cannot be in the future")
     private LocalDate registrationDate;
-
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "users_id"))
     private Set<Role> authorities;
-
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "uploader", fetch = FetchType.LAZY)
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy", orphanRemoval = true)
     private List<Document> createdDocuments;
-
     private boolean accountNonExpired = true;
-
     private boolean accountNonLocked = true;
 
     //todo Block Details
@@ -63,11 +49,8 @@ public class User implements UserDetails {
     private LocalDate accountBlockDate;
 
     private boolean credentialsNonExpired = true;
-
     private boolean enabled;
-
     private String emailActivationCode;
-
     private String passwordResetCode;
 
 

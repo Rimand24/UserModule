@@ -1,9 +1,8 @@
-package org.example.auth.domain;
+package org.example.auth.domain.dto;
 
 import com.sun.istack.Nullable;
 import lombok.Data;
 import lombok.ToString;
-import org.example.auth.domain.UserDto;
 
 import java.time.LocalDateTime;
 
