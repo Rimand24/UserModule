@@ -11,7 +11,7 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String tagName;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "document_tag",
             joinColumns = @JoinColumn(name = "tag_id"),

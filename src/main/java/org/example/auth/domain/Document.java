@@ -2,16 +2,13 @@ package org.example.auth.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.MediaType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -28,13 +25,13 @@ public class Document {
     private String docId;
     @Size(max = 1024)
     private String description;
-    private boolean publicDocument;
+//    private boolean publicDocument;
 
-    @ManyToMany(mappedBy = "taggedDocs", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "document_tag",
-            joinColumns = @JoinColumn(name ="document_id" ),
-            inverseJoinColumns = @JoinColumn(name ="tag_id" ))
+    @ManyToMany(mappedBy = "taggedDocs", fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "document_tag",
+//            joinColumns = @JoinColumn(name ="document_id" ),
+//            inverseJoinColumns = @JoinColumn(name ="tag_id" ))
     private Set<Tag> tags = new HashSet<>();
 
     @NotNull
@@ -49,8 +46,7 @@ public class Document {
     private String filename;
     @NotBlank
     private String mediaType;
-    //  private MediaType mediaType;
-//    private String extension;
+
     private long size;
 
 
