@@ -1,7 +1,9 @@
 package org.example.auth.service.storage;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,10 +20,11 @@ public class StorageService {
         this.uploadPath = uploadPath;
     }
 
-    public String save(byte[] file, String name, String docId) throws IOException {
+    @SneakyThrows
+    public String save(MultipartFile file, String name, String docId) {
         String filename = docId + "." + name;
         Path path = Path.of(uploadPath + filename);
-        Files.write(path, file);
+        Files.write(path, file.getBytes());
         return filename;
     }
 

@@ -1,107 +1,127 @@
 package org.example.auth.service.document;
 
 import lombok.SneakyThrows;
+import org.example.auth.controller.file.DocumentEditRequest;
+import org.example.auth.controller.file.DocumentSearchRequest;
 import org.example.auth.domain.Document;
-import org.example.auth.domain.DocumentDto;
 import org.example.auth.domain.User;
+import org.example.auth.domain.dto.DocumentDto;
 import org.example.auth.repo.DocumentRepo;
 import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.util.MapperUtils;
 import org.example.auth.service.util.RandomGeneratorUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class DocumentService  {
-    @Autowired
-    private DocumentRepo documentRepo;
+public class DocumentService {
+    private final DocumentRepo documentRepo;
+    private final StorageService storageService;
+    private final RandomGeneratorUtils generator;
+    private final MapperUtils mapper;
 
-    @Autowired
-    private StorageService storageService;
+    public DocumentService(DocumentRepo documentRepo, StorageService storageService, RandomGeneratorUtils generator, MapperUtils mapper) {
+        this.documentRepo = documentRepo;
+        this.storageService = storageService;
+        this.generator = generator;
+        this.mapper = mapper;
+    }
 
-    @Autowired
-    private RandomGeneratorUtils generator;
-
-    @Autowired
-    private MapperUtils mapper;
-
-    @SneakyThrows
-    public DocumentDto addDocument(DocumentCreationRequestDto request) {
-
-        if (request == null || request.getCreatedBy() == null || request.getDocumentFile() == null) {
-            throw new DocumentServiceException("document addition request incorrect");
-        }
+    public DocumentDto create(@Valid DocumentCreationRequest request) {
 
         MultipartFile multipartFile = request.getDocumentFile();
-        String name = multipartFile.getOriginalFilename();
+        String docName = StringUtils.hasText(request.getDocName()) ? request.getDocName() : multipartFile.getOriginalFilename();
         String docId = generator.generateUUID();
-        String filename = storageService.save(multipartFile.getBytes(), name, docId);
+        String filename = storageService.save(multipartFile, docName, docId);
 
         Document document = new Document();
-        document.setName(name);
+        document.setDocName(docName);
         document.setDocId(docId);
+        document.setDescription(request.getDescription());
         document.setFilename(filename);
         document.setMediaType(multipartFile.getContentType());
         document.setSize(multipartFile.getSize());
-        document.setAuthor(request.getCreatedBy());
-        document.setCreationDateTime(LocalDateTime.now());
+        document.setUploader(request.getUploader());
+        document.setUploadDateTime(LocalDateTime.now());
+//        document.setPublicDocument(request.isPublicDocument());//fixme uncomment
+        document.setTags(request.getTags());
+
         Document saved = documentRepo.save(document);
 
-        return mapper.mapDocument(saved);
+        return mapper.mapDocumentToDto(saved);
     }
 
-    public List<DocumentDto> getAllDocuments() {
-        List<Document> documents = documentRepo.findAll();
-        return mapper.mapDocumentList(documents);
+    public DocumentDto edit(@Valid DocumentEditRequest request) {
+        throw new RuntimeException();
     }
 
-    public DocumentDto getDocumentById(String docId) {
-        Document document = documentRepo.findByDocId(docId);
-        if (StringUtils.isEmpty(document)) {
-            throw new DocumentServiceException("document not found (id:" + docId + ")");
+    public boolean delete(String docId) {
+        Document document = documentRepo.findByDocId(docId).get(); //fixme opt
+        documentRepo.delete(document);
+        storageService.delete(document.getFilename());
+        return true;
+    }
+
+    public DocumentDto findById(String docId) {
+        Optional<Document> optional = documentRepo.findByDocId(docId);
+        if (optional.isEmpty()) {
+            throw new DocumentServiceException("document not found (id:" + docId + ")"); //fixme
         }
-        return mapper.mapDocument(document);
+        return mapper.mapDocumentToDto(optional.get());
     }
 
-    public List<DocumentDto> searchDocumentsByName(String name) {
-        List<Document> documents = documentRepo.findByNameContains(name);
-        return mapper.mapDocumentList(documents);
+    public List<DocumentDto> findByUser(String username) {
+        List<Document> documents = documentRepo.findByUploader_Username(username);
+        return mapper.mapDocumentListToDtoList(documents);
     }
 
-    public List<DocumentDto> findDocumentsByUser(String username) {
-        List<Document> documents = documentRepo.findByAuthor_Username(username);
-        return mapper.mapDocumentList(documents);
+    public List<DocumentDto> findAll() {
+        List<Document> documents = documentRepo.findAll();
+        return mapper.mapDocumentListToDtoList(documents);
     }
-
-
 
     @SneakyThrows
     public DocumentDto getDocumentFileById(String docId) {
-        DocumentDto document = getDocumentById(docId);
+        DocumentDto document = findById(docId);
         byte[] load = storageService.load(document.getFilename());
         document.setRawFile(load);
         return document;
     }
 
     public boolean changeOwnerToDeleted(String docId) {
-        Document document = documentRepo.findByDocId(docId);
+        Document document = documentRepo.findByDocId(docId).get(); //fixme opt
         User user = new User();//fixme validation exception - not all field filled
         user.setUsername("USER_DELETED");
-        document.setAuthor(user);
+        document.setUploader(user);
         documentRepo.save(document);
         return true;
     }
 
-    public boolean deleteDocument(String docId) {
-        Document document = documentRepo.findByDocId(docId);
-        documentRepo.delete(document);
-        storageService.delete(document.getFilename());
-        return true;
+
+    public List<DocumentDto> searchDocumentsByName(DocumentSearchRequest request) {
+        String docName = request.getDocName();
+        String username = request.getUsername();
+        if (StringUtils.hasText(docName) && StringUtils.hasText(username)) {
+            List<Document> documents = documentRepo.findByDocNameContainsAndUploader_UsernameContains(docName, username);
+            return mapper.mapDocumentListToDtoList(documents);
+        }
+        if (StringUtils.hasText(docName)) {
+            List<Document> documents = documentRepo.findByDocNameContains(docName);
+            return mapper.mapDocumentListToDtoList(documents);
+        }
+        if (!StringUtils.hasText(username)) {
+            List<Document> documents = documentRepo.findByUploader_UsernameContains(username);
+            return mapper.mapDocumentListToDtoList(documents);
+        }
+
+        return Collections.EMPTY_LIST;
     }
 
 }
