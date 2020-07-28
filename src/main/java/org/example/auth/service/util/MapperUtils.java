@@ -1,11 +1,13 @@
 package org.example.auth.service.util;
 
-import org.example.auth.controller.file.DocsUploadForm;
+import org.example.auth.controller.file.DocumentEditForm;
+import org.example.auth.controller.file.DocumentEditRequest;
+import org.example.auth.controller.file.DocumentUploadForm;
 import org.example.auth.domain.Document;
-import org.example.auth.domain.DocumentDto;
 import org.example.auth.domain.User;
-import org.example.auth.domain.UserDto;
-import org.example.auth.service.document.DocumentCreationRequestDto;
+import org.example.auth.domain.dto.DocumentDto;
+import org.example.auth.domain.dto.UserDto;
+import org.example.auth.service.document.DocumentCreationRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,10 +36,11 @@ public class MapperUtils {
         dto.setRegistrationDate(user.getRegistrationDate());
         dto.setBlockReason(user.getAccountBlockReason());
         dto.setBlockDate(user.getAccountBlockDate());
+        dto.setBlockerName(user.getAccountBlockerName());
 
         List<DocumentDto> docs = user.getCreatedDocuments().stream().map(doc -> new DocumentDto() {
             {
-                setName(doc.getName());
+                setName(doc.getDocName());
                 setDocId(doc.getDocId());
                 setSize(doc.getSize());
                 setMediaType(doc.getMediaType());
@@ -51,18 +54,18 @@ public class MapperUtils {
         return dto;
     }
 
-    public List<DocumentDto> mapDocumentList(List<Document> documents) {
+    public List<DocumentDto> mapDocumentListToDtoList(List<Document> documents) {
         List<DocumentDto> result = new ArrayList<>();
         for (Document doc : documents) {
-            DocumentDto dto = mapDocument(doc);
+            DocumentDto dto = mapDocumentToDto(doc);
             result.add(dto);
         }
         return result;
     }
 
-    public DocumentDto mapDocument(Document doc) {
+    public DocumentDto mapDocumentToDto(Document doc) {
         DocumentDto dto = new DocumentDto();
-        dto.setName(doc.getName());
+        dto.setName(doc.getDocName());
         dto.setDocId(doc.getDocId());
         dto.setFilename(doc.getFilename());
         dto.setMediaType(doc.getMediaType());
@@ -72,10 +75,26 @@ public class MapperUtils {
         return dto;
     }
 
-    public DocumentCreationRequestDto mapDocFormToDocRequest(DocsUploadForm form, User user) {
-        DocumentCreationRequestDto requestDto = new DocumentCreationRequestDto();
-        requestDto.setDocumentFile(form.getFile());
-        requestDto.setCreatedBy(user); //todo User to String?
-return requestDto;
+
+    public DocumentCreationRequest mapDocUploadFormToDocUploadRequest(DocumentUploadForm form, User user) {
+        DocumentCreationRequest request = new DocumentCreationRequest();
+        request.setDocName(form.getDocName());
+        request.setUploader(user);
+        request.setDescription(form.getDescription());
+        request.setPublicDocument(form.isPublicDocument());
+        request.setTags(form.getTags());
+        request.setDocumentFile(form.getFile());
+        return request;
+    }
+
+
+    public DocumentEditRequest mapDocEditFormToDocEditRequest(DocumentEditForm form, String docId, User user) {
+        DocumentEditRequest request = new DocumentEditRequest();
+        request.setDocId(docId);
+        request.setDocName(form.getDocName());
+        request.setPublicDocument(form.isPublicDocument());
+        request.setTags(form.getTagList());
+        request.setEditor(user);
+        return request;
     }
 }

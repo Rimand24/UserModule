@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.example.auth.controller.file.DocumentEditRequest;
 import org.example.auth.controller.file.DocumentSearchRequest;
 import org.example.auth.domain.Document;
+import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.domain.dto.DocumentDto;
 import org.example.auth.repo.DocumentRepo;
@@ -79,15 +80,20 @@ public class DocumentService {
 
     }
 
-    public boolean delete(String docId) {
+    public boolean delete(String docId, User user) {
         Optional<Document> optional = documentRepo.findByDocId(docId);
         if (optional.isEmpty()) {
 //            throw new Exception("doc not found"); //fixme
             return false;
         }
-        documentRepo.delete(optional.get());
-        storageService.delete(optional.get().getFilename());
-        return true;
+        Document document = optional.get();
+        if (document.getUploader().getUsername().equals(user.getUsername())
+                || user.getRoles().contains(Role.DOC_REDACTOR)) { //todo fixme check if admin works with role hierarchy
+            documentRepo.delete(optional.get());
+            storageService.delete(optional.get().getFilename());
+            return true;
+        }
+        return false;
     }
 
     public Optional<DocumentDto> findById(String docId) {
