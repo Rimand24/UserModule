@@ -2,7 +2,7 @@ package org.example.auth.controller.user.search;
 
 import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
-import org.example.auth.domain.UserDto;
+import org.example.auth.domain.dto.UserDto;
 import org.example.auth.service.user.search.UserSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,9 +23,9 @@ public class UserSearchController {
     private final UserSearchService userSearchService;
 
     //view names
-    private static final String USER_LIST = "userList";
+    private static final String USER_LIST = "account/userList";
     private static final String PROFILE = "account/profile";
-    private static final String USER_NOT_FOUND = "userNotFound";
+    private static final String USER_NOT_FOUND = "account/userNotFound";
     private static final String REDIRECT_GET_USER = "redirect:/users/";
 
     //models
@@ -52,7 +52,7 @@ public class UserSearchController {
         return new ModelAndView(PROFILE, MODEL_NAME_USER, optional.get());
     }
 
-    @GetMapping("/users/{email:.+}") //todo redirect to getUserByName with dto as param
+    @GetMapping("/users/email/{email:.+}") //todo redirect to getUserByName with dto as param
     public ModelAndView getUserByEmail(@PathVariable String email) {
         Optional<UserDto> optional = userSearchService.findByEmail(email);
         if (optional.isEmpty()) {
@@ -60,6 +60,9 @@ public class UserSearchController {
         }
         return new ModelAndView(PROFILE, MODEL_NAME_USER, optional.get());
     }
+
+
+    //todo 1 method search with path params
 
     @GetMapping("/users/all")
     public ModelAndView getUsersActivated() {
@@ -94,7 +97,15 @@ public class UserSearchController {
         return new ModelAndView(USER_LIST, MODEL_NAME_USERS, users);
     }
 
-    @PostMapping("/users/search")
+    @GetMapping("/users/search")
+    public ModelAndView searchUsersRefreshPage(String username) {
+        username = username == null? "" : username;
+
+        List<UserDto> users = userSearchService.searchUsersByName(username);
+        return new ModelAndView(USER_LIST, MODEL_NAME_USERS, users);
+    }
+
+    @PostMapping ("/users/search")
     public ModelAndView searchUsers(@RequestParam String username) {
         List<UserDto> users = userSearchService.searchUsersByName(username);
         return new ModelAndView(USER_LIST, MODEL_NAME_USERS, users);

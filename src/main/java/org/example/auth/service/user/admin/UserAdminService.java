@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -89,7 +90,11 @@ public class UserAdminService {
         User user = optional.get();
         List<Document> docs = user.getCreatedDocuments();
         if (!docs.isEmpty()) {
-            docs.forEach(document -> documentService.deleteDocument(document.getDocId()));
+            docs.forEach(document -> documentService.delete(document.getDocId(), new User() {{ //fixme костыль c User.Roles
+                Set<Role> roles = new HashSet<>();
+                roles.add(Role.DOC_REDACTOR);
+                setAuthorities(roles);
+            }}));
         }
         userRepo.delete(user);
 

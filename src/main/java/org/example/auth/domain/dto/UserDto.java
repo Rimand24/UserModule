@@ -16,6 +16,7 @@ public class UserDto {
     private Set<Role> roles;
     private boolean active;
     private boolean blocked;
+    private String blockerName;
     private String blockReason;
     private LocalDate blockDate;
 }

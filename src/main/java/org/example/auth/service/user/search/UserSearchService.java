@@ -3,17 +3,14 @@ package org.example.auth.service.user.search;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
-import org.example.auth.domain.UserDto;
+import org.example.auth.domain.dto.UserDto;
 import org.example.auth.repo.UserRepo;
-import org.example.auth.service.document.DocumentService;
 import org.example.auth.service.util.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

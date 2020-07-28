@@ -150,127 +150,99 @@ public class UserAccountService implements UserDetailsService {
 
     public UserAccountResponse changePassword(@Valid ChangePasswordRequest request) {
         log.debug("change password username:{}", request.getUsername());
-
         Optional<User> optional = userRepo.findByUsername(request.getUsername());
-
         if (optional.isEmpty()) {
             log.debug("Change password error:{}", USERNAME_NOT_FOUND);
             return new UserAccountResponse(USERNAME_NOT_FOUND);
         }
-
         User user = optional.get();
-
-        if (!user.getPassword().equals(encoder.encode(request.getOldPassword()))) {
+        if (!encoder.matches(request.getOldPassword(), user.getPassword())) {
             log.debug("Change password error:{}", PASSWORD_INCORRECT);
             return new UserAccountResponse(PASSWORD_INCORRECT);
         }
-
         user.setPassword(encoder.encode(request.getPassword()));
         userRepo.save(user);
-
         log.debug("Password changed for user:{}", request.getUsername());
         return new UserAccountResponse(OK);
     }
 
     public UserAccountResponse sendResetPasswordCode(@NotNull String username) {
         log.debug("sending reset password for username:{}", username);
-
         Optional<User> optional = userRepo.findByUsername(username);
-
         if (optional.isEmpty()) {
             log.debug("Send reset password code error:{}", USERNAME_NOT_FOUND);
             return new UserAccountResponse(USERNAME_NOT_FOUND);
         }
-
         User user = optional.get();
-
         String code = tokenService.generatePasswordResetToken();
         user.setPasswordResetCode(code);
         String email = user.getEmail();
         mailService.sendResetPasswordCode(username, email, code);
-
         log.debug("Reset password code resent:(email:{}, code:{})", email, code);
         return new UserAccountResponse(OK);
     }
 
     public UserAccountResponse resetPassword(@NotNull String code) {
         log.debug("reset password for code:{}", code);
-
         Optional<User> optional = userRepo.findByPasswordResetCode(code);
         if (optional.isEmpty()) {
             log.debug("Reset password error:{}", PASSWORD_TOKEN_NOT_FOUND);
             return new UserAccountResponse(PASSWORD_TOKEN_NOT_FOUND);
         }
-
         if (!tokenService.verifyToken(code)) {
             log.debug("Reset password error:{}", TOKEN_NOT_VERIFIED);
             return new UserAccountResponse(TOKEN_NOT_VERIFIED);
         }
-
         User user = optional.get();
-
         String newPassword = generator.generatePassword();
         user.setPassword(encoder.encode(newPassword));
         user.setPasswordResetCode(null);
         mailService.sendNewPassword(user.getUsername(), user.getEmail(), newPassword);
         userRepo.save(user);
-
         log.debug("Password changed for user:{}", user.getUsername());
         return new UserAccountResponse(OK);
     }
 
     public UserAccountResponse changeEmail(@Valid ChangeEmailRequest request) {
         log.debug("change email request:(username:{}, email:{})", request.getUsername(), request.getEmail());
-
         Optional<User> optional = userRepo.findByUsername(request.getUsername());
         if (optional.isEmpty()) {
             log.debug("Email change error:{}", USERNAME_NOT_FOUND);
             return new UserAccountResponse(USERNAME_NOT_FOUND);
         }
-
         User user = optional.get();
-
-        if (!user.getPassword().equals(encoder.encode(request.getPassword()))) {
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
             log.debug("Email change error:{}", PASSWORD_INCORRECT);
             return new UserAccountResponse(PASSWORD_INCORRECT);
         }
-
         if (user.getEmail().equals(request.getEmail())) {
             log.debug("Email change error:{}", NEW_EMAIL_IS_THE_SAME);
             return new UserAccountResponse(NEW_EMAIL_IS_THE_SAME);
         }
-
         if (userRepo.findByEmail(request.getEmail()).isPresent()) {
             log.debug("Email change error:{}", EMAIL_ALREADY_EXISTS);
             return new UserAccountResponse(EMAIL_ALREADY_EXISTS);
         }
-
         String code = tokenService.generateEmailVerificationToken();
         user.setEmailActivationCode(code);
         userRepo.save(user);
-
         mailService.sendNewEmailConfirmCode(request.getUsername(), request.getEmail(), code);
-
         log.debug("Email change code resent:(email:{}, code:{})", request.getEmail(), code);
         return new UserAccountResponse(OK);
     }
 
     public UserAccountResponse confirmChangeEmail(@NotNull String code) {
         log.debug("change email for code:{}", code);
-
         Optional<User> optional = userRepo.findByEmailActivationCode(code);
         if (optional.isEmpty()) {
             log.debug("Email change error:{}", EMAIL_TOKEN_NOT_FOUND);
             return new UserAccountResponse(EMAIL_TOKEN_NOT_FOUND);
         }
-
         String email = tokenService.getEmailFromToken(code);
         User user = optional.get();
         user.setEmail(email);
         userRepo.save(user);
-
         mailService.sendNewEmailConfirmSuccess(user.getUsername(), email);
-
         log.debug("Email changed for user:{}", user.getUsername());
         return new UserAccountResponse(OK);
     }

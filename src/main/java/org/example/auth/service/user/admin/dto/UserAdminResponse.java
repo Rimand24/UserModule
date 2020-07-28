@@ -5,12 +5,9 @@ import lombok.NoArgsConstructor;
 import org.example.auth.service.ServiceResponse;
 import org.example.auth.service.ServiceResponseCode;
 
-import java.io.Serializable;
-
 @Data
 @NoArgsConstructor
-public class UserAdminResponse implements ServiceResponse, Serializable {
-    private static final long serialVersionUID = 4717833379612084584L;
+public class UserAdminResponse implements ServiceResponse {
     ServiceResponseCode status = UserAdminServiceResponseCode.UNDEFINED_ADMIN_SERVICE_ERROR;
 
     public UserAdminResponse(ServiceResponseCode status) {

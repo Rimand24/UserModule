@@ -6,8 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-public class UserBlockRequest implements Serializable {
-    private static final long serialVersionUID = 8231778969676638078L;
+public class UserBlockRequest {
     @NotNull
     private String username;
     @NotNull
