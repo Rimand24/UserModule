@@ -36,6 +36,8 @@ public class Document {
 
     @NotNull
     private LocalDateTime uploadDateTime;
+    private LocalDateTime lastEditDateTime;
+//    private User LastEditor;
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
     private User uploader;

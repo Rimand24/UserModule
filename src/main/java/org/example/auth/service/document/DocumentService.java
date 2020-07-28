@@ -58,26 +58,48 @@ public class DocumentService {
         return mapper.mapDocumentToDto(saved);
     }
 
-    public DocumentDto edit(@Valid DocumentEditRequest request) {
-        throw new RuntimeException();
+    //fixme
+    public Optional<DocumentDto> edit(@Valid DocumentEditRequest request) {
+        Optional<Document> optional = documentRepo.findByDocId(request.getDocId());
+        if (optional.isEmpty()) {
+//            throw new Exception("doc not found"); //fixme
+            return Optional.empty();
+        }
+        Document document = optional.get();
+        if (StringUtils.hasText(request.getDocName())) {
+            document.setDocName(request.getDocName());
+        }
+//document.setPublic(request.isPublicDocument()); //todo
+        if (!request.getTags().isEmpty()) {
+            document.setTags(request.getTags());
+        }
+        document.setLastEditDateTime(LocalDateTime.now());
+        Document save = documentRepo.save(document);
+        return Optional.of(mapper.mapDocumentToDto(save));
+
     }
 
     public boolean delete(String docId) {
-        Document document = documentRepo.findByDocId(docId).get(); //fixme opt
-        documentRepo.delete(document);
-        storageService.delete(document.getFilename());
+        Optional<Document> optional = documentRepo.findByDocId(docId);
+        if (optional.isEmpty()) {
+//            throw new Exception("doc not found"); //fixme
+            return false;
+        }
+        documentRepo.delete(optional.get());
+        storageService.delete(optional.get().getFilename());
         return true;
     }
 
-    public DocumentDto findById(String docId) {
+    public Optional<DocumentDto> findById(String docId) {
         Optional<Document> optional = documentRepo.findByDocId(docId);
         if (optional.isEmpty()) {
-            throw new DocumentServiceException("document not found (id:" + docId + ")"); //fixme
+            //   throw new DocumentServiceException("document not found (id:" + docId + ")"); //fixme
+            return Optional.empty();
         }
-        return mapper.mapDocumentToDto(optional.get());
+        return Optional.of(mapper.mapDocumentToDto(optional.get()));
     }
 
-    public List<DocumentDto> findByUser(String username) {
+    public List<DocumentDto> findAllByUser(String username) {
         List<Document> documents = documentRepo.findByUploader_Username(username);
         return mapper.mapDocumentListToDtoList(documents);
     }
@@ -88,22 +110,28 @@ public class DocumentService {
     }
 
     @SneakyThrows
-    public DocumentDto getDocumentFileById(String docId) {
-        DocumentDto document = findById(docId);
-        byte[] load = storageService.load(document.getFilename());
-        document.setRawFile(load);
-        return document;
+    public Optional<DocumentDto> downloadDocById(String docId) {
+        Optional<DocumentDto> optional = findById(docId);
+        if (optional.isPresent()) {
+            byte[] load = storageService.load(optional.get().getFilename());
+            optional.get().setRawFile(load);
+        }
+        return optional;
     }
 
+    @Deprecated  //fixme may cause errors
     public boolean changeOwnerToDeleted(String docId) {
-        Document document = documentRepo.findByDocId(docId).get(); //fixme opt
+        Optional<Document> optional = documentRepo.findByDocId(docId); //fixme opt
+        if (optional.isEmpty()) {
+            return false;
+        }
         User user = new User();//fixme validation exception - not all field filled
         user.setUsername("USER_DELETED");
+        Document document = optional.get();
         document.setUploader(user);
         documentRepo.save(document);
         return true;
     }
-
 
     public List<DocumentDto> searchDocumentsByName(DocumentSearchRequest request) {
         String docName = request.getDocName();
@@ -120,7 +148,6 @@ public class DocumentService {
             List<Document> documents = documentRepo.findByUploader_UsernameContains(username);
             return mapper.mapDocumentListToDtoList(documents);
         }
-
         return Collections.EMPTY_LIST;
     }
 

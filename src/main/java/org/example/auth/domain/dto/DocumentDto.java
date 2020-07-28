@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class DocumentDto {
-
     private String name;
     private String docId;
     private String filename;
@@ -16,6 +15,7 @@ public class DocumentDto {
     private LocalDateTime uploadDateTime;
     private String mediaType;
     private long size;
+    private boolean publicDocument;
     @Nullable
     @ToString.Exclude
     private byte[] rawFile;
