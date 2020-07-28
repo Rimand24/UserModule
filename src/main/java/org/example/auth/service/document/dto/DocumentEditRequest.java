@@ -1,4 +1,4 @@
-package org.example.auth.controller.file;
+package org.example.auth.service.document.dto;
 
 import lombok.Data;
 import org.example.auth.domain.Tag;
@@ -13,7 +13,8 @@ public class DocumentEditRequest {
     @NotNull
     private String docId;
     private String docName;
-    private Set<Tag> tags = new HashSet<>();
+    private Set<Tag> tags;
     private boolean publicDocument;
+    @NotNull
     private User editor;
 }

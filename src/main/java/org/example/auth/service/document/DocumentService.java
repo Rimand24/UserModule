@@ -1,13 +1,14 @@
 package org.example.auth.service.document;
 
 import lombok.SneakyThrows;
-import org.example.auth.controller.file.DocumentEditRequest;
-import org.example.auth.controller.file.DocumentSearchRequest;
 import org.example.auth.domain.Document;
 import org.example.auth.domain.Role;
 import org.example.auth.domain.User;
 import org.example.auth.domain.dto.DocumentDto;
 import org.example.auth.repo.DocumentRepo;
+import org.example.auth.service.document.dto.DocumentCreationRequest;
+import org.example.auth.service.document.dto.DocumentEditRequest;
+import org.example.auth.service.document.dto.DocumentSearchRequest;
 import org.example.auth.service.storage.StorageService;
 import org.example.auth.service.util.MapperUtils;
 import org.example.auth.service.util.RandomGeneratorUtils;

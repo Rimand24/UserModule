@@ -1,13 +1,13 @@
 package org.example.auth.service.util;
 
-import org.example.auth.controller.file.DocumentEditForm;
-import org.example.auth.controller.file.DocumentEditRequest;
-import org.example.auth.controller.file.DocumentUploadForm;
+import org.example.auth.controller.file.dto.DocumentEditForm;
+import org.example.auth.service.document.dto.DocumentEditRequest;
+import org.example.auth.controller.file.dto.DocumentUploadForm;
 import org.example.auth.domain.Document;
 import org.example.auth.domain.User;
 import org.example.auth.domain.dto.DocumentDto;
 import org.example.auth.domain.dto.UserDto;
-import org.example.auth.service.document.DocumentCreationRequest;
+import org.example.auth.service.document.dto.DocumentCreationRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

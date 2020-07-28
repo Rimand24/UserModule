@@ -1,9 +1,13 @@
 package org.example.auth.controller.file;
 
+import org.example.auth.controller.file.dto.DocumentEditForm;
 import org.example.auth.controller.file.dto.DocumentSearchForm;
+import org.example.auth.controller.file.dto.DocumentUploadForm;
 import org.example.auth.domain.User;
 import org.example.auth.domain.dto.DocumentDto;
-import org.example.auth.service.document.DocumentCreationRequest;
+import org.example.auth.service.document.dto.DocumentCreationRequest;
+import org.example.auth.service.document.dto.DocumentEditRequest;
+import org.example.auth.service.document.dto.DocumentSearchRequest;
 import org.example.auth.service.document.DocumentService;
 import org.example.auth.service.util.MapperUtils;
 import org.springframework.core.io.ByteArrayResource;

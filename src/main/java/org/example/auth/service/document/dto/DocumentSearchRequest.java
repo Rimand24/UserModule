@@ -1,4 +1,4 @@
-package org.example.auth.controller.file;
+package org.example.auth.service.document.dto;
 
 import lombok.Data;
 
