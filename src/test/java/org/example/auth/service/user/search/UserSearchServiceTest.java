@@ -1,7 +1,7 @@
 package org.example.auth.service.user.search;
 
 import org.example.auth.domain.User;
-import org.example.auth.domain.UserDto;
+import org.example.auth.domain.dto.UserDto;
 import org.example.auth.repo.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

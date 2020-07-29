@@ -54,4 +54,19 @@ class TokenServiceTest {
         assertEquals("token incorrect",exception.getMessage());
     }
 
+    @Test
+    void generateEmailVerificationToken() {
+    }
+
+    @Test
+    void verifyToken() {
+    }
+
+    @Test
+    void generatePasswordResetToken() {
+    }
+
+    @Test
+    void getEmailFromToken() {
+    }
 }
