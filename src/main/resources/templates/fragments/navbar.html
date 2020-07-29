@@ -12,14 +12,14 @@
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="../../templates/documentList.html" th:href="@{/docs}">Document List</a>
+                    <a class="nav-link" href="../document/docList.html" th:href="@{/docs/all}">Document List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../../templates/documentList.html" th:href="@{/users}">User List</a>
+                    <a class="nav-link" href="../document/docList.html" th:href="@{/users/all}">User List</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
-                       href="../account/profile.html" th:href="@{/user/{id}(id=${#authentication.name})}"
+                       href="../account/profile.html" th:href="@{/users/{id}(id=${#authentication.name})}"
                        sec:authorize="authenticated">Profile</a>
                 </li>
                 <li class="nav-item">
@@ -34,7 +34,7 @@
                 <span sec:authorize="authenticated" sec:authentication="name">Username</span>
                 <span sec:authorize="anonymous">anonymous</span>
                 <a class="btn btn-outline-primary" href="#" sec:authorize="authenticated" th:href="@{/logout}">Log Out</a>
-                <a class="btn btn-outline-primary" href="#" sec:authorize="anonymous" th:href="@{/login}">Log In</a>
+<!--                <a class="btn btn-outline-primary" href="#" sec:authorize="anonymous" th:href="@{/login}">Log In</a>-->
             </div>
         </div>
 
@@ -42,9 +42,9 @@
 
         <div sec:authorize="anonymous" >
             <form th:action="@{/login}" method="post">
-                <input type="text" name="username">
-                <input type="text" name="password">
-                <input type="submit" class="btn-success">
+                <input type="text" name="username" >
+                <input type="text" name="password" >
+                <input type="submit" class="btn btn-success primary-lg" value="login">
             </form>
         </div>
 

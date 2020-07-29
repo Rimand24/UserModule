@@ -43,11 +43,9 @@
             </table>
         </div>
 
-        <div><a href="/user/changePassword">Change password</a></div>
-        <div><a href="/user/changeEmail">Change email</a></div>
-
-        <div sec:authorize="hasAuthority('ADMIN')">
-            <a href="/admin/changeRole/{username}(username = ${user.name}})">Change role</a>
+        <div th:if="${user.username} == ${#authorization.authentication.name}">
+        <div><a href="/changePassword">Change password</a></div>
+        <div><a href="/changeEmail">Change email</a></div>
         </div>
 
     </div> <!-- fragment.content -->
