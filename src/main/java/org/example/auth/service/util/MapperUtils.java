@@ -40,7 +40,7 @@ public class MapperUtils {
 
         List<DocumentDto> docs = user.getCreatedDocuments().stream().map(doc -> new DocumentDto() {
             {
-                setName(doc.getDocName());
+                setDocName(doc.getDocName());
                 setDocId(doc.getDocId());
                 setSize(doc.getSize());
                 setMediaType(doc.getMediaType());
@@ -64,17 +64,21 @@ public class MapperUtils {
     }
 
     public DocumentDto mapDocumentToDto(Document doc) {
+        System.out.println("mapper sout debug"); //fixme
+        System.out.println("name:"+doc.getDocName()+"\nupload date:"+doc.getUploadDateTime()); //fixme
         DocumentDto dto = new DocumentDto();
-        dto.setName(doc.getDocName());
+        dto.setDocName(doc.getDocName());
         dto.setDocId(doc.getDocId());
         dto.setFilename(doc.getFilename());
         dto.setMediaType(doc.getMediaType());
         dto.setUploadDateTime(doc.getUploadDateTime());
         dto.setSize(doc.getSize());
         dto.setUploader(doc.getUploader().getUsername());
+        dto.setLastEditDateTime(doc.getLastEditDateTime());
+        dto.setTags(doc.getTags());
+        System.out.println(dto.toString()); //fixme
         return dto;
     }
-
 
     public DocumentCreationRequest mapDocUploadFormToDocUploadRequest(DocumentUploadForm form, User user) {
         DocumentCreationRequest request = new DocumentCreationRequest();
@@ -86,7 +90,6 @@ public class MapperUtils {
         request.setDocumentFile(form.getFile());
         return request;
     }
-
 
     public DocumentEditRequest mapDocEditFormToDocEditRequest(DocumentEditForm form, String docId, User user) {
         DocumentEditRequest request = new DocumentEditRequest();

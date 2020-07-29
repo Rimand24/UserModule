@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+add doc form
+
+<div>
+    <br>
+    <form th:action="@{/docs/add}" action="#" method="post" enctype="multipart/form-data">
+        <p>Upload file (max size 300mb)</p>
+        <div class="form-group">
+            <div class="custom-file">
+                <input type="file" name="file" id="customFile" placeholder="choose">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+    </form>
+</div>
+</div>
+
+</body>
+</html>

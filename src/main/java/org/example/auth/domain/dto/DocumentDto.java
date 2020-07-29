@@ -3,16 +3,20 @@ package org.example.auth.domain.dto;
 import com.sun.istack.Nullable;
 import lombok.Data;
 import lombok.ToString;
+import org.example.auth.domain.Tag;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 public class DocumentDto {
-    private String name;
+    private String docName;
     private String docId;
     private String filename;
+    private Set<Tag> tags;
     private String uploader;
     private LocalDateTime uploadDateTime;
+    private LocalDateTime lastEditDateTime;
     private String mediaType;
     private long size;
     private boolean publicDocument;

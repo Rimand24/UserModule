@@ -5,10 +5,10 @@ import org.example.auth.controller.file.dto.DocumentSearchForm;
 import org.example.auth.controller.file.dto.DocumentUploadForm;
 import org.example.auth.domain.User;
 import org.example.auth.domain.dto.DocumentDto;
+import org.example.auth.service.document.DocumentService;
 import org.example.auth.service.document.dto.DocumentCreationRequest;
 import org.example.auth.service.document.dto.DocumentEditRequest;
 import org.example.auth.service.document.dto.DocumentSearchRequest;
-import org.example.auth.service.document.DocumentService;
 import org.example.auth.service.util.MapperUtils;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,9 +69,19 @@ public class DocumentController {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(DOC_ADD_FORM, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
         }
+        //todo - make handler
+        boolean allowed = isAllowedContentType(form.getFile().getContentType());
+        if (!allowed) {
+            return new ModelAndView(DOC_ADD_FORM, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
+        }
+        //
         DocumentCreationRequest request = mapper.mapDocUploadFormToDocUploadRequest(form, user);
         DocumentDto document = documentService.create(request);
         return new ModelAndView(DOC_INFO, MODEL_DOC, document);
+    }
+
+    private boolean isAllowedContentType(String contentType) {
+        return true;
     }
 
     @GetMapping("/docs/edit")
@@ -112,10 +121,9 @@ public class DocumentController {
     }
 
     @GetMapping("/docs/all")
-    public ModelAndView findAll(Model model) {
+    public ModelAndView findAll() {
         List<DocumentDto> list = documentService.findAll();
-        model.addAttribute(DOC_LIST, list);
-        return new ModelAndView(DOC_INFO, MODEL_DOC_LIST, list);
+        return new ModelAndView(DOC_LIST, MODEL_DOC_LIST, list);
     }
 
     @GetMapping("/docs/download/{docId}")
@@ -127,7 +135,7 @@ public class DocumentController {
         DocumentDto document = optional.get();
         ByteArrayResource resource = new ByteArrayResource(document.getRawFile());
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + document.getName())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + document.getDocName())
                 .contentType(MediaType.parseMediaType(document.getMediaType()))
                 .contentLength(resource.contentLength())
                 .body(resource);
