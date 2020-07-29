@@ -76,6 +76,7 @@ public class MapperUtils {
         dto.setUploader(doc.getUploader().getUsername());
         dto.setLastEditDateTime(doc.getLastEditDateTime());
         dto.setTags(doc.getTags());
+        dto.setDescription(doc.getDescription());
         System.out.println(dto.toString()); //fixme
         return dto;
     }

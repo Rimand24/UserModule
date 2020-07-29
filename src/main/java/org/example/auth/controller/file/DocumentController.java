@@ -102,15 +102,6 @@ public class DocumentController {
         return new ModelAndView(DOC_INFO, MODEL_DOC, optional.get());
     }
 
-    @DeleteMapping("/docs/{docId}")
-    public ModelAndView delete(@PathVariable String docId, @AuthenticationPrincipal User user) {
-        boolean deleted = documentService.delete(docId, user);
-        if (!deleted) {
-            return new ModelAndView(DOC_LIST, MODEL_ERROR, DELETE_FAILED);
-        }
-        return new ModelAndView(REDIRECT_DOCS_ALL);
-    }
-
     @GetMapping("/docs/{docId}")
     public ModelAndView findById(@PathVariable String docId) {
         Optional<DocumentDto> optional = documentService.findById(docId);
@@ -141,6 +132,15 @@ public class DocumentController {
                 .body(resource);
     }
 
+    @GetMapping("/docs/delete/{docId}")
+    public ModelAndView delete(@PathVariable String docId, @AuthenticationPrincipal User user) {
+        boolean deleted = documentService.delete(docId, user);
+        if (!deleted) {
+            return new ModelAndView(DOC_LIST, MODEL_ERROR, DELETE_FAILED);
+        }
+        return new ModelAndView(REDIRECT_DOCS_ALL);
+    }
+
     @GetMapping("/docs/search")
     public ModelAndView search() {
         return new ModelAndView(SEARCH_FORM);
@@ -154,5 +154,4 @@ public class DocumentController {
         List<DocumentDto> list = documentService.searchDocumentsByName(request);
         return new ModelAndView(DOC_INFO, MODEL_DOC_LIST, list);
     }
-
 }

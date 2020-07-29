@@ -13,6 +13,7 @@ public class DocumentDto {
     private String docName;
     private String docId;
     private String filename;
+    private String description;
     private Set<Tag> tags;
     private String uploader;
     private LocalDateTime uploadDateTime;

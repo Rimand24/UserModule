@@ -12,6 +12,16 @@
 
 <div class="col" layout:fragment="content">
     <div>
+        <form th:action="@{/docs/search}" method="post">
+            <input type="search" name="username">
+            <input type="submit" value="Search" class="btn-info">
+        </form>
+    </div>
+    <div><br></div>
+
+    <div>
+
+
         <table class="documentList" border="2">
             <thead align="center">
             <tr>
@@ -24,7 +34,7 @@
                 <th width="100">Edit Date</th>
                 <th width="100">size</th>
                 <th width="200">Author</th>
-                <th width="80">Open</th>
+<!--                <th width="80">Open</th>-->
                 <th width="80">Download</th>
                 <th width="80">Delete</th>
                 <!--    Просмотры:25501-->
@@ -37,22 +47,27 @@
                 <!--     todo   picture depends on mediaType -->
                 <td th:text="*{mediaType}">file type</td>
                 <td><a th:href="@{/docs/{docId}(docId=*{docId})}" th:text="*{docName}">Kerman</a></td>
-<!--                <td th:text="*{docName}">695462.pdf</td>-->
+                <!--                <td th:text="*{docName}">695462.pdf</td>-->
                 <td th:if="*{tags.size() > 0}" th:text="*{tags}">tag</td>
                 <td th:if="*{tags.size() < 1}"></td>
                 <td th:if="*{uploadDateTime != null}" th:text="*{uploadDateTime.toLocalDate()}">01.01.2020</td>
-                <td th:if="*{uploadDateTime == null}" th:text="Unknown">01.01.2020</td>
+                <td th:if="*{uploadDateTime == null}" th:text="Unknown">Unknown</td>
                 <!--     todo    format time to delete nanos -->
                 <td th:if="*{lastEditDateTime != null}" th:text="*{lastEditDateTime.toLocalDate()}">10.10.2020</td>
-                <td th:if="*{lastEditDateTime == null}" th:text="Unknown">01.01.2020</td>
+                <td th:if="*{lastEditDateTime == null and uploadDateTime != null}"
+                    th:text="*{uploadDateTime.toLocalDate()}">01.01.2020
+                </td>
+                <td th:if="*{lastEditDateTime == null and uploadDateTime == null}" th:text="Unknown">Unknown</td>
                 <td th:if="*{size}<1024" th:text="*{size}+b">size</td>
                 <td th:if="*{size}>1024 and *{size}<1048576" th:text="*{size/1024}+' '+Kb">size</td>
                 <td th:if="*{size}>1048576 and *{size}<1073741824" th:text="*{size/1048576}+' '+Mb">size</td>
                 <td th:if="*{size}>1073741824" th:text="*{size/1073741824}+' '+Gb3">size</td>
                 <td th:text="*{uploader}">Jeb</td>
-                <td><a th:href="@{/docs/{id}(id=*{docId})}">Open</a></td>
-                <td><a th:href="@{/docs/download/{id}(id=*{docId})}" download>Download</a></td>
-                <td><a th:href="@{/docs/delete/{id}(id=*{docId})}">Delete</a></td>
+
+<!--                <td><a th:href="@{/docs/{docId}(docId=*{docId})}">Open</a></td>-->
+
+                <td><a th:href="@{/docs/download/{docId}(docId=*{docId})}" class="btn btn-success" download>Download</a></td>
+                <td><a th:action="@{/docs/delete/{docId}(docId=*{docId})}" class="btn btn-danger">Delete</a></td>
             </tr>
             </tbody>
 
