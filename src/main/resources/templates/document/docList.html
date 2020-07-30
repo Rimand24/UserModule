@@ -13,7 +13,7 @@
 <div class="col" layout:fragment="content">
     <div>
         <form th:action="@{/docs/search}" method="post">
-            <input type="search" name="username">
+            <input type="search" name="docName">
             <input type="submit" value="Search" class="btn-info">
         </form>
     </div>
@@ -34,7 +34,7 @@
                 <th width="100">Edit Date</th>
                 <th width="100">size</th>
                 <th width="200">Author</th>
-<!--                <th width="80">Open</th>-->
+                <!--                <th width="80">Open</th>-->
                 <th width="80">Download</th>
                 <th width="80">Delete</th>
                 <!--    Просмотры:25501-->
@@ -64,14 +64,19 @@
                 <td th:if="*{size}>1073741824" th:text="*{size/1073741824}+' '+Gb3">size</td>
                 <td th:text="*{uploader}">Jeb</td>
 
-<!--                <td><a th:href="@{/docs/{docId}(docId=*{docId})}">Open</a></td>-->
+                <!--                <td><a th:href="@{/docs/{docId}(docId=*{docId})}">Open</a></td>-->
 
-                <td><a th:href="@{/docs/download/{docId}(docId=*{docId})}" class="btn btn-success" download>Download</a></td>
+                <td><a th:href="@{/docs/download/{docId}(docId=*{docId})}" class="btn btn-success" download>Download</a>
+                </td>
                 <td><a th:action="@{/docs/delete/{docId}(docId=*{docId})}" class="btn btn-danger">Delete</a></td>
             </tr>
             </tbody>
-
         </table>
+        <br>
+        <div>
+            <a th:href="@{/docs/add}" class="btn btn-dark">Add doc</a>
+        </div>
+
     </div>
 </div> <!-- fragment.content -->
 

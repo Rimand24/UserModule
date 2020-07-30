@@ -142,7 +142,7 @@ public class DocumentController {
     }
 
     @GetMapping("/docs/search")
-    public ModelAndView search() {
+    public ModelAndView searchForm() {
         return new ModelAndView(SEARCH_FORM);
     }
 
@@ -152,6 +152,15 @@ public class DocumentController {
         request.setUsername(form.getUsername());
         request.setDocName(form.getDocName());
         List<DocumentDto> list = documentService.searchDocumentsByName(request);
-        return new ModelAndView(DOC_INFO, MODEL_DOC_LIST, list);
+        return new ModelAndView(DOC_LIST, MODEL_DOC_LIST, list);
     }
+
+    @PostMapping("/docs/search}")
+    public ModelAndView search(String docName) {
+        DocumentSearchRequest request = new DocumentSearchRequest();
+        request.setDocName(docName);
+        List<DocumentDto> list = documentService.searchDocumentsByName(request);
+        return new ModelAndView(DOC_LIST, MODEL_DOC_LIST, list);
+    }
+
 }
