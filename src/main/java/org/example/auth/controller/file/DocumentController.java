@@ -17,12 +17,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.util.ContentTypeUtils;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -37,9 +37,7 @@ public class DocumentController {
     private final MapperUtils mapper;
 
     //view names
-    private static final String DOC_ADD_FORM = "document/addDocumentForm";
     private static final String DOC_EDIT_FORM = "document/editDocumentForm";
-    private static final String SEARCH_FORM = "document/searchDocumentForm";
     private static final String DOC_INFO = "document/docInfo";
     private static final String DOC_NOT_FOUND = "document/docNotFound";
     private static final String DOC_LIST = "document/docList";
@@ -49,7 +47,7 @@ public class DocumentController {
     private static final String MODEL_DOC_LIST = "docList";
     private static final String MODEL_ERROR = "error";
     //message
-    private static final String DELETE_FAILED = "delete failed";
+    private static final String DELETE_ERROR = "delete error";
     private static final String EDIT_ERROR = "edit error";
 
 
@@ -58,30 +56,31 @@ public class DocumentController {
         this.mapper = mapper;
     }
 
-
-    @GetMapping("/docs/add")
-    public String showAddPage() {
-        return DOC_ADD_FORM;
+//fixme
+    @PostMapping("/docs/add/fast")
+    public String showAddFast(@AuthenticationPrincipal User user, MultipartFile file) {
+        DocumentCreationRequest request = new DocumentCreationRequest();
+        request.setDocumentFile(file);
+        request.setUploader(user);
+        documentService.create(request);
+        return REDIRECT_DOCS_ALL;
     }
 
+    //fixme
     @PostMapping("/docs/add")
     public ModelAndView add(@AuthenticationPrincipal User user, @Valid DocumentUploadForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ModelAndView(DOC_ADD_FORM, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
+            return new ModelAndView(DOC_LIST, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
         }
         //todo - make handler
         boolean allowed = isAllowedContentType(form.getFile().getContentType());
         if (!allowed) {
-            return new ModelAndView(DOC_ADD_FORM, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
+            return new ModelAndView(DOC_LIST, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
         }
         //
         DocumentCreationRequest request = mapper.mapDocUploadFormToDocUploadRequest(form, user);
         DocumentDto document = documentService.create(request);
         return new ModelAndView(DOC_INFO, MODEL_DOC, document);
-    }
-
-    private boolean isAllowedContentType(String contentType) {
-        return true;
     }
 
     @GetMapping("/docs/edit")
@@ -136,18 +135,17 @@ public class DocumentController {
     public ModelAndView delete(@PathVariable String docId, @AuthenticationPrincipal User user) {
         boolean deleted = documentService.delete(docId, user);
         if (!deleted) {
-            return new ModelAndView(DOC_LIST, MODEL_ERROR, DELETE_FAILED);
+            return new ModelAndView(DOC_LIST, MODEL_ERROR, DELETE_ERROR);
         }
         return new ModelAndView(REDIRECT_DOCS_ALL);
     }
 
-    @GetMapping("/docs/search")
-    public ModelAndView searchForm() {
-        return new ModelAndView(SEARCH_FORM);
-    }
-
     @PostMapping("/docs/search")
     public ModelAndView search(DocumentSearchForm form) {
+      if (!StringUtils.hasText(form.getUsername()) && !StringUtils.hasText(form.getDocName())){
+            return new ModelAndView(REDIRECT_DOCS_ALL);
+        }
+
         DocumentSearchRequest request = new DocumentSearchRequest();
         request.setUsername(form.getUsername());
         request.setDocName(form.getDocName());
@@ -155,12 +153,25 @@ public class DocumentController {
         return new ModelAndView(DOC_LIST, MODEL_DOC_LIST, list);
     }
 
-    @PostMapping("/docs/search}")
-    public ModelAndView search(String docName) {
-        DocumentSearchRequest request = new DocumentSearchRequest();
-        request.setDocName(docName);
-        List<DocumentDto> list = documentService.searchDocumentsByName(request);
-        return new ModelAndView(DOC_LIST, MODEL_DOC_LIST, list);
+    @GetMapping("/docs/search}")
+    public ModelAndView search() {
+            return new ModelAndView(REDIRECT_DOCS_ALL);
+    }
+
+//    @PostMapping("/docs/search}")
+//    public ModelAndView search(String docName) {
+//        if (!StringUtils.hasText(docName)){
+//            return new ModelAndView(REDIRECT_DOCS_ALL);
+//        }
+//        DocumentSearchRequest request = new DocumentSearchRequest();
+//        request.setDocName(docName);
+//        List<DocumentDto> list = documentService.searchDocumentsByName(request);
+//        return new ModelAndView(DOC_LIST, MODEL_DOC_LIST, list);
+//    }
+
+    //todo
+    private boolean isAllowedContentType(String contentType) {
+        return true;
     }
 
 }

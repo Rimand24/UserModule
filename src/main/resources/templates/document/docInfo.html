@@ -14,54 +14,62 @@
 <div class="col" layout:fragment="content">
 
     <div>
-        <div>
-            <div>File name: <b th:text="${doc.docName}">example.txt</b></div>
-            <div>Document ID: <b th:text="${doc.docId}">145454a1fs45dff4a</b></div>
-            <div>MediaType: <b th:text="${doc.mediaType}">text/doc</b></div>
-            <div>Size:
-                <b th:if="${doc.size}<1024" th:text="${doc.size}+b">1041 b</b>
-                <b th:if="${doc.size}>1024 and ${doc.size}<1048576" th:text="${doc.size/1024}+' '+Kb">512 Kb</b>
-                <b th:if="${doc.size}>1048576 and ${doc.size}<1073741824" th:text="${doc.size/1048576}+' '+Mb">10 Mb</b>
-                <b th:if="${doc.size}>1073741824" th:text="${doc.size/1073741824}+' '+Gb3">1 Gb</b>
-            </div>
-            <div>Uploader: <b th:text="${doc.uploader}">Username</b></div>
-            <div>Upload date:
-                <b th:if="${doc.uploadDateTime != null}" th:text="${doc.uploadDateTime.toLocalDate()}">01.01.2020</b>
-                <b th:if="${doc.uploadDateTime == null}">Unknown</b>
-            </div>
-
-            <div th:if="${doc.lastEditDateTime != null}">Last changes: <b
-                    th:text="${doc.lastEditDateTime}">10.01.2020</b></div>
-
-            <div>Visible:
-                <b th:if="${doc.publicDocument}">All</b>
-                <b th:if="${!doc.publicDocument}">User only</b>
-            </div>
-
-            <div><a href="#" th:href="@{/docs/download/{docId}(docId=${doc.docId})}">Download</a></div>
+        <div>File name: <b th:text="${doc.docName}">example.txt</b></div>
+        <div>Document ID: <b th:text="${doc.docId}">145454a1fs45dff4a</b></div>
+        <div>MediaType: <b th:text="${doc.mediaType}">text/doc</b></div>
+        <div>Size:
+            <b th:if="${doc.size}<1024" th:text="${doc.size}+b">1041 b</b>
+            <b th:if="${doc.size}>1024 and ${doc.size}<1048576" th:text="${doc.size/1024}+' '+Kb">512 Kb</b>
+            <b th:if="${doc.size}>1048576 and ${doc.size}<1073741824" th:text="${doc.size/1048576}+' '+Mb">10 Mb</b>
+            <b th:if="${doc.size}>1073741824" th:text="${doc.size/1073741824}+' '+Gb3">1 Gb</b>
         </div>
+        <div>Uploader: <b th:text="${doc.uploader}">Username</b></div>
+        <div>Upload date:
+            <b th:if="${doc.uploadDateTime != null}" th:text="${doc.uploadDateTime.toLocalDate()}">01.01.2020</b>
+            <b th:if="${doc.uploadDateTime == null}">Unknown</b>
+        </div>
+
+        <div th:if="${doc.lastEditDateTime != null}">Last changes: <b
+                th:text="${doc.lastEditDateTime}">10.01.2020</b></div>
+
+        <div>Visible:
+            <b th:if="${doc.publicDocument}">All</b>
+            <b th:if="${!doc.publicDocument}">User only</b>
+        </div>
+        <br>
     </div>
+
+    <div>
+        <a class="btn btn-success" th:href="@{/docs/download/{docId}(docId=${doc.docId})}" download> Download</a>
+        <span th:if="${doc.uploader} == ${#authorization.authentication.name}">
+                <a class="btn btn-warning" th:action="@{/docs/edit/{docId}(docId=*{docId})}">Edit</a>
+                <a class="btn btn-danger" th:action="@{/docs/delete/{docId}(docId=*{docId})}">Delete</a>
+        </span>
+    </div>
+
+
+</div>
+</div>
+
 
 <!--    ///////-->
-    <div th:if="${doc.uploader} == ${#authorization.authentication.name}">
-        <div><a href="/changePassword">Change password</a></div>
-        <div><a href="/changeEmail">Change email</a></div>
-    </div>
+<div th:if="${doc.uploader} == ${#authorization.authentication.name}">
+    <a th:action="@{/docs/edit/{docId}(docId=*{docId})}" class="btn btn-warning">Edit</a>
+    <a th:action="@{/docs/delete/{docId}(docId=*{docId})}" class="btn btn-danger">Delete</a>
+</div>
 <!--    //////-->
 
 
+<!--    <iframe width="100%" height="750"-->
 
 
-    <iframe width="100%" height="750"
+<!--            src="http://www.africau.edu/images/default/sample.pdf"-->
+<!--            th:src="${doc.getRawFile()}">-->
 
-
-            src="http://www.africau.edu/images/default/sample.pdf"
-            th:src="${doc.getRawFile()}">
-
-        document preview WIP <br><br>
-        https://poi.apache.org/download.html <br>
-        https://github.com/mozilla/pdf.js
-    </iframe>
+<!--        document preview WIP <br><br>-->
+<!--        https://poi.apache.org/download.html <br>-->
+<!--        https://github.com/mozilla/pdf.js-->
+<!--    </iframe>-->
 
 </div> <!-- fragment.content -->
 
