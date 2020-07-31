@@ -2,14 +2,11 @@ package org.rimand.doc.service.user.admin;
 
 import lombok.extern.slf4j.Slf4j;
 import org.rimand.doc.domain.Document;
-
 import org.rimand.doc.domain.Role;
 import org.rimand.doc.domain.User;
 import org.rimand.doc.repo.UserRepo;
 import org.rimand.doc.service.document.DocumentService;
-
 import org.rimand.doc.service.user.admin.dto.UserAdminResponse;
-import org.rimand.doc.service.user.admin.dto.UserAdminServiceResponseCode;
 import org.rimand.doc.service.user.admin.dto.UserBlockRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

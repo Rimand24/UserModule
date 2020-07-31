@@ -1,5 +1,6 @@
-package org.rimand.doc.controller.user.admin;
+package org.rimand.doc.controller.user;
 
+import org.rimand.doc.controller.user.dto.UserBlockForm;
 import org.rimand.doc.domain.Role;
 import org.rimand.doc.domain.User;
 import org.rimand.doc.service.user.admin.UserAdminService;

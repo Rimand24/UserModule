@@ -1,6 +1,9 @@
-package org.rimand.doc.controller.user.account;
+package org.rimand.doc.controller.user;
 
 
+import org.rimand.doc.controller.user.dto.EmailChangeForm;
+import org.rimand.doc.controller.user.dto.PasswordChangeForm;
+import org.rimand.doc.controller.user.dto.RegistrationForm;
 import org.rimand.doc.domain.User;
 import org.rimand.doc.service.user.account.UserAccountService;
 import org.rimand.doc.service.user.account.dto.ChangeEmailRequest;

@@ -2,18 +2,15 @@ package org.rimand.doc.service.document;
 
 import lombok.SneakyThrows;
 import org.rimand.doc.domain.Document;
-
 import org.rimand.doc.domain.Role;
 import org.rimand.doc.domain.User;
 import org.rimand.doc.domain.dto.DocumentDto;
-
 import org.rimand.doc.repo.DocumentRepo;
 import org.rimand.doc.service.document.dto.DocumentCreationRequest;
 import org.rimand.doc.service.document.dto.DocumentEditRequest;
 import org.rimand.doc.service.document.dto.DocumentSearchRequest;
 import org.rimand.doc.service.storage.StorageService;
 import org.rimand.doc.service.util.MapperUtils;
-
 import org.rimand.doc.service.util.RandomGeneratorUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

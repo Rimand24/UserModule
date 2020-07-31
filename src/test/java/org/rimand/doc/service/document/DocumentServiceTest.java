@@ -1,13 +1,6 @@
-package org.example.auth.service.document;
+package org.rimand.doc.service.document;
 
 import lombok.SneakyThrows;
-import org.example.auth.domain.Document;
-import org.example.auth.domain.User;
-import org.example.auth.domain.dto.DocumentDto;
-import org.example.auth.repo.DocumentRepo;
-import org.example.auth.service.document.dto.DocumentCreationRequest;
-import org.example.auth.service.storage.StorageService;
-import org.example.auth.service.util.RandomGeneratorUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -15,6 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.rimand.doc.domain.Document;
+import org.rimand.doc.domain.User;
+import org.rimand.doc.domain.dto.DocumentDto;
+import org.rimand.doc.repo.DocumentRepo;
+import org.rimand.doc.service.document.dto.DocumentCreationRequest;
+import org.rimand.doc.service.storage.StorageService;
+import org.rimand.doc.service.util.RandomGeneratorUtils;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;

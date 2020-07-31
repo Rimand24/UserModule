@@ -1,12 +1,12 @@
 package org.rimand.doc.controller.user.admin;
 
+import org.rimand.doc.controller.user.UserAdminController;
 import org.rimand.doc.domain.Role;
 import org.rimand.doc.service.user.admin.UserAdminService;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.rimand.doc.service.user.admin.dto.UserAdminResponse;
-import org.rimand.doc.service.user.admin.dto.UserAdminServiceResponseCode;
 import org.rimand.doc.service.user.admin.dto.UserBlockRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

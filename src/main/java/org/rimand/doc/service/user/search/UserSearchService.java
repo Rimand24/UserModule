@@ -1,7 +1,6 @@
 package org.rimand.doc.service.user.search;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.rimand.doc.domain.Role;
 import org.rimand.doc.domain.User;
 import org.rimand.doc.domain.dto.UserDto;

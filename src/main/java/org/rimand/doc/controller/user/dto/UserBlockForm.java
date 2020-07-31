@@ -1,4 +1,4 @@
-package org.rimand.doc.controller.user.admin;
+package org.rimand.doc.controller.user.dto;
 
 import lombok.Data;
 

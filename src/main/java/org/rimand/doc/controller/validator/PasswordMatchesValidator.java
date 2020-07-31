@@ -1,7 +1,7 @@
 package org.rimand.doc.controller.validator;
 
 
-import org.rimand.doc.controller.user.account.RegistrationForm;
+import org.rimand.doc.controller.user.dto.RegistrationForm;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

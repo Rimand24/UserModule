@@ -1,4 +1,4 @@
-package org.rimand.doc.controller.user.search;
+package org.rimand.doc.controller.user;
 
 import org.rimand.doc.domain.Role;
 import org.rimand.doc.domain.User;
@@ -99,13 +99,13 @@ public class UserSearchController {
 
     @GetMapping("/users/search")
     public ModelAndView searchUsersRefreshPage(String username) {
-        username = username == null? "" : username;
+        username = username == null ? "" : username;
 
         List<UserDto> users = userSearchService.searchUsersByName(username);
         return new ModelAndView(USER_LIST, MODEL_NAME_USERS, users);
     }
 
-    @PostMapping ("/users/search")
+    @PostMapping("/users/search")
     public ModelAndView searchUsers(@RequestParam String username) {
         List<UserDto> users = userSearchService.searchUsersByName(username);
         return new ModelAndView(USER_LIST, MODEL_NAME_USERS, users);

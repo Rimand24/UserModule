@@ -1,4 +1,4 @@
-package org.rimand.doc.controller.user.account;
+package org.rimand.doc.controller.user.dto;
 
 import lombok.Data;
 import org.rimand.doc.controller.validator.ValidEmail;
