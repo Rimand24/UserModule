@@ -25,39 +25,68 @@
         </div>
         <div>Uploader: <b th:text="${doc.uploader}">Username</b></div>
         <div>Upload date:
-            <b th:if="${doc.uploadDateTime != null}" th:text="${doc.uploadDateTime.toLocalDate()}">01.01.2020</b>
-            <b th:if="${doc.uploadDateTime == null}">Unknown</b>
+            <b th:if="${doc.uploadDateTime != null}"
+               th:text="${doc.uploadDateTime.toLocalDate()} + ' '
+                    + ${doc.uploadDateTime.toLocalTime().hour} + ':'
+                    + ${doc.uploadDateTime.toLocalTime().minute} + ':'
+                    + ${doc.uploadDateTime.toLocalTime().second}"></b>
+            <b th:if="${doc.uploadDateTime == null}">Never</b>
         </div>
 
-        <div th:if="${doc.lastEditDateTime != null}">Last changes: <b
-                th:text="${doc.lastEditDateTime}">10.01.2020</b></div>
+        <div th:if="${doc.lastEditDateTime != null}">Last changes:
+            <b th:text="${doc.lastEditDateTime.toLocalDate()} + ' '
+                    + ${doc.lastEditDateTime.toLocalTime().hour} + ':'
+                    + ${doc.lastEditDateTime.toLocalTime().minute} + ':'
+                    + ${doc.lastEditDateTime.toLocalTime().second}"></b>
+        </div>
 
         <div>Visible:
             <b th:if="${doc.publicDocument}">All</b>
             <b th:if="${!doc.publicDocument}">User only</b>
         </div>
+        <div> Description: <b th:text="${doc.description}">description</b></div>
         <br>
     </div>
 
     <div>
         <a class="btn btn-success" th:href="@{/docs/download/{docId}(docId=${doc.docId})}" download> Download</a>
         <span th:if="${doc.uploader} == ${#authorization.authentication.name}">
-                <a class="btn btn-warning" th:action="@{/docs/edit/{docId}(docId=*{docId})}">Edit</a>
-                <a class="btn btn-danger" th:action="@{/docs/delete/{docId}(docId=*{docId})}">Delete</a>
+                    <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#editForm"
+                            aria-expanded="false" aria-controls="collapseExample">Edit</button>
+                <a class="btn btn-danger" th:href="@{/docs/delete/{docId}(docId=*{docId})}">Delete</a>
         </span>
     </div>
 
+    <div class="collapse" id="editForm" th:if="${doc.uploader} == ${#authorization.authentication.name}">
+        <div class="card card-body">
+            <div>
+                <form class="needs-validation" th:action="@{/docs/edit/{docId}(docId=*{docId})}" method="post">
+                    <div class="form-group">
+                        <label for="docName">Document name:</label>
+                        <input type="text" class="form-control" id="docName" th:value="${doc.docName}"
+                               name="docName">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <input type="text" class="form-control" id="description" th:value="${doc.description}"
+                               name="description">
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input th:if="${doc.publicDocument}" class="form-check-input" type="checkbox" name="publicDocument" checked>
+                            <input th:if="${!doc.publicDocument}" class="form-check-input" type="checkbox" name="publicDocument">
+                            Public document
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <br>
+                        <button type="submit" class="btn btn-dark">Comfirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-</div>
-</div>
-
-
-<!--    ///////-->
-<div th:if="${doc.uploader} == ${#authorization.authentication.name}">
-    <a th:action="@{/docs/edit/{docId}(docId=*{docId})}" class="btn btn-warning">Edit</a>
-    <a th:action="@{/docs/delete/{docId}(docId=*{docId})}" class="btn btn-danger">Delete</a>
-</div>
-<!--    //////-->
 
 
 <!--    <iframe width="100%" height="750"-->
@@ -70,6 +99,7 @@
 <!--        https://poi.apache.org/download.html <br>-->
 <!--        https://github.com/mozilla/pdf.js-->
 <!--    </iframe>-->
+
 
 </div> <!-- fragment.content -->
 

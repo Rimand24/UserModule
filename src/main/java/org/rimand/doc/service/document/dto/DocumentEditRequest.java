@@ -14,6 +14,7 @@ public class DocumentEditRequest {
     private String docId;
     private String docName;
     private Set<Tag> tags;
+    private String description;
     private boolean publicDocument;
     @NotNull
     private User editor;

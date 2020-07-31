@@ -10,5 +10,6 @@ import java.util.Set;
 public class DocumentEditForm {
     private String docName;
     private Set<Tag> tagList=new HashSet<>();
+    private String description;
     private boolean publicDocument;
 }

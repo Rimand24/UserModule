@@ -43,6 +43,7 @@ public class DocumentController {
     private static final String DOC_NOT_FOUND = "document/docNotFound";
     private static final String DOC_LIST = "document/docList";
     private static final String REDIRECT_DOCS_ALL = "redirect:/docs/all";
+    private static final String REDIRECT_DOCS_ID = "redirect:/docs/{id}";
     //models
     private static final String MODEL_DOC = "doc";
     private static final String MODEL_DOC_LIST = "docList";
@@ -58,14 +59,14 @@ public class DocumentController {
     }
 
 //fixme
-    @PostMapping("/docs/add/fast")
-    public String showAddFast(@AuthenticationPrincipal User user, MultipartFile file) {
-        DocumentCreationRequest request = new DocumentCreationRequest();
-        request.setDocumentFile(file);
-        request.setUploader(user);
-        documentService.create(request);
-        return REDIRECT_DOCS_ALL;
-    }
+//    @PostMapping("/docs/add/fast")
+//    public String showAddFast(@AuthenticationPrincipal User user, MultipartFile file) {
+//        DocumentCreationRequest request = new DocumentCreationRequest();
+//        request.setDocumentFile(file);
+//        request.setUploader(user);
+//        documentService.create(request);
+//        return REDIRECT_DOCS_ALL;
+//    }
 
     //fixme
     @PostMapping("/docs/add")
@@ -78,22 +79,23 @@ public class DocumentController {
         if (!allowed) {
             return new ModelAndView(DOC_LIST, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
         }
-        //
+        System.out.println("controller:"+form);
         DocumentCreationRequest request = mapper.mapDocUploadFormToDocUploadRequest(form, user);
         DocumentDto document = documentService.create(request);
-        return new ModelAndView(DOC_INFO, MODEL_DOC, document);
+        return new ModelAndView(REDIRECT_DOCS_ALL);
     }
 
-    @GetMapping("/docs/edit")
-    public ModelAndView editPage() {
-        return new ModelAndView(DOC_EDIT_FORM);
-    }
+//    @GetMapping("/docs/edit")
+//    public ModelAndView editPage() {
+//        return new ModelAndView(DOC_EDIT_FORM);
+//    }
 
     @PostMapping("/docs/edit/{docId}")
     public ModelAndView edit(@AuthenticationPrincipal User user, @PathVariable String docId, @Valid DocumentEditForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(DOC_EDIT_FORM, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
         }
+        System.out.println(form);//fixme
         DocumentEditRequest request = mapper.mapDocEditFormToDocEditRequest(form, docId, user);
         Optional<DocumentDto> optional = documentService.edit(request);
         if (optional.isEmpty()) {

@@ -67,16 +67,15 @@ public class DocumentService {
 //            throw new Exception("doc not found"); //fixme
             return Optional.empty();
         }
+
         Document document = optional.get();
-        if (StringUtils.hasText(request.getDocName())) {
-            document.setDocName(request.getDocName());
-        }
+        document.setDocName(request.getDocName());
         document.setPublicDocument(request.isPublicDocument());
-        if (!request.getTags().isEmpty()) {
-            document.setTags(request.getTags());
-        }
+        document.setDescription(request.getDescription());
+        document.setTags(request.getTags());
         document.setLastEditDateTime(LocalDateTime.now());
         Document save = documentRepo.save(document);
+
         return Optional.of(mapper.mapDocumentToDto(save));
 
     }

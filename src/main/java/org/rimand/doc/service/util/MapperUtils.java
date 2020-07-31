@@ -64,8 +64,6 @@ public class MapperUtils {
     }
 
     public DocumentDto mapDocumentToDto(Document doc) {
-        System.out.println("mapper sout debug"); //fixme
-        System.out.println("name:"+doc.getDocName()+"\nupload date:"+doc.getUploadDateTime()); //fixme
         DocumentDto dto = new DocumentDto();
         dto.setDocName(doc.getDocName());
         dto.setDocId(doc.getDocId());
@@ -78,7 +76,6 @@ public class MapperUtils {
         dto.setTags(doc.getTags());
         dto.setDescription(doc.getDescription());
         dto.setPublicDocument(doc.isPublicDocument());
-        System.out.println(dto.toString()); //fixme
         return dto;
     }
 
@@ -99,6 +96,7 @@ public class MapperUtils {
         request.setDocName(form.getDocName());
         request.setPublicDocument(form.isPublicDocument());
         request.setTags(form.getTagList());
+        request.setDescription(form.getDescription());
         request.setEditor(user);
         return request;
     }

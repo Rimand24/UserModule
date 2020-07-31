@@ -27,16 +27,17 @@
                 <!--    todo change text to icons    -->
                 <!--        todo contant width to proportions-->
                 <th width="100">file type</th>
-                <th width="300">File name</th>
+                <th width="300">Document name</th>
                 <th width="100">Tags</th>
-                <th width="300">Description</th>
-                <th width="150">Upload Date</th>
-                <th width="150">Edit Date</th>
-                <th width="100">size</th>
+                <!--                <th width="2500">Description</th>-->
+                <th width="150">Uploaded</th>
+                <th width="150">Edited</th>
+                <th width="100">Size</th>
                 <th width="200">Author</th>
                 <th width="80">Visible</th>
                 <th width="80">Download</th>
-                <th width="80" sec:authorize="hasAuthority('ADMIN')">Delete</th>
+                <th width="80" sec:authorize="hasRole('SUPER_ADMIN')">Delete</th>
+                <th width="80" sec:authorize="hasRole('ADMIN_DOCUMENT')">Delete</th>
                 <!--    Просмотры:25501-->
                 <!--    Скачана:2307 раз-->
             </tr>
@@ -44,20 +45,40 @@
 
             <tbody align="center" th:each="doc : ${docList}">
             <tr th:object="${doc}">
+                <span th:if="*{publicDocument or (uploader == #authorization.authentication.name) }">
                 <!--     todo   picture depends on mediaType -->
                 <td th:text="*{mediaType}">file type</td>
                 <td><a th:href="@{/docs/{docId}(docId=*{docId})}" th:text="*{docName}">Kerman</a></td>
-                <!--                <td th:text="*{docName}">695462.pdf</td>-->
+                    <!--                <td th:text="*{docName}">695462.pdf</td>-->
                 <td th:if="*{tags.size() > 0}" th:text="*{tags}">tag</td>
                 <td th:if="*{tags.size() < 1}"></td>
-                <td th:text="*{description}">description here</td>
+                    <!--                <td th:text="*{description}">description here</td>-->
 
-                <td th:if="*{uploadDateTime != null}" th:text="*{uploadDateTime.toLocalDate()}">01.01.2020</td>
+                <td th:if="*{uploadDateTime != null}"
+                    th:text="*{uploadDateTime.toLocalDate()} + ' '
+                    + *{uploadDateTime.toLocalTime().hour} + ':'
+                    + *{uploadDateTime.toLocalTime().minute} + ':'
+                    + *{uploadDateTime.toLocalTime().second}">
+                    01.01.2020
+                </td>
                 <td th:if="*{uploadDateTime == null}" th:text="Unknown">Unknown</td>
-                <!--     todo    format time to delete nanos -->
-                <td th:if="*{lastEditDateTime != null}" th:text="*{lastEditDateTime.toLocalDate()}">10.10.2020</td>
-                <td th:if="*{lastEditDateTime == null and uploadDateTime != null}"
-                    th:text="*{uploadDateTime.toLocalDate()}">01.01.2020
+                    <!--     todo    format time to delete nanos -->
+                <td th:if="*{lastEditDateTime != null}"
+                    th:text="*{lastEditDateTime.toLocalDate()} + ' '
+                    + *{lastEditDateTime.toLocalTime().hour} + ':'
+                    + *{lastEditDateTime.toLocalTime().minute} + ':'
+                    + *{lastEditDateTime.toLocalTime().second}">
+<!--                    th:text="*{lastEditDateTime.toLocalDate()}"-->
+                    10.10.2020
+                </td>
+                <td th:if="*{lastEditDateTime == null and uploadDateTime != null}">
+                    Never
+<!--                        th:text="*{uploadDateTime.toLocalDate()} + ' '-->
+<!--                    + *{uploadDateTime.toLocalTime().hour} + ':'-->
+<!--                    + *{uploadDateTime.toLocalTime().minute} + ':'-->
+<!--                    + *{uploadDateTime.toLocalTime().second}">-->
+
+
                 </td>
                 <td th:if="*{lastEditDateTime == null and uploadDateTime == null}" th:text="Unknown">Unknown</td>
                 <td th:if="*{size}<1024" th:text="*{size}+' b'">size</td>
@@ -70,48 +91,67 @@
                     <span th:if="*{!publicDocument}">Private</span>
                 </td>
 
-                <!--                <td><a th:href="@{/docs/{docId}(docId=*{docId})}">Open</a></td>-->
-
-                <td><a th:href="@{/docs/download/{docId}(docId=*{docId})}" class="btn btn-success" download>Download</a>
+                <td>
+                    <a th:href="@{/docs/download/{docId}(docId=*{docId})}" class="btn btn-success btn-sm" download>Download</a>
                 </td>
-                <td sec:authorize="hasAuthority('ADMIN')">
-                    <a th:action="@{/docs/delete/{docId}(docId=*{docId})}" class="btn btn-danger">Delete</a>
+                <td sec:authorize="hasRole('SUPER_ADMIN')">
+                    <a th:href="@{/docs/delete/{docId}(docId=*{docId})}" class="btn btn-danger btn-sm">Delete</a>
                 </td>
+                <td sec:authorize="hasRole('ADMIN_DOCUMENT')">
+                    <a th:href="@{/docs/delete/{docId}(docId=*{docId})}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+                </span>
             </tr>
+
             </tbody>
         </table>
         <br>
     </div>
 
-
-    <div>
-        <form class="needs-validation" th:action="@{/docs/add/fast}" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="docName">Document name:</label>
-                <input type="text" class="form-control" id="docName" placeholder="Enter document name" name="docName">
-            </div>
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter description" name="description">
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" name="publicDocument"> Public document
-                </label>
-            </div>
+    <p>
+        <!--        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">-->
+        <!--            Link with href-->
+        <!--        </a>-->
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+                aria-expanded="false" aria-controls="collapseExample">
+            Upload File
+        </button>
+    </p>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
             <div>
-                <p>Max file size 300 Mb, supported: pdf, txt, doc)</p>
-                <div class="form-control-file">
-                    <label for="customFile">Choose file</label>
-                    <input type="file" name="file" id="customFile" placeholder="choose" required>
-                </div>
+                <form class="needs-validation" th:action="@{/docs/add}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="docName">Document name:</label>
+                        <input type="text" class="form-control" id="docName" placeholder="Enter document name"
+                               name="docName">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <input type="text" class="form-control" id="description" placeholder="Enter description"
+                               name="description">
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="publicDocument"> Public document
+                        </label>
+                    </div>
+                    <div>
+                        <p>Max file size 300 Mb, supported: pdf, txt, doc)</p>
+                        <div class="form-control-file">
+                            <label for="customFile">Choose file</label>
+                            <input type="file" name="file" id="customFile" placeholder="choose" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <br>
+                        <button type="submit" class="btn btn-dark">Add</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <br>
-                <button type="submit" class="btn btn-dark">Add doc</button>
-            </div>
-        </form>
+        </div>
     </div>
+
 
 </div> <!-- fragment.content -->
 
