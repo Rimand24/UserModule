@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.example.auth</groupId>
-    <artifactId>AuthModule</artifactId>
-    <version>0.7.1</version>
-    <name>Spring Security - ${project.artifactId}</name>
+    <groupId>org.rimand.doc</groupId>
+    <artifactId>DocShareApp</artifactId>
+    <version>0.9.0</version>
+<!--    <name>Spring Security - ${project.artifactId}</name>-->
 <!--    <packaging>war</packaging>-->
 
     <parent>
@@ -30,12 +30,6 @@
     <dependencies>
 
         <!--     utility   -->
-
-        <dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-            <version>${modelmapper.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -118,6 +112,8 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+
+
         <!--        prod DB          -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -129,6 +125,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
+
 
         <!--        TEST    -->
         <dependency>
@@ -169,11 +166,7 @@
         <!--                <scope>provided</scope>-->
         <!--            </dependency>-->
 
-
-
     </dependencies>
-
-
 
 
     <build>
@@ -182,14 +175,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <source>11</source>-->
-<!--                    <target>11</target>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>6.5.3</version>
+
+            </plugin>
         </plugins>
     </build>
 
