@@ -25,7 +25,7 @@
             <thead align="center">
             <tr>
                 <!--    todo change text to icons    -->
-                <!--        todo contant width to proportions-->
+                <!--        todo content width to proportions-->
                 <th width="100">file type</th>
                 <th width="300">Document name</th>
                 <th width="100">Tags</th>
@@ -68,19 +68,10 @@
                     + *{lastEditDateTime.toLocalTime().hour} + ':'
                     + *{lastEditDateTime.toLocalTime().minute} + ':'
                     + *{lastEditDateTime.toLocalTime().second}">
-<!--                    th:text="*{lastEditDateTime.toLocalDate()}"-->
                     10.10.2020
                 </td>
-                <td th:if="*{lastEditDateTime == null and uploadDateTime != null}">
-                    Never
-<!--                        th:text="*{uploadDateTime.toLocalDate()} + ' '-->
-<!--                    + *{uploadDateTime.toLocalTime().hour} + ':'-->
-<!--                    + *{uploadDateTime.toLocalTime().minute} + ':'-->
-<!--                    + *{uploadDateTime.toLocalTime().second}">-->
-
-
-                </td>
-                <td th:if="*{lastEditDateTime == null and uploadDateTime == null}" th:text="Unknown">Unknown</td>
+                <td th:if="*{lastEditDateTime == null and uploadDateTime != null}">Never</td>
+                <td th:if="*{lastEditDateTime == null and uploadDateTime == null}">Unknown</td>
                 <td th:if="*{size}<1024" th:text="*{size}+' b'">size</td>
                 <td th:if="*{size}>1024 and *{size}<1048576" th:text="*{size/1024}+' Kb'">size</td>
                 <td th:if="*{size}>1048576 and *{size}<1073741824" th:text="*{size/1048576}+' Mb'">size</td>
@@ -109,9 +100,6 @@
     </div>
 
     <p>
-        <!--        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">-->
-        <!--            Link with href-->
-        <!--        </a>-->
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
                 aria-expanded="false" aria-controls="collapseExample">
             Upload File
@@ -130,6 +118,12 @@
                         <label for="description">Description:</label>
                         <input type="text" class="form-control" id="description" placeholder="Enter description"
                                name="description">
+                    </div>
+                    <div class="form-group">
+                        <label for="tags">Tags:</label>
+                        <input type="text" class="form-control" id="tags" placeholder="Enter tags"
+                               name="tags">
+                        <small id="emailHelp" class="form-text text-muted">Input tags space separated</small>
                     </div>
                     <div class="form-group form-check">
                         <label class="form-check-label">

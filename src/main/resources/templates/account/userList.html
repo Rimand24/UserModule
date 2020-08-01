@@ -28,9 +28,9 @@
             <th width="100">Roles</th>
             <th width="100">Status</th>
             <th>Block Reason</th>
-            <th sec:authorize="hasAuthority('ADMIN')">Block</th>
-            <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
-            <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
+            <th sec:authorize="hasAnyRole('SUPER_ADMIN, ADMIN_USER')">Block</th>
+            <th sec:authorize="hasAnyRole('SUPER_ADMIN, ADMIN_USER')">Delete</th>
+            <th sec:authorize="hasAnyRole('SUPER_ADMIN, ADMIN_USER')">Delete</th>
         </tr>
         </thead>
         <tbody align="center" th:each="user : ${userList}">
@@ -47,7 +47,7 @@
 
             <td th:text="*{blockReason}">block reason</td>
 
-            <td sec:authorize="hasAuthority('ADMIN')" th:if="*{!blocked}" class="">
+            <td sec:authorize="hasAnyRole('SUPER_ADMIN, ADMIN_USER')" th:if="*{!blocked}" class="">
                 <form th:action="@{/admin/users/block}" method="post">
                     <input type="hidden" name="username" th:value="*{username}">
                     <!--                    todo modal form for ban reason-->
@@ -56,21 +56,21 @@
                 </form>
             </td>
 
-            <td sec:authorize="hasAuthority('ADMIN')" th:if="*{blocked}">
+            <td sec:authorize="hasAnyRole('SUPER_ADMIN, ADMIN_USER')" th:if="*{blocked}">
                 <form th:action="@{/admin/users/unblock}" method="post">
                     <input type="hidden" name="username" th:value="*{username}">
                     <input type="submit" value="unblock" class="btn-success">
                 </form>
             </td>
 
-            <td sec:authorize="hasAuthority('ADMIN')">
+            <td sec:authorize="hasAnyRole('SUPER_ADMIN, ADMIN_USER')">
                 <form th:action="@{/admin/users/safeDelete}" method="post">
                     <input hidden="hidden" type="text" name="username" th:value="*{username}">
                     <input type="submit" value="Delete user only" class="btn-danger">
                 </form>
             </td>
 
-            <td sec:authorize="hasAuthority('ADMIN')">
+            <td sec:authorize="hasAnyRole('SUPER_ADMIN, ADMIN_USER')">
                 <form th:action="@{/admin/users/safeDelete}" method="post">
                     <input type="hidden" name="username" th:value="*{username}">
                     <input type="submit" value="Delete with documents" class="btn-danger">

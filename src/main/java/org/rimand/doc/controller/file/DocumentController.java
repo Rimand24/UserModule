@@ -3,6 +3,7 @@ package org.rimand.doc.controller.file;
 import org.rimand.doc.controller.file.dto.DocumentEditForm;
 import org.rimand.doc.controller.file.dto.DocumentSearchForm;
 import org.rimand.doc.controller.file.dto.DocumentUploadForm;
+import org.rimand.doc.domain.Tag;
 import org.rimand.doc.domain.User;
 import org.rimand.doc.domain.dto.DocumentDto;
 import org.rimand.doc.service.document.DocumentService;
@@ -27,9 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class DocumentController {
@@ -95,8 +94,7 @@ public class DocumentController {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(DOC_EDIT_FORM, MODEL_ERROR, Arrays.toString(bindingResult.getAllErrors().toArray()));//fixme
         }
-        System.out.println(form);//fixme
-        DocumentEditRequest request = mapper.mapDocEditFormToDocEditRequest(form, docId, user);
+        DocumentEditRequest request = mapDocEditFormToDocEditRequest(form, docId, user);
         Optional<DocumentDto> optional = documentService.edit(request);
         if (optional.isEmpty()) {
             return new ModelAndView(DOC_EDIT_FORM, MODEL_ERROR, EDIT_ERROR);
@@ -177,4 +175,33 @@ public class DocumentController {
         return true;
     }
 
+
+    private DocumentEditRequest mapDocEditFormToDocEditRequest(DocumentEditForm form, String docId, User user) {
+        DocumentEditRequest request = new DocumentEditRequest();
+        request.setDocId(docId);
+        request.setDocName(form.getDocName());
+
+        System.out.println("tags" + form.getTags());
+
+        Set<Tag> tagSet = new HashSet<>();
+        String stringTags = form.getTags();
+        String[] array = stringTags.split(" ");
+        for (String s : array) {
+            Tag tag = new Tag();
+            tag.setTagName(s);
+            tagSet.add(tag);
+        }
+//        for (Tag tag : tagSet) {
+//            System.out.println(tag.getTagName());
+//        }
+
+
+        request.setTags(tagSet);
+
+
+        request.setPublicDocument(form.isPublicDocument());
+        request.setDescription(form.getDescription());
+        request.setEditor(user);
+        return request;
+    }
 }

@@ -9,7 +9,8 @@ import java.util.Set;
 @Data
 public class DocumentEditForm {
     private String docName;
-    private Set<Tag> tagList=new HashSet<>();
+//    private Set<Tag> tags =new HashSet<>(); //fixme
+    private String tags;
     private String description;
     private boolean publicDocument;
 }

@@ -3,6 +3,7 @@ package org.rimand.doc.service.document;
 import lombok.SneakyThrows;
 import org.rimand.doc.domain.Document;
 import org.rimand.doc.domain.Role;
+import org.rimand.doc.domain.Tag;
 import org.rimand.doc.domain.User;
 import org.rimand.doc.domain.dto.DocumentDto;
 import org.rimand.doc.repo.DocumentRepo;
@@ -72,7 +73,19 @@ public class DocumentService {
         document.setDocName(request.getDocName());
         document.setPublicDocument(request.isPublicDocument());
         document.setDescription(request.getDescription());
-        document.setTags(request.getTags());
+
+//        System.out.println(">>>doc service<<<");
+//        for (Tag tag : request.getTags()) {
+//            System.out.println(tag.getTagName());
+//        }
+
+        document.setTags(request.getTags()); //fixme tags
+
+//        for (Tag tag : document.getTags()) {
+//            System.out.println(tag.getTagName());
+//        }
+
+
         document.setLastEditDateTime(LocalDateTime.now());
         Document save = documentRepo.save(document);
 

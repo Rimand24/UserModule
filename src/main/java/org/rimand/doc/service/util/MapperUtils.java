@@ -3,6 +3,7 @@ package org.rimand.doc.service.util;
 import org.rimand.doc.controller.file.dto.DocumentEditForm;
 import org.rimand.doc.controller.file.dto.DocumentUploadForm;
 import org.rimand.doc.domain.Document;
+import org.rimand.doc.domain.Tag;
 import org.rimand.doc.domain.User;
 import org.rimand.doc.domain.dto.DocumentDto;
 import org.rimand.doc.domain.dto.UserDto;
@@ -10,8 +11,7 @@ import org.rimand.doc.service.document.dto.DocumentCreationRequest;
 import org.rimand.doc.service.document.dto.DocumentEditRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,14 +90,5 @@ public class MapperUtils {
         return request;
     }
 
-    public DocumentEditRequest mapDocEditFormToDocEditRequest(DocumentEditForm form, String docId, User user) {
-        DocumentEditRequest request = new DocumentEditRequest();
-        request.setDocId(docId);
-        request.setDocName(form.getDocName());
-        request.setPublicDocument(form.isPublicDocument());
-        request.setTags(form.getTagList());
-        request.setDescription(form.getDescription());
-        request.setEditor(user);
-        return request;
-    }
+
 }
