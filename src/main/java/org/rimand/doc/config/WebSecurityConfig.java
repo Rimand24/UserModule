@@ -52,7 +52,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/registration", "/activate/*", "/", "/forgetPassword", "/resetPassword/*").permitAll()  //registration controller
                 .antMatchers("/admin/**").hasAuthority(Role.ROLE_SUPER_ADMIN.name())   //admin page
                 .antMatchers("/h2-console/**").permitAll() //fixme H2 database config
-//                .antMatchers("/**").permitAll() //fixme debug config - security disabled
                 .anyRequest().authenticated()
 
                 .and()
