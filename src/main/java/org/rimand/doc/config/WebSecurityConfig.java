@@ -46,7 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 //TLS
 //                .requiresChannel().anyRequest().requiresSecure() //todo tls
-//                .and()
                 .authorizeRequests()
                 .antMatchers("/webjars/**", "/static/**").permitAll()     //css+js
                 .antMatchers("/registration", "/activate/*", "/", "/forgetPassword", "/resetPassword/*").permitAll()  //registration controller
