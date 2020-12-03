@@ -6,3 +6,10 @@ INSERT INTO role (id, name) VALUES (3, 'ROLE_USER');
 
 INSERT INTO users_roles (user_id, role_id) VALUES (1, 1);
 INSERT INTO users_roles (user_id, role_id) VALUES (1, 2);
+
+
+insert into USERS_ROLE (USERS_ID, AUTHORITIES) values (3,'ADMIN')
+
+UPDATE users
+SET email='200@mail.mm'
+WHERE id =3
