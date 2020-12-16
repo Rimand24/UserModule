@@ -7,8 +7,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Data
-public class EmailChangeForm implements Serializable {
-    private static final long serialVersionUID = 8275421911971559913L;
+public class EmailChangeForm {
     @NotBlank
     private String password;
     @ValidEmail

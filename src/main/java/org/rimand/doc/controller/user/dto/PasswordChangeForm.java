@@ -9,8 +9,7 @@ import java.io.Serializable;
 
 @Data
 @PasswordMatches
-public class PasswordChangeForm implements Serializable {
-    private static final long serialVersionUID = -8565974236159842106L;
+public class PasswordChangeForm {
     @NotBlank
     @Size(min = 3, max = 32, message = "password length must be between 3 and 32")
     private String oldPassword;
